@@ -75,9 +75,6 @@ if(isset($_GET['no_rawat'])) {
                                                         <li><a href="./?module=RawatJalan&page=index&action=berkas_digital&no_rawat=<?php echo $row['5']; ?>">Berkas Digital Perawatan</a></li>
                                                         <li><a href="./?module=RawatJalan&page=index&action=radiologi&no_rawat=<?php echo $row['5']; ?>">Berkas Radiologi</a></li>
                                                         <li><a href="./?module=RawatJalan&page=index&action=status_pulang&no_rawat=<?php echo $row['5']; ?>">Status</a></li>
-                                                        <?php if(is_dir(ABSPATH.'/modules/SMSGateway/')) { ?>
-                                                          <li><a href="./?module=SMSGateway&page=listphone&op=instant_pasien&ph=<?php echo $row['16']; ?>">Kirim SMS</a></li>
-                                                        <?php } ?>
                                                     </ul>
                                                 </div>
                                             </td>
