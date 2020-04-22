@@ -26,7 +26,7 @@ class Admin extends Main
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         } else {
             $username = $this->getUserInfo('username', null, true);
-            $pegawai = $this->db('pegawai')->where('nik', $username)->oneArray();
+            $pegawai = $this->db('pegawai')->where('nik', $_SESSION['opensimrs_user'])->oneArray();
             $nama = $pegawai['nama'];
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         }

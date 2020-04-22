@@ -148,7 +148,7 @@ abstract class Main
 
         if (empty(self::$userCache) || $refresh) {
             //if($id == 1) {
-                self::$userCache = $this->db('users')->where('username', $id)->oneArray();
+                self::$userCache = $this->db('users')->where('username', $_SESSION['opensimrs_user'])->oneArray();
             //} else {
             //    self::$userCache = $this->db('pegawai')->join('users', 'users.username = pegawai.nik', 'users.id = $id')->oneArray();
             //}
