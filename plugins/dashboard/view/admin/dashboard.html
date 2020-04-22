@@ -1,0 +1,91 @@
+<article class="row">
+    <div class="col-sm-4">
+
+        <div class="panel panel-default">
+              <div class="panel-heading">
+                    <h3 class="panel-title">Pasien</h3>
+              </div>
+              <div class="panel-body">
+                    <h1 class="text-center stat-bold">{?= $stats.getPasiens ?}</h1>
+              </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+
+        <div class="panel panel-default">
+              <div class="panel-heading">
+                    <h3 class="panel-title">Kunjungan</h3>
+              </div>
+              <div class="panel-body">
+                    <h1 class="text-center stat-bold">{?= $stats.getVisities ?}</h1>
+              </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+
+        <div class="panel panel-default">
+              <div class="panel-heading">
+                    <h3 class="panel-title">Pegawai</h3>
+              </div>
+              <div class="panel-body">
+                    <h1 class="text-center stat-bold">{?= $stats.getEmployes ?}</h1>
+              </div>
+        </div>
+
+    </div>
+</article>
+
+<article class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+              <div class="panel-body">
+                    <canvas id="visits"
+                    style="width:100%; height:300px;"
+                    data-chart="line"
+                    data-labels='[{?= implode(",", $stats.pasienChart.readable) ?}]'
+                    data-datasets='[
+                        {
+                            label: "Halaman",
+                            data: [{?= implode(',', $stats.pasienChart.visits) ?}],
+                            backgroundColor: "rgba(255, 87, 34, 0.2)",
+                            borderColor: "rgba(255, 87, 34, 1)"
+                        }
+                    ]'></canvas>
+              </div>
+        </div>
+</article>
+
+<article class="row">
+    <div class="col-md-8">
+        <div class="row">
+
+            {loop: $modules}
+            <div class="module">
+                <div class="panel panel-default">
+                    <a href="{$value.url}" class="panel-body text-center">
+                        <div class="panel-thumb">
+                            <i class="fa fa-{$value.icon}"></i>
+                        </div>
+                        <h4>{$value.name}</h4>
+                    </a>
+                </div>
+            </div>
+            {/loop}
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default hidden-xs">
+            <div class="panel-heading">
+                <h3 class="panel-title">Berita</h3>
+            </div>
+            <div class="panel-body">
+                <div class="news">
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
