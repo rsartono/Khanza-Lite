@@ -2,23 +2,9 @@
 
 namespace Systems\Lib;
 
-/**
- * OpenSIMRS modules collection
- */
 class ModulesCollection
 {
-    /**
-     * List of loaded modules
-     *
-     * @var array
-     */
     protected $modules = [];
-
-    /**
-     * ModulesCollection constructor
-     *
-     * @param \Systems\Main $core
-     */
     public function __construct($core)
     {
         $modules = array_column($core->db('modules')->asc('sequence')->toArray(), 'dir');
@@ -45,11 +31,6 @@ class ModulesCollection
         }
     }
 
-    /**
-     * Executes all init methods
-     *
-     * @return void
-     */
     protected function initLoop()
     {
         foreach ($this->modules as $module) {
@@ -57,11 +38,6 @@ class ModulesCollection
         }
     }
 
-    /**
-     * Executes all routes methods
-     *
-     * @return void
-     */
     protected function routesLoop()
     {
         foreach ($this->modules as $module) {
@@ -69,11 +45,6 @@ class ModulesCollection
         }
     }
 
-    /**
-     * Executes all finish methods
-     *
-     * @return void
-     */
     public function finishLoop()
     {
         foreach ($this->modules as $module) {
@@ -81,33 +52,16 @@ class ModulesCollection
         }
     }
 
-    /**
-     * Get list of modules as array
-     *
-     * @return array
-     */
     public function getArray()
     {
         return $this->modules;
     }
 
-    /**
-     * Check if collection has loaded module
-     *
-     * @param string $name
-     * @return bool
-     */
     public function has($name)
     {
         return array_key_exists($name, $this->modules);
     }
 
-    /**
-     * Get specified module by magic method
-     *
-     * @param string $module
-     * @return \Systems\BaseModule
-     */
     public function __get($module)
     {
         if (isset($this->modules[$module])) {

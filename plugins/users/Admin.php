@@ -102,7 +102,7 @@ class Admin extends AdminModule
     */
     public function getEdit($id)
     {
-        $user = $this->db('users')->oneArray($id);
+        $user = $this->db('users')->where('id', $id)->oneArray();
         $this->assign['list'] = $this->db('users')->toArray();
 
         if (!empty($user)) {

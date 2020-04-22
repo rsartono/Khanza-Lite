@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenSIMRS - Pengguna</title>
+    <link rel="icon" href="http://localhost:8000/favicon.png" type="image/x-icon">
+    <link href="http://localhost:8000/assets/css/bootstrap.min.css?v=3.0" rel="stylesheet">
+    <link href="http://localhost:8000/assets/css/bootstrap-theme.min.css?v=3.0" rel="stylesheet">
+    <link href="http://localhost:8000/themes/admin/css/style.css?v=3.0&t=b11763ba74ef" rel="stylesheet">
+    <link href="http://localhost:8000/assets/css/font-awesome.css?v=3.0" rel="stylesheet">
+    <script src="http://localhost:8000/assets/jscripts/jquery.min.js"></script>
+    <script src="http://localhost:8000/assets/jscripts/bootstrap.min.js?v=3.0"></script>
+    <script src="http://localhost:8000/assets/jscripts/bootbox.min.js?v=3.0"></script>
+    <script src="http://localhost:8000/assets/jscripts/html.sortable.min.js?v=3.0"></script>
+    <script src="http://localhost:8000/assets/jscripts/tinynav.min.js?v=3.0"></script>
+    <script src="http://localhost:8000/themes/admin/js/kalypto.min.js?v=3.0&t=b11763ba74ef"></script>
+    <script src="http://localhost:8000/themes/admin/js/selectator.min.js?v=3.0&t=b11763ba74ef"></script>
+    <script>
+        var opensimrs = {token:"b11763ba74ef", url:"http://localhost:8000", admin:"admin"};
+    </script>
+    <meta name="generator" content="PinkMED" />
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <aside id="sidebar-wrapper">
+            <div class="user-info">
+                <div class="image">
+                    <img src="http://localhost:8000/plugins/users/img/default.png" width="48" height="48" alt="User" />
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">drg. Faisol Basoro</div>
+                    <div class="email">D0000040</div>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                            <li class="" data-module="dashboard">
+                    <a href="http://localhost:8000/admin/dashboard/main?t=b11763ba74ef"><i class="fa fa-home"></i>Dashboard</a>
+                                    </li>
+                            <li class="" data-module="modules">
+                    <a href="#"><i class="fa fa-plug"></i>Modul</a>
+                                        <ul class="collapse">
+                                                <li class=""><a href="http://localhost:8000/admin/modules/manage?t=b11763ba74ef">Kelola</a></li>
+                                                <li class=""><a href="http://localhost:8000/admin/modules/upload?t=b11763ba74ef">Upload</a></li>
+                                            </ul>
+                                    </li>
+                            <li class="active" data-module="users">
+                    <a href="#"><i class="fa fa-user"></i>Pengguna</a>
+                                        <ul class="collapse">
+                                                <li class="active"><a href="http://localhost:8000/admin/users/manage?t=b11763ba74ef">Kelola</a></li>
+                                                <li class=""><a href="http://localhost:8000/admin/users/add?t=b11763ba74ef">Tambah Baru</a></li>
+                                            </ul>
+                                    </li>
+                            <li class="" data-module="settings">
+                    <a href="http://localhost:8000/admin/settings/general?t=b11763ba74ef"><i class="fa fa-wrench"></i>Pengaturan</a>
+                                    </li>
+                        </ul>
+        </aside>
+
+        <div id="navbar-wrapper">
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a href="#" id="sidebar-toggle"><i class="fa fa-bars"></i></a> <div class="navbar-brand"><a href="http://localhost:8000/admin/"><span class="first">Open</span>SIMRS</a></div>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="hello hidden-sm hidden-xs"><a href="#"><i class="fa fa-fw fa-user"></i> <span>Apa kabar <strong>drg. Faisol Basoro</strong>?</span></a></li>
+                        <li class="hidden-sm hidden-xs"><a href="http://localhost:8000" target="_blank" class="fa fa-globe" data-toggle="tooltip" data-placement="bottom" title="Tampilkan"></a></li>
+                        <li><a href="http://localhost:8000/admin/logout?t=b11763ba74ef" class="fa fa-power-off" data-toggle="tooltip" data-placement="bottom" title="Keluar"></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+		
+        <section id="content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2 class="content-title">Pengguna</h2>
+                        <article class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Kelola Pengguna</h3>
+            </div>
+            <div class="panel-body">
+				<div class="table-responsive no-margin">
+					<table class="table table-striped no-margin">
+						<thead>
+							<tr>
+								<th>Nama Pengguna</th>
+								<th>Nama Lengkap</th>
+								<th>Email</th>
+								<th class="text-right">Aksi</th>
+							</tr>
+						</thead>
+						<tbody>
+														<tr>
+								<td><a href="http://localhost:8000/admin/users/edit/1?t=b11763ba74ef">admin</a></td>
+								<td>----</td>
+								<td></td>
+								<td class="text-right">
+									<a href="http://localhost:8000/admin/users/edit/1?t=b11763ba74ef" class="btn btn-xs btn-success">
+										<i class="fa fa-pencil"></i> <span class="hidden-xs">Edit</span>
+									</a>
+									<a href="http://localhost:8000/admin/users/delete/1?t=b11763ba74ef" class="btn btn-xs btn-danger disabled" data-confirm="Anda yakin akan menghapus user ini?">
+										<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+									</a>
+								</td>
+							</tr>
+														<tr>
+								<td><a href="http://localhost:8000/admin/users/edit/3?t=b11763ba74ef">D0000040</a></td>
+								<td>----</td>
+								<td></td>
+								<td class="text-right">
+									<a href="http://localhost:8000/admin/users/edit/3?t=b11763ba74ef" class="btn btn-xs btn-success">
+										<i class="fa fa-pencil"></i> <span class="hidden-xs">Edit</span>
+									</a>
+									<a href="http://localhost:8000/admin/users/delete/3?t=b11763ba74ef" class="btn btn-xs btn-danger disabled" data-confirm="Anda yakin akan menghapus user ini?">
+										<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+									</a>
+								</td>
+							</tr>
+													</tbody>
+					</table>
+				</div>
+            </div>
+        </div>
+    </div>
+</article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="hidden-xs">
+        Dikembangkan oleh <img src="http://localhost:8000/themes/admin/img/opensimrs_logo.png?t=b11763ba74ef" alt="logo" width="16" height="16"> <a href="https://basoro.id/" target="_blank">Basoro.ID</a>
+    </footer>
+
+    <script src="http://localhost:8000/themes/admin/js/scripts.js?v=3.0&t=b11763ba74ef"></script>
+    </body>
+</html>

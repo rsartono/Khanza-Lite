@@ -2,30 +2,10 @@
 
 namespace Systems\Lib;
 
-/**
- * Templates class
- */
 class Templates
 {
-    /**
-     * Variables for template usage
-     *
-     * @var array
-     */
     private $data = [];
-
-    /**
-     * Temporary directory for Templates cache
-     *
-     * @var string
-     */
     private $tmp = 'tmp/';
-
-    /**
-     * Template tags list
-     *
-     * @var array
-     */
     private $tags = [
                 '{\*(.*?)\*}' => 'self::comment',
                 '{noparse}(.*?){\/noparse}' => 'self::noParse',
@@ -44,19 +24,8 @@ class Templates
                 '{include: (.+?\.[a-z]{2,4})}' => '<?php include_once(str_replace(url()."/", null, "$1")); ?>',
                 '{template: (.+?\.[a-z]{2,4})}' => '<?php include_once(str_replace(url()."/", null, $opensimrs["theme"]."/$1")); ?>',
             ];
-
-    /**
-     * Instance of OpenSIMRS core class
-     *
-     * @var \Systems\Main
-     */
     public $core;
 
-    /**
-     * Templates constructor
-     *
-     * @param Systems\Main $object
-     */
     public function __construct($object)
     {
         $this->core = $object;
@@ -65,12 +34,6 @@ class Templates
         }
     }
 
-    /**
-    * set variable
-    * @param string $name
-    * @param mixed $value
-    * @return Templates $this
-    */
     public function set($name, $value)
     {
         $this->data[$name] = $value;
@@ -78,22 +41,11 @@ class Templates
         return $this;
     }
 
-    /**
-     * append array variable
-     * @param  string $name
-     * @param  mixed $value
-     * @return void
-     */
     public function append($name, $value)
     {
         $this->data[$name][] = $value;
     }
 
-    /**
-    * content parsing
-    * @param string $content
-    * @return string
-    */
     private function parse($content)
     {
         // replace tags with PHP
@@ -141,12 +93,6 @@ class Templates
         return $content;
     }
 
-    /**
-     * Organize preg_match_all matches array
-     *
-     * @param array $input
-     * @return array
-     */
     protected function organize_array($input)
     {
         for ($z = 0; $z < count($input); $z++) {
@@ -158,11 +104,6 @@ class Templates
         return $rt;
     }
 
-    /**
-    * execute PHP code
-    * @param string $file
-    * @return string
-    */
     private function execute($file, $counter = 0)
     {
         $pathInfo = pathinfo($file);
@@ -190,12 +131,6 @@ class Templates
         }
     }
 
-    /**
-    * display compiled code
-    * @param string $file
-    * @param bool $last
-    * @return string
-    */
     public function draw($file, $last = false)
     {
         if (preg_match('#plugins(\/modules\/[^"]*\/)view\/([^"]*.'.pathinfo($file, PATHINFO_EXTENSION).')#', $file, $m)) {
@@ -212,19 +147,10 @@ class Templates
             $result = str_replace(['*bracket*','*/bracket*'], ['{', '}'], $result);
             $result = str_replace('*dollar*', '$', $result);
 
-            if (HTML_BEAUTY) {
-                //$tidyHTML = new Indenter;
-                //return $tidyHTML->indent($result);
-            }
             return $result;
         }
     }
 
-    /**
-    * replace signs {,},$ in string with *words*
-    * @param string $content
-    * @return string
-    */
     public function noParse($content)
     {
         if (is_array($content)) {
@@ -234,11 +160,6 @@ class Templates
         return str_replace('$', '*dollar*', $content);
     }
 
-    /**
-    * replace signs {,},$ in array with *words*
-    * @param arry $array
-    * @return array
-    */
     public function noParse_array($array)
     {
         foreach ($array as $key => $value) {
@@ -251,21 +172,11 @@ class Templates
         return $array;
     }
 
-    /**
-    * remove selected content from source code
-    * @param string $content
-    * @return null
-    */
     public function comment($content)
     {
         return null;
     }
 
-    /**
-    * search tags in content
-    * @param string $content
-    * @return bool
-    */
     private function searchTags($content)
     {
         foreach ($this->tags as $regexp  => $replace) {
@@ -276,13 +187,6 @@ class Templates
         return false;
     }
 
-    /**
-     * Replace dot based variable to PHP version
-     * $a.b => $a['b']
-     *
-     * @param string $var
-     * @return string
-     */
     private function replaceVariable($var)
     {
         if (strpos($var, '.') === false) {

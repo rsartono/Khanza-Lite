@@ -14,26 +14,17 @@ class Admin extends AdminModule
         ];
     }
 
-    /**
-    * list of active/inactive modules
-    */
     public function getManage($type = 'active')
     {
         $modules = $this->_modulesList($type);
         return $this->draw('manage.html', ['modules' => array_chunk($modules, 2), 'tab' => $type]);
     }
 
-    /**
-    * module upload
-    */
     public function getUpload()
     {
         return $this->draw('upload.html');
     }
 
-    /**
-     * module extract
-     */
     public function postExtract()
     {
         if (isset($_FILES['zip_module']['tmp_name']) && !FILE_LOCK) {
@@ -163,12 +154,6 @@ class Admin extends AdminModule
         $module = $this->core->getModuleInfo($dir);
         $module['description'] = $this->tpl->noParse($module['description']);
         $module['last_modified'] = date("Y-m-d", filemtime($files['info']));
-
-        // ReadMe.md
-        if (file_exists($files['readme'])) {
-            $parsedown = new \Systems\Lib\Parsedown();
-            $module['readme'] = $parsedown->text($this->tpl->noParse(file_get_contents($files['readme'])));
-        }
 
         $this->tpl->set('module', $module);
         echo $this->tpl->draw(MODULES.'/modules/view/admin/details.html', true);

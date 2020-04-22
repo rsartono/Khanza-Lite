@@ -2,35 +2,12 @@
 
 namespace Systems;
 
-/**
- * Core Admin class
- */
 class Admin extends Main
 {
-    /**
-     * Assigned variables for templates
-     *
-     * @var array
-     */
     private $assign = [];
-
-    /**
-     * Registered module pages
-     *
-     * @var array
-     */
     private $registerPage = [];
-
-    /**
-     * Instance of Modules Collection
-     *
-     * @var \Systems\Lib\ModulesCollection
-     */
     public $module = null;
 
-    /**
-     * Admin constructor
-     */
     public function __construct()
     {
         parent::__construct();
@@ -40,11 +17,6 @@ class Admin extends Main
         });
     }
 
-    /**
-    * set variables to template core and display them
-    * @param string $file
-    * @return void
-    */
     public function drawTheme($file)
     {
         if(isset($_SESSION['opensimrs_user']) && $_SESSION['opensimrs_user'] == 1) {
@@ -76,13 +48,6 @@ class Admin extends Main
         echo $this->tpl->draw(THEMES.'/admin/'.$file, true);
     }
 
-    /**
-    * load module and set variables
-    * @param string $name
-    * @param string $feature
-    * @param array $params (optional)
-    * @return void
-    */
     public function loadModule($name, $method, $params = [])
     {
         $row = $this->module->{$name};
@@ -111,12 +76,6 @@ class Admin extends Main
         }
     }
 
-    /**
-    * create list of modules
-    * @param string $activeModile
-    * @param string $activeFeature
-    * @return void
-    */
     public function createNav($activeModule, $activeMethod)
     {
         $nav = [];
@@ -177,11 +136,6 @@ class Admin extends Main
         $this->assign['nav'] = $nav;
     }
 
-    /**
-    * get module informations
-    * @param string $dir
-    * @return array
-    */
     public function getModuleInfo($dir)
     {
         $file = MODULES.'/'.$dir.'/Info.php';
@@ -194,11 +148,6 @@ class Admin extends Main
         }
     }
 
-    /**
-    * get module's methods
-    * @param string $dir
-    * @return array
-    */
     public function getModuleNav($dir)
     {
         if ($this->module->has($dir)) {
@@ -208,13 +157,6 @@ class Admin extends Main
         return false;
     }
 
-    /**
-    * get module method
-    * @param string $dir
-    * @param string $feature
-    * @param array $params (optional)
-    * @return array
-    */
     public function getModuleMethod($name, $method, $params = [])
     {
         if (method_exists($this->module->{$name}, $method)) {
@@ -225,12 +167,6 @@ class Admin extends Main
         return false;
     }
 
-    /**
-    * user login
-    * @param string $username
-    * @param string $password
-    * @return bool
-    */
     public function login($username, $password, $remember_me = false)
     {
         // Check attempt
@@ -312,10 +248,6 @@ class Admin extends Main
         }
     }
 
-    /**
-    * user logout
-    * @return void
-    */
     private function logout()
     {
         $_SESSION = [];
@@ -332,23 +264,11 @@ class Admin extends Main
         redirect(url(ADMIN.'/'));
     }
 
-    /**
-     * Register module page
-     *
-     * @param string $name
-     * @param string $path
-     * @return void
-     */
     private function registerPage($name, $path)
     {
         $this->registerPage[] = ['id' => null, 'title' => $name, 'slug' => $path];
     }
 
-    /**
-     * Get registered pages
-     *
-     * @return array
-     */
     public function getRegisteredPages()
     {
         return $this->registerPage;

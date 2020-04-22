@@ -6,63 +6,14 @@ use Systems\Lib\QueryBuilder;
 use Systems\Lib\Templates;
 use Systems\Lib\Router;
 
-/**
- * Base for core classes
- */
 abstract class Main
 {
-    /**
-     * Templates instance
-     *
-     * @var Templates
-     */
     public $tpl;
-
-    /**
-     * Router instance
-     *
-     * @var Router
-     */
     public $router;
-
-    /**
-     * Settings instance
-     *
-     * @var Settings
-     */
-    public $settings;
-
-    /**
-     * List of additional header or footer content
-     *
-     * @var array
-     */
     public $appends = [];
-
-    /**
-     * Reference to ModulesCollection
-     *
-     * @var \Systems\Lib\ModulesCollection|null
-     */
     public $module = null;
-
-    /**
-     * Settings cache
-     *
-     * @var array
-     */
-    protected static $settingsCache = [];
-
-    /**
-     * User cache
-     *
-     * @var array
-     */
     protected static $userCache = [];
 
-    /**
-     * Main constructor
-     */
     public function __construct()
     {
         $this->setSession();
@@ -77,64 +28,17 @@ abstract class Main
             $this->freshInstall();
         }
 
-        //$this->settings = new Settings($this);
-
         $this->tpl = new Templates($this);
         $this->router = new Router;
 
         $this->append(base64_decode('PG1ldGEgbmFtZT0iZ2VuZXJhdG9yIiBjb250ZW50PSJQaW5rTUVEIiAvPg=='), 'header');
     }
 
-    /**
-     * New instance of QueryBuilder
-     *
-     * @param string $table
-     * @return QueryBuilder
-     */
     public function db($table = null)
     {
         return new QueryBuilder($table);
     }
 
-    /**
-    * get module settings
-    * @param string $module
-    * @param string $field
-    * @param bool $refresh
-    *
-    * @deprecated
-    *
-    * @return string or array
-    */
-    public function getSettings($module = 'settings', $field = null, $refresh = false)
-    {
-        if ($refresh) {
-            $this->settings->reload();
-        }
-
-        return $this->settings->get($module, $field);
-    }
-
-    /**
-     * Set module settings value
-     *
-     * @param string $module
-     * @param string $field
-     * @param string $value
-     *
-     * @deprecated
-     *
-     * @return bool
-     */
-    public function setSettings($module, $field, $value)
-    {
-        return $this->settings->set($module, $field, $value);
-    }
-
-    /**
-    * safe session
-    * @return void
-    */
     private function setSession()
     {
         ini_set('session.use_only_cookies', 1);
@@ -143,13 +47,6 @@ abstract class Main
         session_start();
     }
 
-    /**
-    * create notification
-    * @param string $type ('success' or 'failure')
-    * @param string $text
-    * @param mixed $args [, mixed $... ]]
-    * @return void
-    */
     public function setNotify($type, $text, $args = null)
     {
         $variables = [];
@@ -165,10 +62,6 @@ abstract class Main
         }
     }
 
-    /**
-    * display notification
-    * @return array or false
-    */
     public function getNotify()
     {
         if (isset($_SESSION['failure'])) {
@@ -184,42 +77,21 @@ abstract class Main
         }
     }
 
-    /**
-    * adds CSS URL to array
-    * @param string $path
-    * @return void
-    */
     public function addCSS($path)
     {
         $this->appends['header'][] = "<link rel=\"stylesheet\" href=\"$path\">\n";
     }
 
-    /**
-    * adds JS URL to array
-    * @param string $path
-    * @param string $location (header / footer)
-    * @return void
-    */
     public function addJS($path, $location = 'header')
     {
         $this->appends[$location][] = "<script src=\"$path\"></script>\n";
     }
 
-    /**
-    * adds string to array
-    * @param string $string
-    * @param string $location (header / footer)
-    * @return void
-    */
     public function append($string, $location)
     {
         $this->appends[$location][] = $string."\n";
     }
 
-    /**
-    * chcec if user is login
-    * @return bool
-    */
     public function loginCheck()
     {
         if (isset($_SESSION['opensimrs_user']) && isset($_SESSION['token']) && isset($_SESSION['userAgent']) && isset($_SESSION['IPaddress'])) {
@@ -267,12 +139,6 @@ abstract class Main
         return false;
     }
 
-    /**
-    * get user informations
-    * @param string $filed
-    * @param int $id (optional)
-    * @return string
-    */
     public function getUserInfo($field, $id = null, $refresh = false)
     {
         if (!$id) {
@@ -282,7 +148,7 @@ abstract class Main
 
         if (empty(self::$userCache) || $refresh) {
             //if($id == 1) {
-                self::$userCache = $this->db('users')->where('id', $id)->oneArray();
+                self::$userCache = $this->db('users')->where('username', $id)->oneArray();
             //} else {
             //    self::$userCache = $this->db('pegawai')->join('users', 'users.username = pegawai.nik', 'users.id = $id')->oneArray();
             //}
@@ -291,11 +157,6 @@ abstract class Main
         return self::$userCache[$field];
     }
 
-    /**
-     * Load installed modules
-     *
-     * @return void
-     */
     public function loadModules()
     {
         if ($this->module == null) {
@@ -303,11 +164,6 @@ abstract class Main
         }
     }
 
-    /**
-    * Generating database with OpenSIRMS data
-    * @param string $dbFile path to OpenSIRMS SQLite database
-    * @return void
-    */
     private function freshInstall()
     {
         QueryBuilder::connect("mysql:host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME."",DBUSER, DBPASS);
@@ -330,7 +186,6 @@ abstract class Main
         foreach ($modules as $order => $name) {
             $core->db('modules')->save(['dir' => $name, 'sequence' => $order]);
         }
-
 
         redirect(url());
     }

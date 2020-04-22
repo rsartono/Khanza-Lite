@@ -2,22 +2,10 @@
 
 namespace Systems;
 
-/**
- * Core Site class
- */
 class Site extends Main
 {
-    /**
-     * Current site template file
-     * Does not use template if set to false
-     *
-     * @var mixed
-     */
     public $template = 'index.html';
 
-    /**
-     * Site constructor
-     */
     public function __construct()
     {
         parent::__construct();
@@ -38,11 +26,6 @@ class Site extends Main
         $this->module->finishLoop();
     }
 
-    /**
-    * set variables to template core and display them
-    * @param string $file
-    * @return void
-    */
     private function drawTheme($file)
     {
         $assign = [];
@@ -59,10 +42,6 @@ class Site extends Main
         echo $this->tpl->draw(THEMES.'/site/'.$file, true);
     }
 
-    /**
-    * check if user is login
-    * @return bool
-    */
     public function loginCheck()
     {
         if (isset($_SESSION['opensimrs_user']) && isset($_SESSION['token']) && isset($_SESSION['userAgent']) && isset($_SESSION['IPaddress'])) {

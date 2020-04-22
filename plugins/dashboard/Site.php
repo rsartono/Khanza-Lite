@@ -4,9 +4,6 @@ namespace Plugins\Dashboard;
 
 use Systems\SiteModule;
 
-/**
- * Contoh site class
- */
 class Site extends SiteModule
 {
 
@@ -17,24 +14,11 @@ class Site extends SiteModule
         }
     }
 
-    /**
-     * Register module routes
-     * Call the appropriate method/function based on URL
-     *
-     * @return void
-     */
     public function routes()
     {
-        // Simple:
         $this->route('dashboard', 'getIndex');
     }
 
-    /**
-     * GET: /contoh
-     * Called method by router
-     *
-     * @return string
-     */
     public function getIndex()
     {
 

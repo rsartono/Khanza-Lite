@@ -2,36 +2,15 @@
 
 namespace Systems\Lib;
 
-/**
- * OpenSIMRS Router class
- */
 class Router
 {
-    /**
-     * Declared routes
-     *
-     * @var array
-     */
     private $routes = array();
-
-    /**
-     * Route patterns that converts to regexp style
-     *
-     * @var array
-     */
     private $patterns = array(
         ':any' => '.*',
         ':int' => '[0-9]+',
         ':str' => '[a-zA-Z0-9_-]+',
     );
 
-    /**
-     * Set route
-     *
-     * @param string $pattern
-     * @param callable $callback
-     * @return void
-     */
     public function set($pattern, $callback)
     {
         $pattern = str_replace('/', '\/', $pattern);
@@ -39,12 +18,6 @@ class Router
         $this->routes[$pattern] = $callback;
     }
 
-    /**
-     * Executes routing and parse matches
-     *
-     * @param boolean $returnPath
-     * @return mixed
-     */
     public function execute($returnPath = false)
     {
         if (empty($path) && empty($_SERVER['PATH_INFO'])) {
@@ -88,12 +61,6 @@ class Router
         Event::call('router.notfound');
     }
 
-    /**
-     * Change current "path" to custom
-     *
-     * @param string $path
-     * @return void
-     */
     public function changeRoute($path)
     {
         $_SERVER['PATH_INFO'] = $path;

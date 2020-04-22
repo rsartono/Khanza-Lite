@@ -1,13 +1,5 @@
 <?php
 
-/**
- * check if array have an empty values
- *
- * @param array $keys
- * @param array $array
- *
- * @return boolean
- */
 function checkEmptyFields(array $keys, array $array)
 {
     foreach ($keys as $field) {
@@ -19,13 +11,6 @@ function checkEmptyFields(array $keys, array $array)
     return false;
 }
 
-/**
- * delte dir with files
- *
- * @param string $path
- *
- * @return boolean
- */
 function deleteDir($path)
 {
     return !empty($path) && is_file($path)
@@ -37,13 +22,6 @@ function deleteDir($path)
         && @rmdir($path);
 }
 
-/**
- * remove special chars from string
- *
- * @param string $text
- *
- * @return string
- */
 function createSlug($text)
 {
     setlocale(LC_ALL, 'en_EN');
@@ -55,13 +33,6 @@ function createSlug($text)
     return strtolower(str_replace('\'', '', $text));
 }
 
-/**
- * convert special chars from array
- *
- * @param array $array
- *
- * @return array
- */
 function htmlspecialchars_array(array $array)
 {
     foreach ($array as $key => $value) {
@@ -75,13 +46,6 @@ function htmlspecialchars_array(array $array)
     return $array;
 }
 
-/**
- * convert all characters to HTML entities from array
- *
- * @param array $array
- *
- * @return array
- */
 function htmlentities_array(array $array)
 {
     foreach ($array as $key => $value) {
@@ -95,14 +59,6 @@ function htmlentities_array(array $array)
     return $array;
 }
 
-/**
- * redirect to URL
- *
- * @param string $url
- * @param array  $data
- *
- * @return void
- */
 function redirect($url, array $data = [])
 {
     if ($data) {
@@ -113,11 +69,6 @@ function redirect($url, array $data = [])
     exit();
 }
 
-/**
- * get data from session
- *
- * @return array or null
- */
 function getRedirectData()
 {
     if (isset($_SESSION['REDIRECT_DATA'])) {
@@ -130,13 +81,6 @@ function getRedirectData()
     return null;
 }
 
-/**
- * Returns current url
- *
- * @param boolean $query
- *
- * @return string
- */
 function currentURL($query = false)
 {
     if (isset_or($GLOBALS['core'], null) instanceof \Systems\Admin) {
@@ -152,13 +96,6 @@ function currentURL($query = false)
     }
 }
 
-/**
- * parse URL
- *
- * @param int $key
- *
- * @return mixed array, string or false
- */
 function parseURL($key = null)
 {
     $url = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
@@ -173,13 +110,6 @@ function parseURL($key = null)
     }
 }
 
-/**
- * add token to URL
- *
- * @param string $url
- *
- * @return string
- */
 function addToken($url)
 {
     if (isset($_SESSION['token'])) {
@@ -193,13 +123,6 @@ function addToken($url)
     return $url;
 }
 
-/**
- * create URL
- *
- * @param string / array $data
- *
- * @return string
- */
 function url($data = null)
 {
     if (filter_var($data, FILTER_VALIDATE_URL) !== false) {
@@ -236,11 +159,6 @@ function url($data = null)
     return $url;
 }
 
-/**
- * Current domain name
- *
- * @return string
- */
 function domain($with_protocol = true, $cut_www = false)
 {
     $url = parse_url(url());
@@ -258,36 +176,15 @@ function domain($with_protocol = true, $cut_www = false)
     return $host;
 }
 
-/**
- * OpenSIMRS dir name
- *
- * @return string
- */
 function opensimrs_dir() {
     return dirname(str_replace(ADMIN, null, $_SERVER['SCRIPT_NAME']));
 }
 
-/**
- * toggle empty variable
- *
- * @param mixed $var
- * @param mixed $alternate
- *
- * @return mixed
- */
 function isset_or(&$var, $alternate = null)
 {
     return (isset($var)) ? $var : $alternate;
 }
 
-/**
- * compares two version number strings
- *
- * @param string $a
- * @param string $b
- *
- * @return int
- */
 function cmpver($a, $b)
 {
     $a = explode(".", $a);
@@ -323,15 +220,6 @@ function cmpver($a, $b)
     return 0;
 }
 
-/**
- * Limits string to specified length and appends with $end value
- *
- * @param  string  $text  Input text
- * @param  integer $limit String max length
- * @param  string  $end   Appending variable if text is longer than limit
- *
- * @return string         Limited string
- */
 function str_limit($text, $limit = 100, $end = '...')
 {
     if (mb_strlen($text, 'UTF-8') > $limit) {
@@ -341,13 +229,6 @@ function str_limit($text, $limit = 100, $end = '...')
     return $text;
 }
 
-/**
- * Get response headers list
- *
- * @param string $key
- *
- * @return mixed Array of headers or specified header by $key
- */
 function get_headers_list($key = null)
 {
     $headers_list = headers_list();
@@ -364,14 +245,6 @@ function get_headers_list($key = null)
     return $headers;
 }
 
-/**
- * Generating random hash from specified characters
- *
- * @param  int    $length     Hash length
- * @param  string $characters Characters for hash
- *
- * @return string             Generated random string
- */
 function str_gen($length, $characters = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
 {
     $return = null;
@@ -387,38 +260,16 @@ function str_gen($length, $characters = "1234567890qwertyuiopasdfghjklzxcvbnmQWE
     return $return;
 }
 
-/**
- * Compressed base64_encode
- *
- * @param strin $string
- *
- * @return string
- */
 function gz64_encode($string)
 {
     return str_replace(['+', '/'], ['_', '-'], trim(base64_encode(gzcompress($string, 9)), "="));
 }
 
-/**
- * Decompress base64_decode
- *
- * @param string $string
- *
- * @return string
- */
 function gz64_decode($string)
 {
     return gzuncompress(base64_decode(str_replace(['_', '-'], ['+', '/'], $string)));
 }
 
-/**
- * Call variable which can be callback or other type.
- * If it is anonymous function it will be executed, otherwise $variable will be returned.
- *
- * @param mixed $variable
- *
- * @return mixed
- */
 function cv($variable)
 {
     if (!is_string($variable) && is_callable($variable)) {
