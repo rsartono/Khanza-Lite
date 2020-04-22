@@ -46,7 +46,7 @@ function deleteDir($path)
  */
 function createSlug($text)
 {
-    setlocale(LC_ALL, 'pl_PL');
+    setlocale(LC_ALL, 'en_EN');
     $text = str_replace(' ', '-', trim($text));
     $text = str_replace('.', '-', trim($text));
     $text = iconv('utf-8', 'ascii//translit', $text);

@@ -53,12 +53,9 @@ class Admin extends Main
             $username = $username['username'];
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         } else {
-            //$nama = $this->getUserInfo('nama', null, true);
             $username = $this->getUserInfo('username', null, true);
-            //$username = $_SESSION['opensimrs_user'];
             $pegawai = $this->db('pegawai')->where('nik', $username)->oneArray();
             $nama = $pegawai['nama'];
-            //$this->assign['avatarURL'] = url(WEBAPPS_URL.'/penggajian/'.$pegawai['photo']);
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         }
         $access = $this->getUserInfo('access');

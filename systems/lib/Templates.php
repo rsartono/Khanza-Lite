@@ -41,7 +41,6 @@ class Templates
                 '{(\$[a-zA-Z\-\._\[\]\'"0-9]+)}' => '<?php echo %%$1; ?>',
                 '{(\$[a-zA-Z\-\._\[\]\'"0-9]+)\|e}' => '<?php echo htmlspecialchars(%%$1, ENT_QUOTES | ENT_HTML5, "UTF-8"); ?>',
                 '{(\$[a-zA-Z\-\._\[\]\'"0-9]+)\|cut:([0-9]+)}' => '<?php echo str_limit(strip_tags(%%$1), $2); ?>',
-                '{widget: ([\.\-a-zA-Z0-9]+)}' => '<?php echo \Systems\Lib\Widget::call(\'$1\'); ?>',
                 '{include: (.+?\.[a-z]{2,4})}' => '<?php include_once(str_replace(url()."/", null, "$1")); ?>',
                 '{template: (.+?\.[a-z]{2,4})}' => '<?php include_once(str_replace(url()."/", null, $opensimrs["theme"]."/$1")); ?>',
             ];
@@ -199,7 +198,7 @@ class Templates
     */
     public function draw($file, $last = false)
     {
-        if (preg_match('#inc(\/modules\/[^"]*\/)view\/([^"]*.'.pathinfo($file, PATHINFO_EXTENSION).')#', $file, $m)) {
+        if (preg_match('#plugins(\/modules\/[^"]*\/)view\/([^"]*.'.pathinfo($file, PATHINFO_EXTENSION).')#', $file, $m)) {
             $themeFile = THEMES.'/site'.$m[1].$m[2];
             if (is_file($themeFile)) {
                 $file = $themeFile;
@@ -214,8 +213,8 @@ class Templates
             $result = str_replace('*dollar*', '$', $result);
 
             if (HTML_BEAUTY) {
-                $tidyHTML = new Indenter;
-                return $tidyHTML->indent($result);
+                //$tidyHTML = new Indenter;
+                //return $tidyHTML->indent($result);
             }
             return $result;
         }
