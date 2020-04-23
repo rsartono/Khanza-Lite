@@ -16,7 +16,8 @@ class Admin extends AdminModule
     public function navigation()
     {
         return [
-            'Aplikasi'          => 'general'
+            'Aplikasi'          => 'general',
+            'Jadwal Dokter'          => 'jadwal_dokter',
         ];
     }
 

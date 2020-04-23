@@ -14,22 +14,47 @@
                         <label>Alamat Institusi</label>
                         <textarea class="form-control" name="alamat_instansi" placeholder="Alamat (optional)" rows="4">{$settings.0.alamat_instansi}</textarea>
                     </div>
+                    <div class="row clearfix">
+												<div class="col-md-6">
+                            <div class="form-group">
+                                <label>No. Telepon</label>
+                                <input type="text" name="kontak" class="form-control" value="{$settings.0.kontak}" required />
+                            </div>
+												</div>
+												<div class="col-md-6">
+                            <div class="form-group">
+                                <label>E-Mail</label>
+                                <input type="email" name="email" class="form-control" value="{$settings.0.email}" required />
+                            </div>
+												</div>
+										</div>
+                    <div class="row clearfix">
+												<div class="col-md-6">
+                            <div class="form-group">
+                                <label>Kabupaten</label>
+                                <input type="text" name="kabupaten" class="form-control" value="{$settings.0.kabupaten}" required />
+                            </div>
+                        </div>
+												<div class="col-md-6">
+                            <div class="form-group">
+                                <label>Propinsi</label>
+                                <input type="text" name="propinsi" class="form-control" value="{$settings.0.propinsi}" required />
+                            </div>
+                        </div>
+										</div>
                     <div class="form-group">
-                        <label>Kontak</label>
-                        <input type="text" name="kontak" class="form-control" value="{$settings.0.kontak}" required />
+                        <label>Kode PPK Kemkes</label>
+                        <input type="text" name="kode_ppk" class="form-control" value="{$settings.0.kode_ppk}" required />
                     </div>
                     <div class="form-group">
-                        <label>e-Mail</label>
-                        <input type="email" name="email" class="form-control" value="{$settings.0.email}" required />
+                        <label>Kode PPK BPJS</label>
+                        <input type="text" name="kode_ppkkemenkes" class="form-control" value="{$settings.0.kode_ppkkemenkes}" required />
                     </div>
                     <div class="form-group">
-                        <label>Kabupaten</label>
-                        <input type="text" name="kabupaten" class="form-control" value="{$settings.0.kabupaten}" required />
+                        <label>Kode PPK Inhealth</label>
+                        <input type="text" name="kode_ppkinhealth" class="form-control" value="{$settings.0.kode_ppkinhealth}" required />
                     </div>
-                    <div class="form-group">
-                        <label>Propinsi</label>
-                        <input type="text" name="propinsi" class="form-control" value="{$settings.0.propinsi}" required />
-                    </div>
+
                     <input type="submit" name="save" class="btn btn-primary" value="Simpan" />
                 </div>
             </div>

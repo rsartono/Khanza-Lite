@@ -16,7 +16,20 @@
 												<div class="col-md-6">
 														<div class="form-group">
 					    	                <label>Nomor KTP</label>
-					    	                <input type="text" name="no_ktp" class="form-control" required value="{$pasien.form.no_ktp}" />
+																<div class="input-group">
+					    	                		<input type="text" name="no_ktp" class="form-control" required value="{$pasien.form.no_ktp}" />
+																		<span class="input-group-addon">
+																				<div class="dropdown">
+																						<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																								<i class="fa fa-paperclip"></i>
+																						</a>
+																						<ul class="dropdown-menu pull-right">
+																								<li><a href="javascript:void(0);">Bridging NIK BPJS</a></li>
+																								<li><a href="javascript:void(0);">Bridging NIK Dukcapil</a></li>
+																						</ul>
+																				</div>
+																		</span>
+																</div>
 					    	            </div>
 												</div>
 										</div>
@@ -245,7 +258,20 @@
 									</div>
 									<div class="form-group">
 											<label>Nomor Peserta</label>
-											<input type="text" name="no_peserta" class="form-control" placeholder="Nomor peserta asuransi (optional)" value="{$pasien.form.no_peserta}" />
+											<div class="input-group">
+													<input type="text" name="no_peserta" class="form-control" placeholder="Nomor peserta asuransi (optional)" value="{$pasien.form.no_peserta}" />
+													<span class="input-group-addon">
+															<div class="dropdown">
+																	<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+																			<i class="fa fa-paperclip"></i>
+																	</a>
+																	<ul class="dropdown-menu pull-right">
+																			<li><a href="javascript:void(0);">Bridging BPJS</a></li>
+																			<li><a href="javascript:void(0);">Bridging Inhealth</a></li>
+																	</ul>
+															</div>
+													</span>
+											</div>
 									</div>
 									<div class="form-group">
 											<label>Suku Bangsa</label>
