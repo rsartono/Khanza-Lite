@@ -18,7 +18,7 @@
   // URL Webapps
   define('WEBAPPS_URL', 'https://simrs.rshdbarabai.com/webapps');
 
-	// Admin cat name
+	// Admin url path
 	define('ADMIN', 'admin');
 
 	// Themes path
