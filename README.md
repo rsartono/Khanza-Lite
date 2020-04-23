@@ -1,1 +1,1 @@
-# Khanza LITE codename ataaka
+# OpenSIMRS

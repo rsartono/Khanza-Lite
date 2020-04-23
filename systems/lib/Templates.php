@@ -6,6 +6,7 @@ class Templates
 {
     private $data = [];
     private $tmp = 'tmp/';
+
     private $tags = [
                 '{\*(.*?)\*}' => 'self::comment',
                 '{noparse}(.*?){\/noparse}' => 'self::noParse',
@@ -24,6 +25,7 @@ class Templates
                 '{include: (.+?\.[a-z]{2,4})}' => '<?php include_once(str_replace(url()."/", null, "$1")); ?>',
                 '{template: (.+?\.[a-z]{2,4})}' => '<?php include_once(str_replace(url()."/", null, $opensimrs["theme"]."/$1")); ?>',
             ];
+
     public $core;
 
     public function __construct($object)

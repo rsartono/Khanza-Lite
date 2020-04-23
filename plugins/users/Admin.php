@@ -21,7 +21,7 @@ class Admin extends AdminModule
     */
     public function getManage()
     {
-        $rows = $this->db('users')->toArray();
+        $rows = $this->db('lite_roles')->toArray();
         foreach ($rows as &$row) {
             if (empty($row['fullname'])) {
                 $row['fullname'] = '----';
@@ -83,7 +83,7 @@ class Admin extends AdminModule
           }
         }*/
 
-        $this->assign['list'] = $this->db('users')->toArray();
+        $this->assign['list'] = $this->db('lite_roles')->toArray();
 
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
@@ -102,8 +102,8 @@ class Admin extends AdminModule
     */
     public function getEdit($id)
     {
-        $user = $this->db('users')->where('id', $id)->oneArray();
-        $this->assign['list'] = $this->db('users')->toArray();
+        $user = $this->db('lite_roles')->oneArray($id);
+        $this->assign['list'] = $this->db('lite_roles')->toArray();
 
         if (!empty($user)) {
             $this->assign['form'] = $user;
@@ -159,9 +159,9 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if (!$id) {    // new
-                $query = $this->db('users')->save($_POST);
+                $query = $this->db('lite_roles')->save($_POST);
             } else {        // edit
-                $query = $this->db('users')->where('id', $id)->save($_POST);
+                $query = $this->db('lite_roles')->where('id', $id)->save($_POST);
             }
 
             if ($query) {
@@ -181,8 +181,8 @@ class Admin extends AdminModule
     */
     public function getDelete($id)
     {
-        if ($id != 1 && $this->core->getUserInfo('id') != $id && ($user = $this->db('users')->oneArray($id))) {
-            if ($this->db('users')->delete($id)) {
+        if ($id != 1 && $this->core->getUserInfo('id') != $id && ($user = $this->db('lite_roles')->oneArray($id))) {
+            if ($this->db('lite_roles')->delete($id)) {
                 $this->notify('success', 'Hapus sukses');
             } else {
                 $this->notify('failure', 'Hapus gagal');
@@ -232,9 +232,9 @@ class Admin extends AdminModule
     private function _userAlreadyExists($id = null)
     {
         if (!$id) {    // new
-            $count = $this->db('users')->where('username', $_POST['username'])->count();
+            $count = $this->db('lite_roles')->where('username', $_POST['username'])->count();
         } else {        // edit
-            $count = $this->db('users')->where('username', $_POST['username'])->where('id', '<>', $id)->count();
+            $count = $this->db('lite_roles')->where('username', $_POST['username'])->where('id', '<>', $id)->count();
         }
         if ($count > 0) {
             return true;

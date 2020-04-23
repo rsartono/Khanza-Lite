@@ -21,12 +21,12 @@ class Admin extends Main
     {
         if(isset($_SESSION['opensimrs_user']) && $_SESSION['opensimrs_user'] == 1) {
             $nama = 'Administrator';
-            $username = $this->db('users')->where('id', 1)->oneArray();
+            $username = $this->db('lite_roles')->where('id', 1)->oneArray();
             $username = $username['username'];
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         } else {
             $username = $this->getUserInfo('username', null, true);
-            $pegawai = $this->db('pegawai')->where('nik', $_SESSION['opensimrs_user'])->oneArray();
+            $pegawai = $this->db('pegawai')->where('nik', $username)->oneArray();
             $nama = $pegawai['nama'];
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         }
@@ -170,11 +170,11 @@ class Admin extends Main
     public function login($username, $password, $remember_me = false)
     {
         // Check attempt
-        $attempt = $this->db('login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->oneArray();
+        $attempt = $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->oneArray();
 
         // Create attempt if does not exist
         if (!$attempt) {
-            $this->db('login_attempts')->save(['ip' => $_SERVER['REMOTE_ADDR'], 'attempts' => 0]);
+            $this->db('lite_login_attempts')->save(['ip' => $_SERVER['REMOTE_ADDR'], 'attempts' => 0]);
             $attempt = ['ip' => $_SERVER['REMOTE_ADDR'], 'attempts' => 0, 'expires' => 0];
         } else {
             $attempt['attempts'] = intval($attempt['attempts']);
@@ -187,17 +187,17 @@ class Admin extends Main
             return false;
         }
 
-        $row_admin = $this->db()->pdo()->prepare("SELECT users.id as id, AES_DECRYPT(admin.usere,'nur') as username, AES_DECRYPT(admin.passworde,'windi') as password FROM users, admin WHERE users.username = AES_DECRYPT(admin.usere,'nur') AND admin.usere = AES_ENCRYPT(?,'nur')");
+        $row_admin = $this->db()->pdo()->prepare("SELECT lite_roles.id as id, AES_DECRYPT(admin.usere,'nur') as username, AES_DECRYPT(admin.passworde,'windi') as password FROM lite_roles, admin WHERE lite_roles.username = AES_DECRYPT(admin.usere,'nur') AND admin.usere = AES_ENCRYPT(?,'nur')");
         $row_admin->execute([$username]);
         $row_admin = $row_admin->fetch();
 
-        $row_user = $this->db()->pdo()->prepare("SELECT users.id as id, AES_DECRYPT(user.id_user,'nur') as username, AES_DECRYPT(user.password,'windi') as password FROM users, user WHERE users.username = AES_DECRYPT(user.id_user,'nur') AND user.id_user = AES_ENCRYPT(?,'nur')");
+        $row_user = $this->db()->pdo()->prepare("SELECT lite_roles.id as id, AES_DECRYPT(user.id_user,'nur') as username, AES_DECRYPT(user.password,'windi') as password FROM lite_roles, user WHERE lite_roles.username = AES_DECRYPT(user.id_user,'nur') AND user.id_user = AES_ENCRYPT(?,'nur')");
         $row_user->execute([$username]);
         $row_user = $row_user->fetch();
 
         if ($row_admin && trim($password) == $row_admin['password']) {
             // Reset fail attempts for this IP
-            $this->db('login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
+            $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
 
             $_SESSION['opensimrs_user']   = $row_admin['id'];
             $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
@@ -207,14 +207,14 @@ class Admin extends Main
             if ($remember_me) {
                 $token = str_gen(64, "1234567890qwertyuiop[]asdfghjkl;zxcvbnm,./");
 
-                $this->db('remember_me')->save(['user_id' => $row_admin['id'], 'token' => $token, 'expiry' => time()+60*60*24*30]);
+                $this->db('lite_remember_me')->save(['user_id' => $row_admin['id'], 'token' => $token, 'expiry' => time()+60*60*24*30]);
 
                 setcookie('opensimrs_remember', $row_admin['id'].':'.$token, time()+60*60*24*365, '/');
             }
             return true;
         } else if ($row_user && trim($password) == $row_user['password']) {
             // Reset fail attempts for this IP
-            $this->db('login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
+            $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
 
             $_SESSION['opensimrs_user']   = $row_user['id'];
             $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
@@ -224,19 +224,19 @@ class Admin extends Main
             if ($remember_me) {
                 $token = str_gen(64, "1234567890qwertyuiop[]asdfghjkl;zxcvbnm,./");
 
-                $this->db('remember_me')->save(['user_id' => $row_user['id'], 'token' => $token, 'expiry' => time()+60*60*24*30]);
+                $this->db('lite_remember_me')->save(['user_id' => $row_user['id'], 'token' => $token, 'expiry' => time()+60*60*24*30]);
 
                 setcookie('opensimrs_remember', $row_user['id'].':'.$token, time()+60*60*24*365, '/');
             }
             return true;
         } else {
             // Increase attempt
-            $this->db('login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => $attempt['attempts']+1]);
+            $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => $attempt['attempts']+1]);
             $attempt['attempts'] += 1;
 
             // ... and block if reached maximum attempts
             if ($attempt['attempts'] % 3 == 0) {
-                $this->db('login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['expires' => strtotime("+10 minutes")]);
+                $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['expires' => strtotime("+10 minutes")]);
                 $attempt['expires'] = strtotime("+10 minutes");
 
                 $this->setNotify('failure', sprintf('Batas maksimum login tercapai. Tunggu %s menit untuk coba lagi.', ceil(($attempt['expires']-time())/60)));
@@ -255,7 +255,7 @@ class Admin extends Main
         // Delete remember_me token from database and cookie
         if (isset($_COOKIE['opensimrs_remember'])) {
             $token = explode(':', $_COOKIE['opensimrs_remember']);
-            $this->db('remember_me')->where('user_id', $token[0])->where('token', $token[1])->delete();
+            $this->db('lite_remember_me')->where('user_id', $token[0])->where('token', $token[1])->delete();
             setcookie('opensimrs_remember', null, -1, '/');
         }
 

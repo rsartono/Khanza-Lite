@@ -14,17 +14,26 @@ class Admin extends AdminModule
         ];
     }
 
+    /**
+    * list of active/inactive modules
+    */
     public function getManage($type = 'active')
     {
         $modules = $this->_modulesList($type);
         return $this->draw('manage.html', ['modules' => array_chunk($modules, 2), 'tab' => $type]);
     }
 
+    /**
+    * module upload
+    */
     public function getUpload()
     {
         return $this->draw('upload.html');
     }
 
+    /**
+     * module extract
+     */
     public function postExtract()
     {
         if (isset($_FILES['zip_module']['tmp_name']) && !FILE_LOCK) {

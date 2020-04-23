@@ -5,9 +5,10 @@ namespace Systems\Lib;
 class ModulesCollection
 {
     protected $modules = [];
+
     public function __construct($core)
     {
-        $modules = array_column($core->db('modules')->asc('sequence')->toArray(), 'dir');
+        $modules = array_column($core->db('lite_modules')->asc('sequence')->toArray(), 'dir');
         if ($core instanceof \Systems\Admin) {
             $clsName = 'Admin';
         } else {

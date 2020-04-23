@@ -4,10 +4,10 @@ namespace Systems;
 
 class BaseModule
 {
-
     protected $core;
     protected $tpl;
     protected $route;
+    //protected $settings;
     protected $name;
 
     public function __construct(Main $core)
@@ -45,6 +45,20 @@ class BaseModule
 
         return $this->tpl->draw($file);
     }
+
+    /*protected function settings($module, $field = false, $value = false)
+    {
+        if (substr_count($module, '.') == 1) {
+            $value = $field;
+            list($module, $field) = explode('.', $module);
+        }
+
+        if ($value === false) {
+            return $this->settings->get($module, $field);
+        } else {
+            return $this->settings->set($module, $field, $value);
+        }
+    }*/
 
     protected function db($table = null)
     {

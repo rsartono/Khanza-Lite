@@ -41,6 +41,22 @@
             </tbody>
         </table>
 
+        {if: isset($module.readme)}
+        <table class="table no-bottom-margin">
+            <thead>
+                <tr>
+                    <th>Deskripsi panjang</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {$module.readme}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {/if}
     </div>
 </div>
 <div class="modal-footer">

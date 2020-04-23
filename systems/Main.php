@@ -10,8 +10,10 @@ abstract class Main
 {
     public $tpl;
     public $router;
+    //public $settings;
     public $appends = [];
     public $module = null;
+    //protected static $settingsCache = [];
     protected static $userCache = [];
 
     public function __construct()
@@ -20,7 +22,7 @@ abstract class Main
 
         QueryBuilder::connect("mysql:host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME."",DBUSER, DBPASS);
 
-        $check_db = $this->db()->pdo()->query("SHOW TABLES LIKE 'modules'");
+        $check_db = $this->db()->pdo()->query("SHOW TABLES LIKE 'lite_modules'");
         $check_db->execute();
         $check_db = $check_db->fetch();
 
@@ -38,6 +40,20 @@ abstract class Main
     {
         return new QueryBuilder($table);
     }
+
+    /*public function getSettings($module = 'settings', $field = null, $refresh = false)
+    {
+        if ($refresh) {
+            $this->settings->reload();
+        }
+
+        return $this->settings->get($module, $field);
+    }
+
+    public function setSettings($module, $field, $value)
+    {
+        return $this->settings->set($module, $field, $value);
+    }*/
 
     private function setSession()
     {
@@ -112,18 +128,18 @@ abstract class Main
         } elseif (isset($_COOKIE['opensimrs_remember'])) {
             $token = explode(":", $_COOKIE['opensimrs_remember']);
             if (count($token) == 2) {
-                $row = $this->db('users')->leftJoin('remember_me', 'remember_me.user_id = users.id')->where('users.id', $token[0])->where('remember_me.token', $token[1])->select(['users.*', 'remember_me.expiry', 'token_id' => 'remember_me.id'])->oneArray();
+                $row = $this->db('lite_roles')->leftJoin('lite_remember_me', 'lite_remember_me.user_id = lite_roles.id')->where('lite_roles.id', $token[0])->where('lite_remember_me.token', $token[1])->select(['lite_roles.*', 'lite_remember_me.expiry', 'token_id' => 'lite_remember_me.id'])->oneArray();
 
                 if ($row) {
                     if (time() - $row['expiry'] > 0) {
-                        $this->db('remember_me')->delete(['id' => $row['token_id']]);
+                        $this->db('lite_remember_me')->delete(['id' => $row['token_id']]);
                     } else {
                         $_SESSION['opensimrs_user']   = $row['id'];
                         $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
                         $_SESSION['userAgent']  = $_SERVER['HTTP_USER_AGENT'];
                         $_SESSION['IPaddress']  = $_SERVER['REMOTE_ADDR'];
 
-                        $this->db('remember_me')->where('remember_me.user_id', $token[0])->where('remember_me.token', $token[1])->save(['expiry' => time()+60*60*24*30]);
+                        $this->db('lite_remember_me')->where('lite_remember_me.user_id', $token[0])->where('lite_remember_me.token', $token[1])->save(['expiry' => time()+60*60*24*30]);
 
                         if (strpos($_SERVER['SCRIPT_NAME'], '/'.ADMIN.'/') !== false) {
                             redirect(url([ADMIN, 'dashboard', 'main']));
@@ -148,9 +164,9 @@ abstract class Main
 
         if (empty(self::$userCache) || $refresh) {
             //if($id == 1) {
-                self::$userCache = $this->db('users')->where('username', $_SESSION['opensimrs_user'])->oneArray();
+                self::$userCache = $this->db('lite_roles')->where('id', $id)->oneArray();
             //} else {
-            //    self::$userCache = $this->db('pegawai')->join('users', 'users.username = pegawai.nik', 'users.id = $id')->oneArray();
+            //    self::$userCache = $this->db('pegawai')->join('lite_roles', 'lite_roles.username = pegawai.nik', 'lite_roles.id = $id')->oneArray();
             //}
         }
 
@@ -184,9 +200,10 @@ abstract class Main
         }
 
         foreach ($modules as $order => $name) {
-            $core->db('modules')->save(['dir' => $name, 'sequence' => $order]);
+            $core->db('lite_modules')->save(['dir' => $name, 'sequence' => $order]);
         }
 
         redirect(url());
     }
+
 }
