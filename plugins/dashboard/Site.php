@@ -12,9 +12,16 @@ class Site extends SiteModule
 
     public function init()
     {
-        if (empty($slug[0]) || ($lang !== false && empty($slug[1]))) {
-            $this->core->router->changeRoute('dashboard');
+        $slug = parseURL();
+
+        if (empty($slug[0])) {
+            $this->core->router->changeRoute(HOMEPAGE);
         }
+
+        \Systems\Lib\Event::add('router.notfound', function () {
+            $this->get404();
+        });
+
     }
 
     /**
@@ -42,14 +49,14 @@ class Site extends SiteModule
         $this->core->addJS(url(BASE_DIR.'/assets/jscripts/Chart.bundle.min.js'));
         $this->core->addJS(url(MODULES.'/dashboard/js/app.js?v={$opensimrs.version}'));
 
-        $stats['getPasiens'] = $this->countPasien();
-        $stats['getVisities'] = $this->countVisite();
-        $stats['getEmployes'] = $this->countEmploye();
+        $stats['getPasiens'] = number_format($this->countPasien(),0,'','.');
+        $stats['getVisities'] = number_format($this->countVisite(),0,'','.');
+        $stats['getEmployes'] = number_format($this->countEmploye(),0,'','.');
         $stats['pasienChart'] = $this->pasienChart(15);
 
         $page = [
-            'title' => 'OpenSIMRS',
-            'desc' => 'Sistem Informasi Rumah Sakit Kode Sumber Terbuka',
+            'title' => 'Khanza LITE',
+            'desc' => 'Sistem Informasi Rumah Sakit',
             'content' => $this->draw('dashboard.html', ['stats' => $stats])
         ];
 
@@ -132,6 +139,18 @@ class Site extends SiteModule
             }
 
         return $return;
+    }
+
+    public function get404()
+    {
+        $page = [
+            'title' => 'Khanza LITE',
+            'desc' => 'Sistem Informasi Rumah Sakit',
+            'content' => '<div class="container text-center" style="margin-top: 30px;margin-bottom: 30px;"><h1>404 Not Found</h1></div>'
+        ];
+
+        $this->setTemplate('index.html');
+        $this->tpl->set('page', $page);
     }
 
 }

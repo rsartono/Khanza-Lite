@@ -3,7 +3,7 @@
 namespace Systems\Lib;
 
 /**
- * OpenSIMRS QueryBuilder class
+ * Khanza LITE QueryBuilder class
  */
 class QueryBuilder
 {

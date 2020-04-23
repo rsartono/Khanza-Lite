@@ -1,0 +1,83 @@
+<article class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Kelola Pendaftaran Pasien</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row clearfix">
+                  <div class="col col-md-6">
+                    <h3 style="margin-top:5px;margin-bottom:15px;">Jumlah: {?=count($pendaftaran.totalRecords)?}</h3>
+                  </div>
+                  <div class="col col-md-6">
+                    <form action="" class="searchbox-input form-inline pull-right padding-bottom-lg" style="margin-top:5px;margin-bottom:15px;">
+                        <div class="input-group">
+                            <input type="text" name="s" minlength="3" class="form-control" placeholder="Search" required>
+                            <input type="hidden" name="t" value="{?=$_SESSION['token']?}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+      					<div class="table-responsive no-margin">
+      						<table class="table table-striped no-margin">
+      							<thead>
+      								<tr>
+                        <th>No. Rawat</th>
+                        <th>Nama Pasien</th>
+                        <th>No. RM</th>
+                        <th>No. Reg</th>
+                        <th>Klinik</th>
+                        <th>Dokter</th>
+      									<th>Jenis Bayar</th>
+                        <th>Alamat</th>
+                        <th>Tgl. Reg</th>
+                        <th>Jam. Reg</th>
+                        <th>Status</th>
+      									<th class="text-right">Aksi</th>
+      								</tr>
+      							</thead>
+      							<tbody>
+              			{if: !empty($pendaftaran.list)}
+      								{loop: $pendaftaran.list}
+      								<tr>
+                        <td>{$value.no_rawat}</td>
+      									<td>{$value.nm_pasien}</td>
+                        <td>{$value.no_rkm_medis}</td>
+                        <td>{$value.no_reg}</td>
+                        <td>{$value.nm_poli}</td>
+      									<td>{$value.nm_dokter}</td>
+                        <td>{$value.png_jawab}</td>
+                        <td>{$value.alamat}</td>
+                        <td>{$value.tgl_registrasi}</td>
+                        <td>{$value.jam_reg}</td>
+                        <td>{$value.status_bayar}</td>
+      									<td class="text-right">
+      										<a href="{$value.print_buktidaftar}" target="_blank" class="btn btn-primary btn-xs">
+      											<i class="fa fa-print"></i> <span class="hidden-xs">Cetak</span>
+      										</a>
+                          <a href="{$value.BridgingBPJS}" target="_blank" class="btn btn-warning btn-xs">
+      											<i class="fa fa-print"></i> <span class="hidden-xs">BPJS</span>
+      										</a>
+      										<a href="{$value.editURL}" class="btn btn-success btn-xs">
+      											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
+      										</a>
+      										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
+      											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+      										</a>
+      									</td>
+      								</tr>
+      								{/loop}
+      								{else}
+      								<tr><td colspan="11" class="text-center">Kosong</td></tr>
+      							{/if}
+      							</tbody>
+      						</table>
+      					</div>
+                {$pendaftaran.pagination}
+            </div>
+        </div>
+    </div>
+</article>

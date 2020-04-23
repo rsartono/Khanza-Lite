@@ -2,7 +2,7 @@
 
 return [
     'name'          =>  'Pengaturan',
-    'description'   =>  'Pengaturan umum OpenSIMRS.',
+    'description'   =>  'Pengaturan umum Khanza LITE.',
     'author'        =>  'Basoro',
     'version'       =>  '1.0',
     'compatibility' =>  '3.*',

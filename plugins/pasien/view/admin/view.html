@@ -1,0 +1,114 @@
+<article class="row">
+	<form name="pasien" action="{?=url(ADMIN.'/pasien/save/'.@$pasien.view.id)?}" method="POST" enctype="multipart/form-data">
+		<div class="col-md-12">
+		    <div class="panel panel-default">
+                <div class="panel-heading">
+		            <h3 class="panel-title">Informasi Pribadi</h3>
+                </div>
+                <div class="panel-body" style="margin-top:15px;">
+										<div class="col-xs-12 col-sm-3">
+				                <div class="card profile-card">
+				                    <div class="profile-header">&nbsp;</div>
+				                    <div class="profile-body">
+				                        <div class="image-area">
+				                            <img src="{$pasien.fotoURL}" width="120" height="120" class="img-thumbnail" alt="Profile Image" />
+																		<h4>{$pasien.view.nm_pasien}</h4>
+				                        </div>
+				                        <div class="content-area">
+				                            <p>{$pasien.view.no_ktp}</p>
+																		<p>{$pasien.view.no_rm}</p>
+				                        </div>
+				                    </div>
+				                    <div class="profile-footer">
+				                        <ul>
+				                            <li>
+				                                <span>Rawat Jalan</span>
+				                                <span>1.234</span>
+				                            </li>
+				                            <li>
+				                                <span>Rawat Inap</span>
+				                                <span>1.201</span>
+				                            </li>
+				                        </ul>
+																<a href="{$pasien.print_kartu}" target="_blank" class="btn btn-primary btn-block">CETAK KARTU</a>
+																<a href="{$pasien.print_rm}" target="_blank" class="btn btn-primary btn-block">CETAK REKAN MEDIK</a>
+				                    </div>
+				                </div>
+
+				                <div class="card card-about-me" style="margin-bottom:20px;">
+				                    <div class="header">
+				                        <h3>Detil Pribadi</h3>
+				                    </div>
+				                    <div class="body">
+				                        <ul>
+				                            <li>
+				                                <div class="title">
+				                                    <i class="fa fa-file-text"></i>
+				                                    Alamat
+				                                </div>
+				                                <div class="content">
+				                                    {$pasien.view.alamat}
+				                                </div>
+				                            </li>
+				                            <li>
+				                                <div class="title">
+				                                    <i class="fa fa-file-text"></i>
+				                                    Jenis Kelamin
+				                                </div>
+				                                <div class="content">
+																						{$pasien.view.jk}
+				                                </div>
+				                            </li>
+				                            <li>
+				                                <div class="title">
+				                                    <i class="fa fa-file-text"></i>
+				                                    Tempat / Tanggal Lahir
+				                                </div>
+				                                <div class="content">
+																						{$pasien.view.tmp_lahir} / {$pasien.view.tgl_lahir}
+				                                </div>
+				                            </li>
+				                        </ul>
+				                    </div>
+				                </div>
+				            </div>
+				            <div class="col-xs-12 col-sm-9">
+				                <div class="card">
+				                    <div class="body">
+				                        <div>
+				                            <ul class="nav nav-tabs" role="tablist">
+				                                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Riwayat Medis</a></li>
+				                                <li role="presentation"><a href="#berkas_digital" aria-controls="berkas_digital" role="tab" data-toggle="tab">Berkas Digital</a></li>
+				                            </ul>
+
+				                            <div class="tab-content">
+				                                <div role="tabpanel" class="tab-pane fade in active" id="home">
+				                                    <div class="panel panel-default panel-post">
+				                                        <div class="panel-heading">
+				                                            <div class="media">
+				                                                <div class="media-body">
+				                                                    <h4 class="media-heading">
+				                                                        <a href="#">Klinik Penyakit Dalam</a>
+				                                                    </h4>
+				                                                    dr. Aris Sugiharjo, Sp.PD - 26 Maret 2020
+				                                                </div>
+				                                            </div>
+				                                        </div>
+				                                        <div class="panel-body">
+				                                            <div class="post">
+				                                            </div>
+				                                        </div>
+				                                    </div>
+				                                </div>
+				                                <div role="tabpanel" class="tab-pane fade in" id="berkas_digital">
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+                </div>
+            </div>
+	    </div>
+	</form>
+</article>

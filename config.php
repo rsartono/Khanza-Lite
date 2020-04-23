@@ -1,16 +1,16 @@
 <?php
 
 	if (!version_compare(PHP_VERSION, '5.5.0', '>=')) {
-		exit("OpenSIMRS requires at least <b>PHP 5.5</b>");
+		exit("Khanza LITE requires at least <b>PHP 5.5</b>");
 	}
 
 	ini_set('memory_limit', '-1');
 
 	define('VERSION', '3.0');
-	define('NAME', 'OpenSIMRS');
+	define('NAME', 'Khanza LITE');
   define('DBHOST', 'localhost');
   define('DBPORT', '3306');
-  define('DBNAME', 'sik_coba');
+  define('DBNAME', 'rshd_sik');
   define('DBUSER', 'root');
   define('DBPASS', '');
 	define('HOMEPAGE', 'dashboard');
@@ -35,14 +35,17 @@
 
 	// Basic modules
 	define('BASIC_MODULES', serialize([
-    8 => 'settings',
+    9999 => 'settings',
 		0 => 'dashboard',
-		7 => 'users',
-		6 => 'modules',
+		1 => 'pasien',
+		2 => 'pendaftaran',
+		3 => 'ralan',
+		4 => 'apotek_ralan',
+		5 => 'kasir_ralan',
+		9996 => 'master',
+		9998 => 'users',
+		9997 => 'modules',
 	]));
 
-	// HTML beautifier
-	define('HTML_BEAUTY', true);
-
 	// Developer mode
-	define('DEV_MODE', true);
+	define('DEV_MODE', false);

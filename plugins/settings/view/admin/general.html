@@ -44,14 +44,21 @@
                 </div>
                 <div class="panel-body">
                     <dl class="dl-horizontal no-margin">
+                        <dt></dt>
+                        <dd><img src="../../themes/admin/img/opensimrs_logo.png"></dd>
+                    </dl>
+                    <hr />
+                    <dl class="dl-horizontal no-margin">
+                        <dt>Aplikasi</dt>
+                        <dd>{?=NAME?}</dd>
                         <dt>Versi</dt>
-                        <dd>{$settings.version}</dd>
+                        <dd>{?=VERSION?}</dd>
                     </dl>
                     <hr />
                     <dl class="dl-horizontal no-margin">
                         <dt>Versi PHP</dt>
                         <dd>{$settings.system.php}</dd>
-                        <dt>Versi SQLite</dt>
+                        <dt>Versi MySQL</dt>
                         <dd>{$settings.system.sqlite}</dd>
                     </dl>
                     <hr />

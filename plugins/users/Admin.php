@@ -198,7 +198,7 @@ class Admin extends AdminModule
     private function _getModules($access = null)
     {
         $result = [];
-        $rows = $this->db('modules')->toArray();
+        $rows = $this->db('lite_modules')->toArray();
 
         if (!$access) {
             $accessArray = [];

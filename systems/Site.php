@@ -30,7 +30,7 @@ class Site extends Main
     {
         $assign = [];
         $assign['notify']   = $this->getNotify();
-        $assign['powered']  = 'Powered by <a href="https://opensimrs.my.id/">OpenSIMRS</a>';
+        $assign['powered']  = 'Powered by <a href="https://khanza.basoro.id/">Khanza LITE</a>';
         $assign['path']     = url();
         $assign['theme']    = url(THEMES.'/site');
         $assign['version']  = VERSION;

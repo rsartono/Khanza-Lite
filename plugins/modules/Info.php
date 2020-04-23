@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'name'          =>  'Modul',
-    'description'   =>  'Pengelolaan modul.',
+    'name'          =>  'Modul-Modul',
+    'description'   =>  'Pengelolaan modul-modul Khanza LITE.',
     'author'        =>  'Basoro',
     'version'       =>  '1.0',
     'compatibility' =>  '3.*',

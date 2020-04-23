@@ -96,7 +96,7 @@ class Admin extends AdminModule
             $info = include($files['info']);
             if (!$this->checkCompatibility(isset_or($info['compatibility']))) {
                 $this->notify('failure', 'Modulnya lawas', $dir);
-            } elseif ($this->db('modules')->save(['dir' => $dir, 'sequence' => $this->db('modules')->count()])) {
+            } elseif ($this->db('lite_modules')->save(['dir' => $dir, 'sequence' => $this->db('lite_modules')->count()])) {
                 if (isset($info['install'])) {
                     $info['install']();
                 }
@@ -119,7 +119,7 @@ class Admin extends AdminModule
             redirect(url([ADMIN, 'modules', 'manage', 'active']));
         }
 
-        if ($this->db('modules')->delete('dir', $dir)) {
+        if ($this->db('lite_modules')->delete('dir', $dir)) {
             $core = $this->core;
             $info = include(MODULES.'/'.$dir.'/Info.php');
 
@@ -171,7 +171,7 @@ class Admin extends AdminModule
 
     private function _modulesList($type)
     {
-        $dbModules = array_column($this->db('modules')->toArray(), 'dir');
+        $dbModules = array_column($this->db('lite_modules')->toArray(), 'dir');
         $result = [];
 
         foreach (glob(MODULES.'/*', GLOB_ONLYDIR) as $dir) {

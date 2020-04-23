@@ -20,22 +20,21 @@ class Admin extends AdminModule
         $this->core->addJS(url(BASE_DIR.'/assets/jscripts/Chart.bundle.min.js'));
         $this->core->addJS(url(MODULES.'/dashboard/js/app.js?v={$opensimrs.version}'));
 
-        $stats['getPasiens'] = $this->countPasien();
-        $stats['getVisities'] = $this->countVisite();
-        $stats['getEmployes'] = $this->countEmploye();
+        $stats['getPasiens'] = number_format($this->countPasien(),0,'','.');
+        $stats['getVisities'] = number_format($this->countVisite(),0,'','.');
+        $stats['getEmployes'] = number_format($this->countEmploye(),0,'','.');
         $stats['pasienChart'] = $this->pasienChart(15);
 
         return $this->draw('dashboard.html', [
           'stats' => $stats,
-          'modules' => $this->_modulesList(),
-          'news' => $this->_fetchNews()
+          'modules' => $this->_modulesList()
         ]);
 
     }
 
     private function _modulesList()
     {
-        $modules = array_column($this->db('modules')->toArray(), 'dir');
+        $modules = array_column($this->db('lite_modules')->toArray(), 'dir');
         $result = [];
 
         if ($this->core->getUserInfo('access') != 'all') {
@@ -62,11 +61,6 @@ class Admin extends AdminModule
             }
         }
         return $result;
-    }
-
-    private function _fetchNews()
-    {
-        return 'News';
     }
 
     public function countVisite()
