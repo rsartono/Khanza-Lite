@@ -229,7 +229,7 @@ class Admin extends AdminModule
 
     private function _addInfoUser() {
         // get users
-        $user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(id_user,'nur') as username FROM user");
+        $user = $this->db()->pdo()->prepare("SELECT nik AS username, nama AS nama FROM pegawai");
         $user->execute();
         $user = $user->fetchAll();
 
@@ -246,18 +246,19 @@ class Admin extends AdminModule
       if (count($role)) {
         $this->assign['role'] = [];
         foreach($role as $row) {
-            $row = trim($row);
             $this->assign['role'][] = $row;
         }
       }
     }
 
     private function _addInfoCap() {
-      $cap = array('admin','manajemen','medis','paramedis','apoteker','rekammedis','kasir');
+      $cap = $this->db()->pdo()->prepare("(SELECT kd_poli AS cap, nm_poli AS nm_cap FROM poliklinik) UNION (SELECT kd_bangsal AS cap, nm_bangsal AS nm_cap FROM bangsal)");
+      $cap->execute();
+      $cap = $cap->fetchAll();
+
       if (count($cap)) {
         $this->assign['cap'] = [];
         foreach($cap as $row) {
-            $row = trim($row);
             $this->assign['cap'][] = $row;
         }
       }
