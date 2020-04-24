@@ -8,11 +8,11 @@
 
 	define('VERSION', '3.0');
 	define('NAME', 'Khanza LITE');
-  define('DBHOST', 'localhost');
+  define('DBHOST', '36.89.82.70');
   define('DBPORT', '3306');
   define('DBNAME', 'rshd_sik');
-  define('DBUSER', 'root');
-  define('DBPASS', '');
+  define('DBUSER', 'rshd_sik');
+  define('DBPASS', 'Murakata04');
 	define('HOMEPAGE', 'dashboard');
 
   // URL Webapps

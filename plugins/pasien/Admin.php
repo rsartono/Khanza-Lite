@@ -194,7 +194,7 @@ class Admin extends AdminModule
       $pdf->SetLeftMargin(5);
       $pdf->SetRightMargin(5);
 
-      $pdf->Image('../themes/admin/img/opensimrs_logo.png',3,3,18);
+      $pdf->Image('../themes/admin/img/logo.png',3,3,18);
       $pdf->SetFont('Arial', '', 20);
       $pdf->Text(22, 12, $setting[0]['nama_instansi']);
       $pdf->SetFont('Arial', '', 8);

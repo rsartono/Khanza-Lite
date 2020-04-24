@@ -22,7 +22,7 @@ class Admin extends AdminModule
 
         $stats['getPasiens'] = number_format($this->countPasien(),0,'','.');
         $stats['getVisities'] = number_format($this->countVisite(),0,'','.');
-        $stats['getEmployes'] = number_format($this->countEmploye(),0,'','.');
+        $stats['getCurrentVisities'] = number_format($this->countCurrentVisite(),0,'','.');
         $stats['pasienChart'] = $this->pasienChart(15);
 
         return $this->draw('dashboard.html', [
@@ -74,25 +74,25 @@ class Admin extends AdminModule
         return $record['count'];
     }
 
+    public function countCurrentVisite()
+    {
+        $date = date('Y-m-d');
+        $record = $this->db('reg_periksa')
+            ->select([
+                'count' => 'COUNT(DISTINCT no_rawat)',
+            ])
+            ->where('tgl_registrasi', $date)
+            ->oneArray();
+
+        return $record['count'];
+    }
+
     public function countPasien()
     {
         $record = $this->db('pasien')
             ->select([
                 'count' => 'COUNT(DISTINCT no_rkm_medis)',
             ])
-            ->oneArray();
-
-        return $record['count'];
-    }
-
-    public function countEmploye()
-    {
-        $record = $this->db('pegawai')
-            ->select([
-                'count' => 'COUNT(DISTINCT nik)',
-            ])
-            ->where('stts_aktif', '=', 'AKTIF')
-            ->orWhere('stts_aktif', '=', 'CUTI')
             ->oneArray();
 
         return $record['count'];

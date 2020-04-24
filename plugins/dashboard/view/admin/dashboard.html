@@ -27,10 +27,10 @@
 
         <div class="panel panel-default">
               <div class="panel-heading">
-                    <h3 class="panel-title">Total Pegawai</h3>
+                    <h3 class="panel-title">Pasien Hari Ini</h3>
               </div>
               <div class="panel-body">
-                    <h1 class="text-center stat-bold">{?= $stats.getEmployes ?}</h1>
+                    <h1 class="text-center stat-bold">{?= $stats.getCurrentVisities ?}</h1>
               </div>
         </div>
 
@@ -43,11 +43,11 @@
               <div class="panel-body">
                     <canvas id="visits"
                     style="width:100%; height:300px;"
-                    data-chart="line"
+                    data-chart="bar"
                     data-labels='[{?= implode(",", $stats.pasienChart.readable) ?}]'
                     data-datasets='[
                         {
-                            label: "Halaman",
+                            label: "Kunjungan",
                             data: [{?= implode(',', $stats.pasienChart.visits) ?}],
                             backgroundColor: "rgba(255, 87, 34, 0.2)",
                             borderColor: "rgba(255, 87, 34, 1)"

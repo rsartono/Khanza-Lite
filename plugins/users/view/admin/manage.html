@@ -11,7 +11,8 @@
 							<tr>
 								<th>Nama Pengguna</th>
 								<th>Nama Lengkap</th>
-								<th>Email</th>
+								<th>Role</th>
+                <th>Access</th>
 								<th class="text-right">Aksi</th>
 							</tr>
 						</thead>
@@ -19,8 +20,9 @@
 							{loop: $users}
 							<tr>
 								<td><a href="{$value.editURL}">{$value.username}</a></td>
-								<td>{$value.fullname}</td>
-								<td>{$value.email}</td>
+								<td>{$value.nama}</td>
+								<td>{$value.role}</td>
+                <td>{$value.access}</td>
 								<td class="text-right">
 									<a href="{$value.editURL}" class="btn btn-xs btn-success">
 										<i class="fa fa-pencil"></i> <span class="hidden-xs">Edit</span>

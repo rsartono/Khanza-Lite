@@ -21,10 +21,14 @@ class Admin extends AdminModule
     */
     public function getManage()
     {
-        $rows = $this->db('lite_roles')->where('id', '!=', '1')->toArray();
+        //$rows = $this->db('lite_roles')->where('id', '!=', '1')->toArray();
+        $rows = $this->db()->pdo()->prepare("SELECT lite_roles.*, pegawai.nama as nama FROM lite_roles, pegawai WHERE pegawai.nik = lite_roles.username AND lite_roles.id !=1");
+        $rows->execute();
+        $rows = $rows->fetchAll();
+
         foreach ($rows as &$row) {
-            if (empty($row['fullname'])) {
-                $row['fullname'] = '----';
+            if (empty($row['nama'])) {
+                $row['nama'] = '----';
             }
             $row['editURL'] = url([ADMIN, 'users', 'edit', $row['id']]);
             $row['delURL']  = url([ADMIN, 'users', 'delete', $row['id']]);
@@ -229,7 +233,7 @@ class Admin extends AdminModule
 
     private function _addInfoUser() {
         // get users
-        $user = $this->db()->pdo()->prepare("SELECT nik AS username, nama AS nama FROM pegawai");
+        $user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(user.id_user,'nur') as username, pegawai.nama as nama FROM user, pegawai WHERE pegawai.nik = AES_DECRYPT(user.id_user,'nur')");
         $user->execute();
         $user = $user->fetchAll();
 

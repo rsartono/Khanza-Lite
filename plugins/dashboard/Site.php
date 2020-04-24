@@ -56,7 +56,7 @@ class Site extends SiteModule
 
         $page = [
             'title' => 'Khanza LITE',
-            'desc' => 'Sistem Informasi Rumah Sakit',
+            'desc' => 'Sistem Informasi Rumah Sakit Indonesia 100% Gratis',
             'content' => $this->draw('dashboard.html', ['stats' => $stats])
         ];
 

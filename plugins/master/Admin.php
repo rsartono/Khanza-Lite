@@ -18,7 +18,6 @@ class Admin extends AdminModule
     public function navigation()
     {
         return [
-            'Index' => 'index',
             'Poliklinik' => 'poliklinik',
             'Dokter' => 'dokter',
             'Data Barang' => 'databarang',
@@ -35,7 +34,7 @@ class Admin extends AdminModule
      *
      * @return string
      */
-    public function getIndex()
+    public function getPoliklinik()
     {
         $text = 'Hello World';
         return $this->draw('index.html', ['text' => $text]);
