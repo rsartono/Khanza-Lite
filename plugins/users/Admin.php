@@ -21,7 +21,7 @@ class Admin extends AdminModule
     */
     public function getManage()
     {
-        $rows = $this->db('lite_roles')->toArray();
+        $rows = $this->db('lite_roles')->where('id', '!=', '1')->toArray();
         foreach ($rows as &$row) {
             if (empty($row['fullname'])) {
                 $row['fullname'] = '----';
@@ -33,37 +33,6 @@ class Admin extends AdminModule
         return $this->draw('manage.html', ['myId' => $this->core->getUserInfo('id'), 'users' => $rows]);
     }
 
-    /**
-    * users json_encode list
-    */
-
-    public function getAjax()
-    {
-
-        $aColumns = array( 'id', 'username', 'role', 'access');
-        $sIndexColumn = $aColumns[0];
-        $sTable = "users";
-
-        include('../systems/lib/Datatable.php');
-
-        foreach ($rResult as $aRow) {
-            $row = array();
-            for ($i=0; $i<count($aColumns); $i++) {
-                $dbID = $aRow[$aColumns[0]];
-                $row[] = $aRow[$aColumns[$i]];
-            }
-            if($dbID == '1' || $dbID == $this->core->getUserInfo('id')) {
-              $row[] = '<a href="'.url([ADMIN, 'users', 'edit', $dbID]).'" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> <span class="hidden-xs">Edit</span></a> <a href="'.url([ADMIN, 'users', 'delete', $dbID]).'" class="btn btn-danger btn-xs disabled" data-confirm="Yakin ingin menghapus halaman ini?"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span></a>';
-            } else {
-              $row[] = '<a href="'.url([ADMIN, 'users', 'edit', $dbID]).'" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> <span class="hidden-xs">Edit</span></a> <a href="'.url([ADMIN, 'users', 'delete', $dbID]).'" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus halaman ini?"><i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span></a>';
-            }
-            $output['aaData'][] = $row;
-        }
-
-        return json_encode($output, true);
-
-    }
-
 
     /**
     * add new user
@@ -71,19 +40,9 @@ class Admin extends AdminModule
     public function getAdd()
     {
 
-        // get users
-        /*$row_user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(id_user,'nur') as username FROM user");
-        $row_user->execute();
-        $row_user = $row_user->fetchAll();
-
-        if (count($row_user)) {
-          $this->assign['row_user'] = [];
-          foreach($row_user as $row) {
-              $this->assign['row_user'][] = $row;
-          }
-        }*/
-
-        $this->assign['list'] = $this->db('lite_roles')->toArray();
+        $this->_addInfoUser();
+        $this->_addInfoRole();
+        $this->_addInfoCap();
 
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
@@ -103,7 +62,10 @@ class Admin extends AdminModule
     public function getEdit($id)
     {
         $user = $this->db('lite_roles')->oneArray($id);
-        $this->assign['list'] = $this->db('lite_roles')->toArray();
+
+        $this->_addInfoUser();
+        $this->_addInfoRole();
+        $this->_addInfoCap();
 
         if (!empty($user)) {
             $this->assign['form'] = $user;
@@ -263,6 +225,42 @@ class Admin extends AdminModule
 
         // MODULE SCRIPTS
         $this->core->addJS(url([ADMIN, 'users', 'javascript']), 'footer');
+    }
+
+    private function _addInfoUser() {
+        // get users
+        $user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(id_user,'nur') as username FROM user");
+        $user->execute();
+        $user = $user->fetchAll();
+
+        if (count($user)) {
+          $this->assign['user'] = [];
+          foreach($user as $row) {
+              $this->assign['user'][] = $row;
+          }
+        }
+    }
+
+    private function _addInfoRole() {
+      $role = array('admin','manajemen','medis','paramedis','apoteker','rekammedis','kasir');
+      if (count($role)) {
+        $this->assign['role'] = [];
+        foreach($role as $row) {
+            $row = trim($row);
+            $this->assign['role'][] = $row;
+        }
+      }
+    }
+
+    private function _addInfoCap() {
+      $cap = array('admin','manajemen','medis','paramedis','apoteker','rekammedis','kasir');
+      if (count($cap)) {
+        $this->assign['cap'] = [];
+        foreach($cap as $row) {
+            $row = trim($row);
+            $this->assign['cap'][] = $row;
+        }
+      }
     }
 
 }
