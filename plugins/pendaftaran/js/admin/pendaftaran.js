@@ -27,7 +27,7 @@ $(document).ready(function(){
 });
 
 $(document).on('click', '.pilihpasien', function (e) {
-    $("#no_rm")[0].value = $(this).attr('data-norm');
+    $("#no_rkm_medis")[0].value = $(this).attr('data-norkmmedis');
     $("#nm_pasien")[0].value = $(this).attr('data-nmpasien');
     $("#namakeluarga")[0].value = $(this).attr('data-namakeluarga');
     $("#alamatkeluarga")[0].value = $(this).attr('data-alamatkeluarga');

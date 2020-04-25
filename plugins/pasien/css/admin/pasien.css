@@ -1,3 +1,7 @@
+th, td {
+  white-space: nowrap;
+}
+
 /* Profile Page ================================ */
 .profile-card .profile-header {
   background-color: #4C9A2A;

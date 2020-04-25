@@ -10,10 +10,8 @@ abstract class Main
 {
     public $tpl;
     public $router;
-    //public $settings;
     public $appends = [];
     public $module = null;
-    //protected static $settingsCache = [];
     protected static $userCache = [];
 
     public function __construct()
@@ -41,19 +39,11 @@ abstract class Main
         return new QueryBuilder($table);
     }
 
-    /*public function getSettings($module = 'settings', $field = null, $refresh = false)
+    public function getSettings($parameter)
     {
-        if ($refresh) {
-            $this->settings->reload();
-        }
-
-        return $this->settings->get($module, $field);
+        $settings = $this->db('setting')->toArray();
+        return $settings[0][$parameter];
     }
-
-    public function setSettings($module, $field, $value)
-    {
-        return $this->settings->set($module, $field, $value);
-    }*/
 
     private function setSession()
     {

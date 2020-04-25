@@ -3,31 +3,21 @@
 namespace Plugins\Pendaftaran;
 
 use Systems\AdminModule;
+use Systems\Lib\Fpdf\FPDF;
+use Systems\Lib\Fpdf\PDF_MC_Table;
 
-/**
- * Sample admin class
- */
 class Admin extends AdminModule
 {
-    /**
-     * Module navigation
-     * Items of the returned array will be displayed in the administration sidebar
-     *
-     * @return array
-     */
+    private $assign = [];
+
     public function navigation()
     {
         return [
-            'Manage' => 'manage',
+            'Kelola'    => 'manage',
+            'Tambah Baru'                => 'add'
         ];
     }
 
-    /**
-     * GET: /admin/pendaftaran/manage
-     * Subpage method of the module
-     *
-     * @return string
-     */
     public function getManage($page = 1)
     {
       $this->_addHeaderFiles();
@@ -56,6 +46,10 @@ class Admin extends AdminModule
       if (count($rows)) {
           foreach ($rows as $row) {
               $row = htmlspecialchars_array($row);
+              $row['editURL'] = url([ADMIN, 'pendaftaran', 'edit', 'no_rawat='.$row['no_rawat']]);
+              $row['delURL']  = url([ADMIN, 'pendaftaran', 'delete', $row['no_rawat']]);
+              $row['viewURL'] = url([ADMIN, 'pendaftaran', 'view', $row['no_rawat']]);
+              $row['print_buktidaftar'] = url([ADMIN, 'pendaftaran', 'print_buktidaftar', convertNorawat($row['no_rawat'])]);
               $this->assign['list'][] = $row;
           }
       }
@@ -64,17 +58,278 @@ class Admin extends AdminModule
 
     }
 
+    /**
+    * add new pasien
+    */
+    public function getAdd()
+    {
+        $this->_addHeaderFiles();
+
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'no_reg' => '',
+              'no_rawat' => '',
+              'tgl_registrasi' => '',
+              'jam_reg' => '',
+              'kd_dokter' => '',
+              'no_rm' => '',
+              'kd_poli' => '',
+              'p_jawab' => '',
+              'alamatpj' => '',
+              'hubunganpj' => '',
+              'biaya_reg' => '',
+              'stts' => '',
+              'stts_daftar' => '',
+              'status_lanjut' => '',
+              'kd_pj' => '',
+              'umurdaftar' => '',
+              'sttsumur' => '',
+              'status_bayar' => '',
+              'status_poli' => ''
+            ];
+        }
+
+        $this->assign['form']['tgl_registrasi'] = date('Y-m-d');
+        $this->assign['form']['jam_reg'] = date('H:i:s');
+        $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
+        $this->assign['dokter'] = $this->core->db('dokter')->toArray();
+        $this->assign['status_lanjut'] = $this->_addEnum('reg_periksa', 'status_lanjut');
+        $this->assign['status_bayar'] = $this->_addEnum('reg_periksa', 'status_bayar');
+        $this->assign['penjab'] = $this->core->db('penjab')->toArray();
+
+        $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
+        $this->assign['form']['no_rawat'] = $this->_setNoRawat();
+        //$this->assign['form']['no_rawat'] = '20200424000011';
+
+        return $this->draw('form.html', ['pendaftaran' => $this->assign]);
+    }
+
+    public function getEdit($id)
+    {
+        //$id = '2020/04/24/000011';
+        $this->_addHeaderFiles();
+        $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
+        $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
+        $this->assign['dokter'] = $this->core->db('dokter')->toArray();
+        $this->assign['status_lanjut'] = $this->_addEnum('reg_periksa', 'status_lanjut');
+        $this->assign['status_bayar'] = $this->_addEnum('reg_periksa', 'status_bayar');
+        $this->assign['penjab'] = $this->core->db('penjab')->toArray();
+
+        if (!empty($pasien)) {
+            $this->assign['form'] = $pasien;
+            $this->assign['title'] = 'Edit Pendaftaran Pasien';
+            $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
+            $this->assign['pasien'] = $this->db('pasien')->where('no_rkm_medis', $pasien['no_rkm_medis'])->oneArray();
+
+            return $this->draw('form.html', ['pendaftaran' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pendaftaran', 'manage']));
+        }
+    }
+
+    /**
+    * save pasien data
+    */
+    public function postSave($id = null)
+    {
+        //$_POST['no_reg'] = '001';
+        //$_POST['no_rawat'] = '2020/04/24/000011';
+        //$_POST['tgl_registrasi'] = '2020-04-25';
+        //$_POST['jam_reg'] = '12:08:10';
+        //$_POST['kd_dokter'] = 'D0000040';
+        //$_POST['no_rkm_medis'] = '415277';
+        //$_POST['kd_poli'] = 'U0018';
+        //$_POST['p_jawab'] = '-';
+        //$_POST['almt_pj'] = '-';
+        $_POST['hubunganpj'] = 'AYAH';
+        $_POST['biaya_reg'] = '100000';
+        $_POST['stts'] = 'Belum';
+        $_POST['stts_daftar'] = 'Baru';
+        //$_POST['status_lanjut'] = 'Ralan';
+        //$_POST['kd_pj'] = 'A01';
+        $_POST['umurdaftar'] = '42';
+        $_POST['sttsumur'] = 'Th';
+        //$_POST['status_bayar'] = 'Belum Bayar';
+        $_POST['status_poli'] = 'Lama';
+
+        $errors = 0;
+        // location to redirect
+        if (!$id) {
+            $_POST['no_reg'] = $this->_setNoReg($_POST['kd_dokter']);
+            $location = url([ADMIN, 'pendaftaran', 'manage']);
+        } else {
+            $location = url([ADMIN, 'pendaftaran', 'edit', $id]);
+        }
+
+
+
+        // CREATE / EDIT
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                //$_POST['no_rawat'] = $this->_setNoRawat();
+                $query = $this->db('reg_periksa')->save($_POST);
+            } else {        // edit
+                //$id = '2020/04/24/000011';
+                $query = $this->db('reg_periksa')->where('no_rawat', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    /**
+    * remove pasien
+    */
+    public function getDelete($id)
+    {
+        if ($pasien = $this->db('pendaftaran')->oneArray($id)) {
+            if ($this->db('pendaftaran')->delete($id)) {
+                $this->notify('success', 'Hapus sukses');
+            } else {
+                $this->notify('failure', 'Hapus gagal');
+            }
+        }
+        redirect(url([ADMIN, 'pendaftaran', 'manage']));
+    }
+
+    public function getAjax()
+    {
+      $show = isset($_GET['show']) ? $_GET['show'] : "";
+      switch($show){
+       default:
+         $s_keyword="";
+         if (isset($_GET['keyword'])) {
+             $s_keyword = $_GET['keyword'];
+         }
+         $search_keyword = '%'. $s_keyword .'%';
+
+         $query = $this->db()->pdo()->prepare("SELECT * FROM pasien WHERE (no_rkm_medis LIKE ? OR nm_pasien LIKE ?) ORDER BY no_rkm_medis DESC LIMIT 50");
+         $query->execute([$search_keyword, $search_keyword]);
+          $rows = $query->fetchAll();
+         foreach($rows as $row){
+           echo '<tr class="pilihpasien" data-norkmmedis="'.$row['no_rkm_medis'].'" data-nmpasien="'.$row['nm_pasien'].'" data-namakeluarga="'.$row['namakeluarga'].'" data-alamatkeluarga="'.$row['alamatpj'].'">';
+           echo '<td>'.$row['no_rkm_medis'].'</td>';
+           echo '<td>'.$row['nm_pasien'].'</td>';
+           echo '<td>'.$row['namakeluarga'].'</td>';
+           echo '<td>'.$row['alamatpj'].'</td>';
+           echo '</tr>';
+         }
+        break;
+      }
+      exit();
+    }
+
+    public function getPrint_BuktiDaftar($id)
+    {
+        $pendaftaran = $this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->oneArray();
+        $pasien = $this->db('pasien')->where('no_rkm_medis', $pendaftaran['no_rkm_medis'])->oneArray();
+
+        $pdf = new FPDF('P', 'mm', array(59,98));
+        $pdf->AddPage();
+        $pdf->SetAutoPageBreak(true, 10);
+        $pdf->SetTopMargin(5);
+        $pdf->SetLeftMargin(5);
+        $pdf->SetRightMargin(5);
+
+        $pdf->Image('../themes/admin/img/logo.png',2,1,12);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Text(15, 5, $this->core->getSettings('nama_instansi'));
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Text(15, 8, $this->core->getSettings('alamat_instansi'));
+        $pdf->Text(15, 10, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+        $pdf->Text(15, 12, $this->core->getSettings('kabupaten').' - '.$this->core->getSettings('propinsi'));
+      	$pdf->SetFont('Arial', '', 11);
+        $pdf->Text(9, 20, 'BUKTI PENDAFTARAN');
+      	$pdf->Text(5, 21, '_______________________');
+      	$pdf->SetFont('Arial', '', 10);
+      	$pdf->Text(17, 26, 'RAWAT JALAN');
+      	$pdf->SetFont('Arial', '', 9);
+      	$pdf->Text(3, 35, 'Tanggal');
+      	$pdf->Text(16, 35, ': '.$pendaftaran['tgl_registrasi']);
+      	$pdf->Text(3, 40, 'Antrian');
+        $pdf->Text(16, 40, ': '.$pendaftaran['no_reg']);
+      	$pdf->Text(3, 45, 'Nama');
+        $pdf->Text(16, 45, ': '.substr($pasien['nm_pasien'],0,20));
+      	$pdf->Text(3, 50, 'No. RM');
+        $pdf->Text(16, 50, ': '.$pendaftaran['no_rkm_medis']);
+      	$pdf->Text(3, 55, 'Alamat');
+      	$pdf->Text(16, 55, ': '.substr($pasien['alamat'],0,20));
+      	$pdf->Text(17, 60, substr($pasien['alamat'],21,42));
+      	$pdf->Text(3, 65, 'Ruang');
+      	//$pdf->Text(16, 65, ': '.substr($poliklinik['nm_poli'],0,20));
+      	$pdf->Text(3, 70, 'Dokter');
+      	//$pdf->Text(16, 70, ': '.substr($dokter['fullname'],0,20));
+      	$pdf->Text(3, 75, 'Bayar');
+      	//$pdf->Text(16, 75, ': '.$cara_bayar[2]);
+      	$pdf->SetFont('Arial', '', 7);
+      	$pdf->Text(9, 83, 'Terima Kasih Atas kepercayaan Anda');
+      	$pdf->Text(12, 86, 'Bawalah kartu Berobat anda dan');
+      	$pdf->Text(14, 89, 'datang 30 menit sebelumnya');
+      	$pdf->Text(6, 92, 'Bawalah surat rujukan atau surat kontrol asli');
+      	$pdf->Text(3, 95, 'dan tunjukkan pada petugas di Lobby resepsionis');
+
+        $pdf->Output('kartu_pasien.pdf','I');
+
+    }
+
+    /**
+    * check if pasien already exists
+    * @return array
+    */
+    private function _pasienAlreadyExists($id = null)
+    {
+        $date = date('Y-m-d');
+
+        if (!$id) {    // new
+            $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('tgl_registrasi', $_POST['tgl_registrasi'])->count();
+        } else {        // edit
+            $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('tgl_registrasi', $_POST['tgl_registrasi'])->where('no_rawat', '<>', $_POST['no_rawat'])->count();
+        }
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function _cekStatusBayar($id = null)
+    {
+        $date = date('Y-m-d');
+
+        if (!$id) {    // new
+            $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('status_bayar', 'Belum Bayar')->count();
+        }
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     public function getJavascript()
     {
         header('Content-type: text/javascript');
-        echo $this->draw(MODULES.'/pendaftaran/js/admin/pasiens.js');
+        echo $this->draw(MODULES.'/pendaftaran/js/admin/pendaftaran.js');
         exit();
     }
 
     public function getCss()
     {
         header('Content-type: text/css');
-        echo $this->draw(MODULES.'/pendaftaran/css/admin/pasiens.css');
+        echo $this->draw(MODULES.'/pendaftaran/css/admin/pendaftaran.css');
         exit();
     }
 
@@ -89,6 +344,47 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'pendaftaran', 'css']));
         $this->core->addJS(url([ADMIN, 'pendaftaran', 'javascript']), 'footer');
+    }
+
+    private function _setNoRawat()
+    {
+        $date = date('Y-m-d');
+        // Get last no_rawat
+        $last_no_rawat = $this->db()->pdo()->prepare("SELECT ifnull(MAX(CONVERT(RIGHT(no_rawat,6),signed)),0) FROM reg_periksa WHERE tgl_registrasi = '$date'");
+        $last_no_rawat->execute();
+        $last_no_rawat = $last_no_rawat->fetch();
+        // Next no_rm
+        if(empty($last_no_rawat[0])) {
+          $last_no_rawat[0] = '000000';
+        }
+        $next_no_rawat = sprintf('%06s', ($last_no_rawat[0] + 1));
+        $next_no_rawat = date('Y/m/d').'/'.$next_no_rawat;
+
+        return $next_no_rawat;
+    }
+
+    private function _setNoReg($kd_dokter)
+    {
+        $date = date('Y-m-d');
+        // Get last no_rawat
+        $last_no_reg = $this->db()->pdo()->prepare("SELECT MAX(no_reg) FROM reg_periksa WHERE tgl_registrasi = '$date' AND kd_dokter = '$kd_dokter'");
+        $last_no_reg->execute();
+        $last_no_reg = $last_no_reg->fetch();
+        // Next no_rm
+        if(empty($last_no_reg[0])) {
+          $last_no_reg[0] = '000';
+        }
+        $next_no_reg = sprintf('%03s', ($last_no_reg[0] + 1));
+
+        return $next_no_reg;
+    }
+
+    private function _addEnum($table_name, $column_name) {
+      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
+      $result->execute();
+      $result = $result->fetch();
+      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
+      return $result;
     }
 
 }
