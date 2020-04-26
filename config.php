@@ -10,7 +10,7 @@
 	define('NAME', 'Khanza LITE');
   define('DBHOST', 'localhost');
   define('DBPORT', '3306');
-  define('DBNAME', 'rshd_sik');
+  define('DBNAME', 'sik');
   define('DBUSER', 'root');
   define('DBPASS', '');
 	define('HOMEPAGE', 'dashboard');

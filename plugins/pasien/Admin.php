@@ -61,16 +61,11 @@ class Admin extends AdminModule
     {
         $this->_addHeaderFiles();
 
-        // Get last no_rm
-        $last_no_rm = $this->db('set_no_rkm_medis')->oneArray();
-        $last_no_rm = substr($last_no_rm['no_rkm_medis'], 0, 6);
-        $next_no_rm = sprintf('%06s', ($last_no_rm + 1));
-
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
             $this->assign['form'] = [
-              'no_rkm_medis' => $next_no_rm,
+              'no_rkm_medis' => $this->_setNoRM(),
               'nm_pasien' => '',
               'no_ktp' => '',
               'jk' => '',
@@ -119,6 +114,7 @@ class Admin extends AdminModule
         $this->assign['suku_bangsa'] = $this->db('suku_bangsa')->toArray();
         $this->assign['bahasa_pasien'] = $this->db('bahasa_pasien')->toArray();
         $this->assign['cacat_fisik'] = $this->db('cacat_fisik')->toArray();
+        $this->assign['perusahaan_pasien'] = $this->db('perusahaan_pasien')->toArray();
 
         $this->assign['manageURL'] = url([ADMIN, 'pasien', 'manage']);
 
@@ -142,6 +138,7 @@ class Admin extends AdminModule
         $this->assign['suku_bangsa'] = $this->db('suku_bangsa')->toArray();
         $this->assign['bahasa_pasien'] = $this->db('bahasa_pasien')->toArray();
         $this->assign['cacat_fisik'] = $this->db('cacat_fisik')->toArray();
+        $this->assign['perusahaan_pasien'] = $this->db('perusahaan_pasien')->toArray();
 
         $this->assign['propinsi'] = $this->db('propinsi')->where('kd_prop', $pasien['kd_prop'])->oneArray();
         $this->assign['kabupaten'] = $this->db('kabupaten')->where('kd_kab', $pasien['kd_kab'])->oneArray();
@@ -223,30 +220,34 @@ class Admin extends AdminModule
     {
         $errors = 0;
 
+        $cek_no_rkm_medis = $this->db('pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->count();
+
         // location to redirect
-        if (!$no_rkm_medis) {
+        if ($cek_no_rkm_medis == 0) {
             $location = url([ADMIN, 'pasien', 'add']);
         } else {
-            $location = url([ADMIN, 'pasien', 'edit', $no_rkm_medis]);
+            $location = url([ADMIN, 'pasien', 'edit', $_POST['no_rkm_medis']]);
         }
 
         // check if required fields are empty
-        if (checkEmptyFields(['no_rkm_medis', 'nm_pasien', 'alamat'], $_POST)) {
-            $this->notify('failure', 'Isian kosong');
+        if (checkEmptyFields(['no_ktp', 'nm_pasien', 'alamat'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
             redirect($location, $_POST);
         }
 
         // check if pasien already exists
-        if ($this->_pasienAlreadyExists($no_rkm_medis)) {
+        if ($this->_pasienAlreadyExists($_POST['no_rkm_medis'])) {
             $errors++;
-            $this->notify('failure', 'Pasiens sudah terdaftar');
+            $this->notify('failure', 'Pasiens sudah terdaftar dengan nomor KTP '.$_POST['no_ktp']);
         }
 
         // CREATE / EDIT
         if (!$errors) {
             unset($_POST['save']);
 
-            if (!$no_rkm_medis) {    // new
+            if ($cek_no_rkm_medis == 0) {    // new
+                $_POST['no_rkm_medis'] = $this->_setNoRM();
+                $_POST['umur'] = $this->_setUmur($_POST['tgl_lahir']);
                 $query = $this->db('pasien')->save($_POST);
                 $this->core->db()->pdo()->exec("UPDATE set_no_rkm_medis SET no_rkm_medis='$_POST[no_rkm_medis]'");
             } else {        // edit
@@ -337,12 +338,13 @@ class Admin extends AdminModule
     * check if pasien already exists
     * @return array
     */
-    private function _pasienAlreadyExists($no_rkm_medis = null)
+    private function _pasienAlreadyExists($no_rkm_medis)
     {
-        if (!$no_rkm_medis) {    // new
+        $cek_no_rkm_medis = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->count();
+        if ($no_rkm_medis == 0) {    // new
             $count = $this->db('pasien')->where('no_ktp', $_POST['no_ktp'])->count();
         } else {        // edit
-            $count = $this->db('pasien')->where('no_ktp', $_POST['no_ktp'])->where('no_rkm_medis', '<>', $no_rkm_medis)->count();
+            $count = $this->db('pasien')->where('no_ktp', $_POST['no_ktp'])->where('no_rkm_medis', '!=', $no_rkm_medis)->count();
         }
         if ($count > 0) {
             return true;
@@ -390,6 +392,23 @@ class Admin extends AdminModule
       $result = $result->fetch();
       $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
       return $result;
+    }
+
+    private function _setNoRM()
+    {
+        // Get last no_rm
+        $last_no_rm = $this->db('set_no_rkm_medis')->oneArray();
+        $last_no_rm = substr($last_no_rm['no_rkm_medis'], 0, 6);
+        $next_no_rm = sprintf('%06s', ($last_no_rm + 1));
+        return $next_no_rm;
+    }
+
+    private function _setUmur($tanggal)
+    {
+        list($cY, $cm, $cd) = explode('-', date('Y-m-d'));
+        list($Y, $m, $d) = explode('-', date('Y-m-d', strtotime($tanggal)));
+        $umur = $cY - $Y;
+        return $umur;
     }
 
 }

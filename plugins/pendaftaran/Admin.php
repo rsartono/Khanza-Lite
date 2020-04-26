@@ -46,9 +46,9 @@ class Admin extends AdminModule
       if (count($rows)) {
           foreach ($rows as $row) {
               $row = htmlspecialchars_array($row);
-              $row['editURL'] = url([ADMIN, 'pendaftaran', 'edit', 'no_rawat='.$row['no_rawat']]);
-              $row['delURL']  = url([ADMIN, 'pendaftaran', 'delete', $row['no_rawat']]);
-              $row['viewURL'] = url([ADMIN, 'pendaftaran', 'view', $row['no_rawat']]);
+              $row['editURL'] = url([ADMIN, 'pendaftaran', 'edit', convertNorawat($row['no_rawat'])]);
+              $row['delURL']  = url([ADMIN, 'pendaftaran', 'delete', convertNorawat($row['no_rawat'])]);
+              $row['viewURL'] = url([ADMIN, 'pendaftaran', 'view', convertNorawat($row['no_rawat'])]);
               $row['print_buktidaftar'] = url([ADMIN, 'pendaftaran', 'print_buktidaftar', convertNorawat($row['no_rawat'])]);
               $this->assign['list'][] = $row;
           }
@@ -109,6 +109,7 @@ class Admin extends AdminModule
     public function getEdit($id)
     {
         //$id = '2020/04/24/000011';
+        $id = revertNorawat($id);
         $this->_addHeaderFiles();
         $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
         $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
@@ -119,6 +120,7 @@ class Admin extends AdminModule
 
         if (!empty($pasien)) {
             $this->assign['form'] = $pasien;
+            $this->assign['form']['norawat'] = convertNorawat($pasien['no_rawat']);
             $this->assign['title'] = 'Edit Pendaftaran Pasien';
             $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
             $this->assign['pasien'] = $this->db('pasien')->where('no_rkm_medis', $pasien['no_rkm_medis'])->oneArray();
@@ -134,48 +136,92 @@ class Admin extends AdminModule
     */
     public function postSave($id = null)
     {
-        //$_POST['no_reg'] = '001';
-        //$_POST['no_rawat'] = '2020/04/24/000011';
-        //$_POST['tgl_registrasi'] = '2020-04-25';
-        //$_POST['jam_reg'] = '12:08:10';
-        //$_POST['kd_dokter'] = 'D0000040';
-        //$_POST['no_rkm_medis'] = '415277';
-        //$_POST['kd_poli'] = 'U0018';
-        //$_POST['p_jawab'] = '-';
-        //$_POST['almt_pj'] = '-';
-        $_POST['hubunganpj'] = 'AYAH';
-        $_POST['biaya_reg'] = '100000';
-        $_POST['stts'] = 'Belum';
-        $_POST['stts_daftar'] = 'Baru';
-        //$_POST['status_lanjut'] = 'Ralan';
-        //$_POST['kd_pj'] = 'A01';
-        $_POST['umurdaftar'] = '42';
-        $_POST['sttsumur'] = 'Th';
-        //$_POST['status_bayar'] = 'Belum Bayar';
-        $_POST['status_poli'] = 'Lama';
-
         $errors = 0;
+
+        $date = date('Y-m-d');
+        $cek_no_rawat = $this->db('reg_periksa')->where('no_rawat', $_POST['no_rawat'])->count();
+
+        $pasien = $this->db('pasien')->where('no_rkm_medis', $_POST['kd_poli'])->oneArray();
+        $_POST['hubunganpj'] = $pasien['hubunganpj'];
+
+        $_POST['stts'] = 'Belum';
+
+        $_POST['stts_daftar'] = 'Baru';
+        $cek_stts_daftar = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->count();
+        if($cek_stts_daftar > 0) {
+          $_POST['stts_daftar'] = 'Lama';
+        }
+
+        $biaya_reg = $this->db('poliklinik')->where('kd_poli', $_POST['kd_poli'])->oneArray();
+        if($_POST['stts_daftar'] == 'Lama') {
+          $_POST['biaya_reg'] = $biaya_reg['registrasilama'];
+        }
+
+        $_POST['status_poli'] = 'Baru';
+        $cek_status_poli = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('kd_poli', $_POST['kd_poli'])->count();
+        if($cek_status_poli > 0) {
+          $_POST['status_poli'] = 'Lama';
+        }
+
+        // set umur
+        $tanggal = new \DateTime($_POST['tgl_lahir']);
+        $today = new \DateTime($date);
+        $y = $today->diff($tanggal)->y;
+        $m = $today->diff($tanggal)->m;
+        $d = $today->diff($tanggal)->d;
+
+        $umur="0";
+        $sttsumur="Th";
+        if($y>0){
+            $umur=$y;
+            $sttsumur="Th";
+        }else if($y==0){
+            if($m>0){
+                $umur=$m;
+                $sttsumur="Bl";
+            }else if($m==0){
+                $umur=$d;
+                $sttsumur="Hr";
+            }
+        }
+        $_POST['umurdaftar'] = $umur;
+        $_POST['sttsumur'] = $sttsumur;
+
         // location to redirect
-        if (!$id) {
+        if ($cek_no_rawat == 0) {
             $_POST['no_reg'] = $this->_setNoReg($_POST['kd_dokter']);
             $location = url([ADMIN, 'pendaftaran', 'manage']);
         } else {
             $location = url([ADMIN, 'pendaftaran', 'edit', $id]);
         }
 
+        // check if pasien already exists
+        if ($this->_pasienAlreadyExists($id)) {
+            $errors++;
+            $this->notify('failure', 'Pasiens sudah terdaftar ditanggal yang sama.');
+        }
 
+        // check if pasien already exists
+        if ($this->_cekStatusBayar($id)) {
+            $errors++;
+            $this->notify('failure', 'Ada tagihan belum dibayar. Silahkan hubungi kasir.');
+        }
 
         // CREATE / EDIT
         if (!$errors) {
             unset($_POST['save']);
 
-            if (!$id) {    // new
-                //$_POST['no_rawat'] = $this->_setNoRawat();
+            if ($cek_no_rawat == 0) {    // new
+                $_POST['no_rawat'] = $this->_setNoRawat();
                 $query = $this->db('reg_periksa')->save($_POST);
             } else {        // edit
-                //$id = '2020/04/24/000011';
-                $query = $this->db('reg_periksa')->where('no_rawat', $id)->save($_POST);
+                $dokter = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('tgl_registrasi', $_POST['tgl_registrasi'])->where('kd_dokter', '<>', $_POST['kd_dokter'])->count();
+                if($dokter) {
+                  $_POST['no_reg'] = $this->_setNoReg($_POST['kd_dokter']);
+                }
+                $query = $this->db('reg_periksa')->where('no_rawat', $_POST['no_rawat'])->save($_POST);
             }
+
 
             if ($query) {
                 $this->notify('success', 'Simpan sukes');
@@ -194,8 +240,8 @@ class Admin extends AdminModule
     */
     public function getDelete($id)
     {
-        if ($pasien = $this->db('pendaftaran')->oneArray($id)) {
-            if ($this->db('pendaftaran')->delete($id)) {
+        if ($pendaftaran = $this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->oneArray()) {
+            if ($this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->delete()) {
                 $this->notify('success', 'Hapus sukses');
             } else {
                 $this->notify('failure', 'Hapus gagal');
@@ -235,6 +281,9 @@ class Admin extends AdminModule
     {
         $pendaftaran = $this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->oneArray();
         $pasien = $this->db('pasien')->where('no_rkm_medis', $pendaftaran['no_rkm_medis'])->oneArray();
+        $dokter = $this->db('dokter')->where('kd_dokter', $pendaftaran['kd_dokter'])->oneArray();
+        $poliklinik = $this->db('poliklinik')->where('kd_poli', $pendaftaran['kd_poli'])->oneArray();
+        $penjab = $this->db('penjab')->where('kd_pj', $pendaftaran['kd_pj'])->oneArray();
 
         $pdf = new FPDF('P', 'mm', array(59,98));
         $pdf->AddPage();
@@ -254,7 +303,7 @@ class Admin extends AdminModule
         $pdf->Text(9, 20, 'BUKTI PENDAFTARAN');
       	$pdf->Text(5, 21, '_______________________');
       	$pdf->SetFont('Arial', '', 10);
-      	$pdf->Text(17, 26, 'RAWAT JALAN');
+      	$pdf->Text(15, 26, $pendaftaran['no_rawat']);
       	$pdf->SetFont('Arial', '', 9);
       	$pdf->Text(3, 35, 'Tanggal');
       	$pdf->Text(16, 35, ': '.$pendaftaran['tgl_registrasi']);
@@ -268,11 +317,11 @@ class Admin extends AdminModule
       	$pdf->Text(16, 55, ': '.substr($pasien['alamat'],0,20));
       	$pdf->Text(17, 60, substr($pasien['alamat'],21,42));
       	$pdf->Text(3, 65, 'Ruang');
-      	//$pdf->Text(16, 65, ': '.substr($poliklinik['nm_poli'],0,20));
+      	$pdf->Text(16, 65, ': '.substr($poliklinik['nm_poli'],0,20));
       	$pdf->Text(3, 70, 'Dokter');
-      	//$pdf->Text(16, 70, ': '.substr($dokter['fullname'],0,20));
+      	$pdf->Text(16, 70, ': '.substr($dokter['nm_dokter'],0,20));
       	$pdf->Text(3, 75, 'Bayar');
-      	//$pdf->Text(16, 75, ': '.$cara_bayar[2]);
+      	$pdf->Text(16, 75, ': '.$penjab['png_jawab']);
       	$pdf->SetFont('Arial', '', 7);
       	$pdf->Text(9, 83, 'Terima Kasih Atas kepercayaan Anda');
       	$pdf->Text(12, 86, 'Bawalah kartu Berobat anda dan');
@@ -291,8 +340,9 @@ class Admin extends AdminModule
     private function _pasienAlreadyExists($id = null)
     {
         $date = date('Y-m-d');
+        $cek_no_rawat = $this->db('reg_periksa')->where('no_rawat', $_POST['no_rawat'])->where('tgl_registrasi', $date)->count();
 
-        if (!$id) {    // new
+        if (!$cek_no_rawat) {    // new
             $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('tgl_registrasi', $_POST['tgl_registrasi'])->count();
         } else {        // edit
             $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('tgl_registrasi', $_POST['tgl_registrasi'])->where('no_rawat', '<>', $_POST['no_rawat'])->count();
@@ -307,10 +357,12 @@ class Admin extends AdminModule
     private function _cekStatusBayar($id = null)
     {
         $date = date('Y-m-d');
+        $cek_no_rawat = $this->db('reg_periksa')->where('no_rawat', $_POST['no_rawat'])->count();
 
-        if (!$id) {    // new
-            $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('status_bayar', 'Belum Bayar')->count();
+        if (!$cek_no_rawat) {    // new
+          $count = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('status_bayar', 'Belum Bayar')->count();
         }
+
         if ($count > 0) {
             return true;
         } else {
@@ -377,6 +429,14 @@ class Admin extends AdminModule
         $next_no_reg = sprintf('%03s', ($last_no_reg[0] + 1));
 
         return $next_no_reg;
+    }
+
+    private function _setUmur($tanggal)
+    {
+        list($cY, $cm, $cd) = explode('-', date('Y-m-d'));
+        list($Y, $m, $d) = explode('-', date('Y-m-d', strtotime($tanggal)));
+        $umur = $cY - $Y;
+        return $umur;
     }
 
     private function _addEnum($table_name, $column_name) {

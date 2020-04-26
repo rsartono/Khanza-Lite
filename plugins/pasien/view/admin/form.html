@@ -10,7 +10,7 @@
 												<div class="col-md-6">
 														<div class="form-group">
 																<label>Nomor RM</label>
-				                        <input type="text" class="form-control" required value="{$pasien.form.no_rkm_medis}" readonly />
+				                        <input type="text" name="no_rkm_medis" class="form-control" required value="{$pasien.form.no_rkm_medis}" readonly />
 					    	            </div>
 												</div>
 												<div class="col-md-6">
@@ -184,7 +184,7 @@
               </div>
               <div class="panel-body">
 									<div class="row clearfix">
-											<div class="col-md-6">
+											<div class="col-md-4">
 													<div class="form-group">
 				    	                <label>Keluarga</label>
 															<select name="keluarga" class="form-control">
@@ -194,10 +194,16 @@
 															</select>
 				    	            </div>
 											</div>
-											<div class="col-md-6">
+											<div class="col-md-4">
 													<div class="form-group">
 				    	                <label>Nama Keluarga</label>
 				    	                <input type="text" name="namakeluarga" class="form-control" value="{$pasien.form.namakeluarga}" />
+				    	            </div>
+											</div>
+											<div class="col-md-4">
+													<div class="form-group">
+				    	                <label>Pekerjaan Keluarga</label>
+				    	                <input type="text" name="pekerjaanpj" class="form-control" value="{$pasien.form.pekerjaanpj}" />
 				    	            </div>
 											</div>
 									</div>
@@ -274,6 +280,14 @@
 											</div>
 									</div>
 									<div class="form-group">
+											<label>Perusahaan Pasien</label>
+											<select name="perusahaan_pasien" class="form-control">
+												{loop: $pasien.perusahaan_pasien}
+													<option value="{$value.kode_perusahaan}"{if: $value.kode_perusahaan == $pasien.form.perusahaan_pasien} selected{/if}>{$value.nama_perusahaan}</option>
+												{/loop}
+											</select>
+									</div>
+									<div class="form-group">
 											<label>Suku Bangsa</label>
 											<select name="suku_bangsa" class="form-control">
 												{loop: $pasien.suku_bangsa}
@@ -306,6 +320,10 @@
 		    	    <h3 class="panel-title">Pengaturan Lainnya</h3>
                 </div>
                 <div class="panel-body">
+									<div class="form-group">
+											<label>NIP</label>
+											<input type="number" name="nip" class="form-control" value="{$pasien.form.nip}" />
+									</div>
 									<div class="form-group">
 											<label>Email</label>
 											<input type="email" name="email" class="form-control" value="{$pasien.form.email}" />

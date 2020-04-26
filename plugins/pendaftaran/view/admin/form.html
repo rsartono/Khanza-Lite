@@ -1,5 +1,5 @@
 <article class="row">
-		<form name="pendaftaran" action="{?=url(ADMIN.'/pendaftaran/save?no_rawat='.@$pendaftaran.form.no_rawat)?}" method="POST" enctype="multipart/form-data">
+		<form name="pendaftaran" action="{?=url(ADMIN.'/pendaftaran/save/'.@$pendaftaran.form.norawat)?}" method="POST" enctype="multipart/form-data">
 				<div class="col-md-8">
 				    <div class="panel panel-default">
 			          <div class="panel-heading">
@@ -43,7 +43,7 @@
 												<div class="col-md-12">
 														<div class="form-group">
 					    	                <label>Alamat Penanggung Jawab</label>
-																<textarea name="almt_pj" id="alamatkeluarga" class="form-control" rows="4" required />{$pendaftaran.form.alamatpj}</textarea>
+																<textarea name="almt_pj" id="alamatkeluarga" class="form-control" rows="4" required />{$pendaftaran.form.almt_pj}</textarea>
 					    	            </div>
 												</div>
 										</div>
