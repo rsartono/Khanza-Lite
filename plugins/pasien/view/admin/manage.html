@@ -27,7 +27,12 @@
     								<tr>
     									<th>No. RM</th>
     									<th>Nama Pasien</th>
+                      <th>No. KTP</th>
     									<th>Alamat</th>
+                      <th>Pekerjaan</th>
+                      <th>No. Peserta</th>
+                      <th>Umur</th>
+                      <th>No. Telepon</th>
     									<th class="text-right">Aksi</th>
     								</tr>
     							</thead>
@@ -35,9 +40,14 @@
             						{if: !empty($pasien.list)}
     								{loop: $pasien.list}
     								<tr>
-    									<td>{$value.no_rkm_medis}</td>
-    									<td>{$value.nm_pasien}</td>
+    									<td><a href="{$value.editURL}">{$value.no_rkm_medis}</a></td>
+    									<td><a href="{$value.viewURL}">{$value.nm_pasien}</a></td>
+                      <td>{$value.no_ktp}</td>
     									<td>{$value.alamat}</td>
+                      <td>{$value.pekerjaan}</td>
+                      <td>{$value.no_peserta}</td>
+                      <td>{$value.umur}</td>
+                      <td>{$value.no_tlp}</td>
     									<td class="text-right">
     										<a href="{$value.viewURL}" class="btn btn-primary btn-xs">
     											<i class="fa fa-search"></i> <span class="hidden-xs">Tampil</span>

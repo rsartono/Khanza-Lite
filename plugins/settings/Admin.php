@@ -65,6 +65,14 @@ class Admin extends AdminModule
         }
     }
 
+    public function postChangeOrderOfNavItem()
+    {
+        foreach ($_POST as $module => $order) {
+            $this->db('lite_modules')->where('dir', $module)->save(['sequence' => $order]);
+        }
+        exit();
+    }
+
     private function _updateSettings($field, $value)
     {
         return $this->settings('settings', $field, $value);

@@ -125,6 +125,7 @@ abstract class Main
                         $this->db('lite_remember_me')->delete(['id' => $row['token_id']]);
                     } else {
                         $_SESSION['opensimrs_user']   = $row['id'];
+                        $_SESSION['opensimrs_username']   = $row['username'];
                         $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
                         $_SESSION['userAgent']  = $_SERVER['HTTP_USER_AGENT'];
                         $_SESSION['IPaddress']  = $_SERVER['REMOTE_ADDR'];

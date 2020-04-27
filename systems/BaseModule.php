@@ -15,7 +15,7 @@ class BaseModule
         $this->core = $core;
         $this->tpl = $core->tpl;
         $this->router = $core->router;
-        $this->settings = $core->settings;
+        //$this->settings = $core->settings;
         $this->name = strtolower(str_replace(['Plugins\\', '\\Admin', '\\Site'], null, static::class));
     }
 

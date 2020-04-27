@@ -202,9 +202,11 @@ class Admin extends AdminModule
         }
 
         // check if pasien already exists
-        if ($this->_cekStatusBayar($id)) {
-            $errors++;
-            $this->notify('failure', 'Ada tagihan belum dibayar. Silahkan hubungi kasir.');
+        if(CEKSTATUSBAYAR) {
+          if ($this->_cekStatusBayar($id)) {
+              $errors++;
+              $this->notify('failure', 'Ada tagihan belum dibayar. Silahkan hubungi kasir.');
+          }          
         }
 
         // CREATE / EDIT
@@ -261,15 +263,19 @@ class Admin extends AdminModule
          }
          $search_keyword = '%'. $s_keyword .'%';
 
-         $query = $this->db()->pdo()->prepare("SELECT * FROM pasien WHERE (no_rkm_medis LIKE ? OR nm_pasien LIKE ?) ORDER BY no_rkm_medis DESC LIMIT 50");
-         $query->execute([$search_keyword, $search_keyword]);
+         $query = $this->db()->pdo()->prepare("SELECT * FROM pasien WHERE (no_rkm_medis LIKE ? OR nm_pasien LIKE ? OR no_ktp LIKE ? OR no_peserta LIKE ?) ORDER BY no_rkm_medis DESC LIMIT 50");
+         $query->execute([$search_keyword, $search_keyword, $search_keyword, $search_keyword]);
           $rows = $query->fetchAll();
          foreach($rows as $row){
            echo '<tr class="pilihpasien" data-norkmmedis="'.$row['no_rkm_medis'].'" data-nmpasien="'.$row['nm_pasien'].'" data-namakeluarga="'.$row['namakeluarga'].'" data-alamatkeluarga="'.$row['alamatpj'].'">';
            echo '<td>'.$row['no_rkm_medis'].'</td>';
            echo '<td>'.$row['nm_pasien'].'</td>';
+           echo '<td>'.$row['no_ktp'].'</td>';
            echo '<td>'.$row['namakeluarga'].'</td>';
            echo '<td>'.$row['alamatpj'].'</td>';
+           echo '<td>'.$row['pekerjaan'].'</td>';
+           echo '<td>'.$row['no_peserta'].'</td>';
+           echo '<td>'.$row['no_tlp'].'</td>';
            echo '</tr>';
          }
         break;
@@ -284,6 +290,7 @@ class Admin extends AdminModule
         $dokter = $this->db('dokter')->where('kd_dokter', $pendaftaran['kd_dokter'])->oneArray();
         $poliklinik = $this->db('poliklinik')->where('kd_poli', $pendaftaran['kd_poli'])->oneArray();
         $penjab = $this->db('penjab')->where('kd_pj', $pendaftaran['kd_pj'])->oneArray();
+        $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
 
         $pdf = new FPDF('P', 'mm', array(59,98));
         $pdf->AddPage();
@@ -292,13 +299,14 @@ class Admin extends AdminModule
         $pdf->SetLeftMargin(5);
         $pdf->SetRightMargin(5);
 
-        $pdf->Image('../themes/admin/img/logo.png',2,1,12);
+        $pdf->Image($logo, 2, 2, '11', '11', 'png');
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Text(15, 5, $this->core->getSettings('nama_instansi'));
+        $pdf->Text(15, 6, $this->core->getSettings('nama_instansi'));
         $pdf->SetFont('Arial', '', 6);
         $pdf->Text(15, 8, $this->core->getSettings('alamat_instansi'));
         $pdf->Text(15, 10, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
         $pdf->Text(15, 12, $this->core->getSettings('kabupaten').' - '.$this->core->getSettings('propinsi'));
+
       	$pdf->SetFont('Arial', '', 11);
         $pdf->Text(9, 20, 'BUKTI PENDAFTARAN');
       	$pdf->Text(5, 21, '_______________________');
@@ -315,7 +323,7 @@ class Admin extends AdminModule
         $pdf->Text(16, 50, ': '.$pendaftaran['no_rkm_medis']);
       	$pdf->Text(3, 55, 'Alamat');
       	$pdf->Text(16, 55, ': '.substr($pasien['alamat'],0,20));
-      	$pdf->Text(17, 60, substr($pasien['alamat'],21,42));
+      	$pdf->Text(18, 60, substr($pasien['alamat'],20,42));
       	$pdf->Text(3, 65, 'Ruang');
       	$pdf->Text(16, 65, ': '.substr($poliklinik['nm_poli'],0,20));
       	$pdf->Text(3, 70, 'Dokter');
@@ -329,7 +337,7 @@ class Admin extends AdminModule
       	$pdf->Text(6, 92, 'Bawalah surat rujukan atau surat kontrol asli');
       	$pdf->Text(3, 95, 'dan tunjukkan pada petugas di Lobby resepsionis');
 
-        $pdf->Output('kartu_pasien.pdf','I');
+        $pdf->Output('bukti_register_'.convertNorawat($pendaftaran['no_rawat']).'.pdf','I');
 
     }
 

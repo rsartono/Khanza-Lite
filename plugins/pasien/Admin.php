@@ -19,25 +19,26 @@ class Admin extends AdminModule
     }
 
     /**
-    * Pasiens dataTables list
+    * Pasiens list
     */
     public function getManage($page = 1)
     {
+        $this->_addHeaderFiles();
         $perpage = '10';
         $phrase = '';
         if(isset($_GET['s']))
           $phrase = $_GET['s'];
 
         // pagination
-        $totalRecords = $this->core->db('pasien')->like('no_rkm_medis', '%'.$phrase.'%')->orLike('nm_pasien', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->core->db('pasien')->like('no_rkm_medis', '%'.$phrase.'%')->orLike('nm_pasien', '%'.$phrase.'%')->orLike('no_ktp', '%'.$phrase.'%')->orLike('no_peserta', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'pasien', 'manage', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM pasien WHERE (no_rkm_medis LIKE ? OR nm_pasien LIKE ?) LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $query = $this->db()->pdo()->prepare("SELECT * FROM pasien WHERE (no_rkm_medis LIKE ? OR nm_pasien LIKE ? OR no_ktp LIKE ? OR no_peserta LIKE ?) LIMIT $perpage OFFSET $offset");
+        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
         $this->assign['list'] = [];
@@ -182,7 +183,7 @@ class Admin extends AdminModule
     public function getPrint_kartu($id)
     {
       $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();
-      $setting = $this->db('setting')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
 
   		$pdf = new FPDF('L', 'mm', array(59,98));
   		$pdf->AddPage();
@@ -191,12 +192,12 @@ class Admin extends AdminModule
       $pdf->SetLeftMargin(5);
       $pdf->SetRightMargin(5);
 
-      $pdf->Image('../themes/admin/img/logo.png',3,3,18);
+      $pdf->Image($logo, 3, 5, '18', '18', 'png');
       $pdf->SetFont('Arial', '', 20);
-      $pdf->Text(22, 12, $setting[0]['nama_instansi']);
+      $pdf->Text(22, 12, $this->core->getSettings('nama_instansi'));
       $pdf->SetFont('Arial', '', 8);
-      $pdf->Text(22, 17, $setting[0]['alamat_instansi']);
-      $pdf->Text(22, 20, $setting[0]['kontak'].' - '.$setting[0]['email']);
+      $pdf->Text(22, 17, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten').' - '.$this->core->getSettings('propinsi'));
+      $pdf->Text(22, 20, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
 
       $pdf->SetFont('Arial', '', 10);
       $pdf->Text(5, 40, 'No. Kartu');

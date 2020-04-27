@@ -43,7 +43,7 @@ class Admin extends AdminModule
     */
     public function getAdd()
     {
-
+        $this->_addHeaderFiles();
         $this->_addInfoUser();
         $this->_addInfoRole();
         $this->_addInfoCap();
@@ -67,6 +67,7 @@ class Admin extends AdminModule
     {
         $user = $this->db('lite_roles')->oneArray($id);
 
+        $this->_addHeaderFiles();
         $this->_addInfoUser();
         $this->_addInfoRole();
         $this->_addInfoCap();
@@ -223,9 +224,11 @@ class Admin extends AdminModule
     {
         // CSS
         $this->core->addCSS(url('assets/css/jquery-ui.css'));
+        //$this->core->addCSS(url('assets/css/select2.min.css'));
 
         // JS
         $this->core->addJS(url('assets/jscripts/jquery-ui.js'), 'footer');
+        //$this->core->addJS(url('assets/jscripts/select2.min.js'), 'footer');
 
         // MODULE SCRIPTS
         $this->core->addJS(url([ADMIN, 'users', 'javascript']), 'footer');

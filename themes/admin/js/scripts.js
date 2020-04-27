@@ -135,7 +135,7 @@ $('a[data-toggle="modal"]').on('click', function(e) {
 $('select').each(function () {
     var options = {
         useDimmer: true,
-        useSearch: false,
+        useSearch: true,
         labels: {
             search: '...'
         }
@@ -145,20 +145,3 @@ $('select').each(function () {
     });
     $(this).selectator(options);
 });
-
-
-/* 11. Navbar Brand firsty word pink color */
-/*$(function() {
-    $('.navbar-brand a').each(function() {
-        var text = this.innerHTML;
-        var firstSpaceIndex = text.indexOf(" ");
-        if (firstSpaceIndex > 0) {
-            var substrBefore = text.substring(0,firstSpaceIndex);
-            var substrAfter = text.substring(firstSpaceIndex, text.length)
-            var newText = '<span class="pink">' + substrBefore + '</span>' + substrAfter;
-            this.innerHTML = newText;
-        } else {
-            this.innerHTML = '<span class="pink">' + text + '</span>';
-        }
-    });
-});*/

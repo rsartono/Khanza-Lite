@@ -156,6 +156,8 @@ class Admin extends AdminModule
             }
         }
 
+        $this->assign['addURL'] = url([ADMIN, 'master', 'poliklinikadd']);
+
         return $this->draw('poliklinik.manage.html', ['poliklinik' => $this->assign]);
 
     }
@@ -470,12 +472,9 @@ class Admin extends AdminModule
     {
         // CSS
         $this->core->addCSS(url('assets/css/jquery-ui.css'));
-        //$this->core->addCSS(url('assets/css/dataTables.bootstrap.min.css'));
 
         // JS
         $this->core->addJS(url('assets/jscripts/jquery-ui.js'), 'footer');
-        //$this->core->addJS(url('assets/jscripts/jquery.dataTables.min.js'), 'footer');
-        //$this->core->addJS(url('assets/jscripts/dataTables.bootstrap.min.js'), 'footer');
 
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'master', 'css']));

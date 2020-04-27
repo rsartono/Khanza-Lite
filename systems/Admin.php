@@ -37,7 +37,8 @@ class Admin extends Main
 
         $this->assign['notify']        = $this->getNotify();
         $this->assign['path']          = url();
-        $this->assign['title']         = NAME;
+        $this->assign['title']         = $this->getSettings('nama_instansi');
+        $this->assign['logo']          = $this->getSettings('logo');
         $this->assign['version']       = VERSION;
         $this->assign['update_access'] = ($access == 'all') || in_array('settings', explode(',', $access)) ? true : false;
 
@@ -200,6 +201,7 @@ class Admin extends Main
             $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
 
             $_SESSION['opensimrs_user']   = $row_admin['id'];
+            $_SESSION['opensimrs_username']   = $row_admin['username'];
             $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
             $_SESSION['userAgent']  = $_SERVER['HTTP_USER_AGENT'];
             $_SESSION['IPaddress']  = $_SERVER['REMOTE_ADDR'];
@@ -217,6 +219,7 @@ class Admin extends Main
             $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
 
             $_SESSION['opensimrs_user']   = $row_user['id'];
+            $_SESSION['opensimrs_username']   = $row_user['username'];
             $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
             $_SESSION['userAgent']  = $_SERVER['HTTP_USER_AGENT'];
             $_SESSION['IPaddress']  = $_SERVER['REMOTE_ADDR'];
