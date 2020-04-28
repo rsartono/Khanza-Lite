@@ -3,8 +3,6 @@
 namespace Plugins\Dokter_Ralan;
 
 use Systems\AdminModule;
-use Systems\Lib\Fpdf\FPDF;
-use Systems\Lib\Fpdf\PDF_MC_Table;
 
 class Admin extends AdminModule
 {
@@ -100,29 +98,6 @@ class Admin extends AdminModule
         } else {
             redirect(url([ADMIN, 'dokter_ralan', 'index']));
         }
-    }
-
-    public function getPrint_rm($no_rkm_medis)
-    {
-      $pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
-      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
-
-      $pdf = new FPDF();
-      $pdf->AddPage();
-      $pdf->SetAutoPageBreak(true, 10);
-      $pdf->SetTopMargin(5);
-      $pdf->SetLeftMargin(5);
-      $pdf->SetRightMargin(5);
-
-      $pdf->Image($logo, 5, 8, '18', '18', 'png');
-      $pdf->SetFont('Arial', '', 24);
-      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
-      $pdf->SetFont('Arial', '', 12);
-      $pdf->Text(30, 22, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
-      $pdf->Text(30, 26, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
-
-      $pdf->Output('rekam_medik_pasien_'.$pasien['no_rkm_medis'].'.pdf','I');
-
     }
 
     public function getResep()
