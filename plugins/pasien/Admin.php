@@ -187,7 +187,7 @@ class Admin extends AdminModule
       $pdf->SetRightMargin(5);
 
       $pdf->Image($logo, 3, 5, '18', '18', 'png');
-      $pdf->SetFont('Arial', '', 20);
+      $pdf->SetFont('Arial', '', 18);
       $pdf->Text(22, 12, $this->core->getSettings('nama_instansi'));
       $pdf->SetFont('Arial', '', 8);
       $pdf->Text(22, 17, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
