@@ -112,6 +112,11 @@ class Admin extends AdminModule
         $this->assign['cacat_fisik'] = $this->db('cacat_fisik')->toArray();
         $this->assign['perusahaan_pasien'] = $this->db('perusahaan_pasien')->toArray();
 
+        $this->assign['propinsi']['nm_prop'] = '';
+        $this->assign['kabupaten']['nm_kab'] = '';
+        $this->assign['kecamatan']['nm_kec'] = '';
+        $this->assign['kelurahan']['nm_kel'] = '';
+
         $this->assign['manageURL'] = url([ADMIN, 'pasien', 'manage']);
 
         return $this->draw('form.html', ['pasien' => $this->assign]);
