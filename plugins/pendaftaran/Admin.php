@@ -69,6 +69,8 @@ class Admin extends AdminModule
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
             $this->assign['form'] = [
+              'no_rkm_medis' => '',
+              'nm_pasien' => '',
               'no_reg' => '',
               'no_rawat' => '',
               'tgl_registrasi' => '',
@@ -77,7 +79,7 @@ class Admin extends AdminModule
               'no_rm' => '',
               'kd_poli' => '',
               'p_jawab' => '',
-              'alamatpj' => '',
+              'almt_pj' => '',
               'hubunganpj' => '',
               'biaya_reg' => '',
               'stts' => '',

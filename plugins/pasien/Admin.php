@@ -4,6 +4,7 @@ namespace Plugins\Pasien;
 
 use Systems\AdminModule;
 use Systems\Lib\BpjsRequest;
+use Systems\Lib\Fpdf\FPDF;
 use Systems\Lib\Fpdf\PDF_MC_Table;
 
 class Admin extends AdminModule
@@ -195,7 +196,7 @@ class Admin extends AdminModule
       $pdf->Text(5, 52, 'Alamat');
       $pdf->Text(25, 52, ': '.$pasien['alamat']);
 
-      $pdf->Output('kartu_pasien_'.$pasien['no_rm'].'.pdf','I');
+      $pdf->Output('kartu_pasien_'.$pasien['no_rkm_medis'].'.pdf','I');
 
       exit();
 
@@ -255,7 +256,7 @@ class Admin extends AdminModule
       $pdf->Text(30, 22, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
       $pdf->Text(30, 26, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
 
-      $pdf->Output('rekam_medik_pasien_'.$pasien['no_rm'].'.pdf','I');
+      $pdf->Output('rekam_medik_pasien_'.$pasien['no_rkm_medis'].'.pdf','I');
 
     }
 

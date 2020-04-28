@@ -22,7 +22,7 @@ function cekNikBPJS(){
         obj = JSON.parse(json);
         console.log(obj);
         $('#nm_pasien').val(obj.response.peserta.nama);
-        $('#no_peserta').val(obj.response.peserta.nokartu);
+        $('#no_peserta').val(obj.response.peserta.noKartu);
         $('#tgl_lahir').val(obj.response.peserta.tglLahir);
         $('#no_tlp').val(obj.response.peserta.mr.noTelepon);
     });
