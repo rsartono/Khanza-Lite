@@ -7,13 +7,17 @@
 	ini_set('memory_limit', '-1');
 
 	define('VERSION', '3.0');
-	define('NAME', 'Khanza LITE');
   define('DBHOST', 'localhost');
   define('DBPORT', '3306');
   define('DBNAME', 'sik');
   define('DBUSER', 'root');
   define('DBPASS', '');
 	define('HOMEPAGE', 'dashboard');
+	define('CEKSTATUSBAYAR', false);
+
+	define('BpjsApiUrl', 'https://new-api.bpjs-kesehatan.go.id:8080/new-vclaim-rest/');
+	define('ConsID', '');
+	define('SecretKey', '');
 
   // URL Webapps
   define('WEBAPPS_URL', 'https://simrs.rshdbarabai.com/webapps');
@@ -35,7 +39,6 @@
 
 	// Basic modules
 	define('BASIC_MODULES', serialize([
-    9999 => 'settings',
 		0 => 'dashboard',
 		1 => 'pasien',
 		2 => 'pendaftaran',
@@ -43,8 +46,9 @@
 		//4 => 'apotek_ralan',
 		//5 => 'kasir_ralan',
 		9996 => 'master',
-		9998 => 'users',
 		9997 => 'modules',
+		9998 => 'users',
+		9999 => 'settings',
 	]));
 
 	// Developer mode

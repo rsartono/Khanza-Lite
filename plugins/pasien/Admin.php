@@ -3,7 +3,7 @@
 namespace Plugins\Pasien;
 
 use Systems\AdminModule;
-//use Systems\Lib\Fpdf\FPDF;
+use Systems\Lib\BpjsRequest;
 use Systems\Lib\Fpdf\PDF_MC_Table;
 
 class Admin extends AdminModule
@@ -18,9 +18,6 @@ class Admin extends AdminModule
         ];
     }
 
-    /**
-    * Pasiens list
-    */
     public function getManage($page = 1)
     {
         $this->_addHeaderFiles();
@@ -55,9 +52,6 @@ class Admin extends AdminModule
         return $this->draw('manage.html', ['pasien' => $this->assign]);
     }
 
-    /**
-    * add new pasien
-    */
     public function getAdd()
     {
         $this->_addHeaderFiles();
@@ -122,9 +116,6 @@ class Admin extends AdminModule
         return $this->draw('form.html', ['pasien' => $this->assign]);
     }
 
-    /**
-    * edit pasien
-    */
     public function getEdit($no_rkm_medis)
     {
         $this->_addHeaderFiles();
@@ -158,9 +149,6 @@ class Admin extends AdminModule
         }
     }
 
-    /**
-    * edit pasien
-    */
     public function getView($no_rkm_medis)
     {
         $this->_addHeaderFiles();
@@ -271,9 +259,6 @@ class Admin extends AdminModule
 
     }
 
-    /**
-    * save pasien data
-    */
     public function postSave($id = null)
     {
         $errors = 0;
@@ -324,9 +309,6 @@ class Admin extends AdminModule
         redirect($location, $_POST);
     }
 
-    /**
-    * remove pasien
-    */
     public function getDelete($no_rkm_medis)
     {
         if ($pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray()) {
@@ -411,9 +393,26 @@ class Admin extends AdminModule
         }
     }
 
-    /**
-    * module JavaScript
-    */
+    public function getNoka_BPJS()
+    {
+      header('Content-type: text/html');
+      $date = date('Y-m-d');
+      $url = BpjsApiUrl.'Peserta/nokartu/'.$_GET[noka].'/tglSEP/'.$date;
+      $output = BpjsRequest::get($url);
+      echo $output;
+      exit();
+    }
+
+    public function getNik_BPJS()
+    {
+      header('Content-type: text/html');
+      $date = date('Y-m-d');
+      $url = BpjsApiUrl.'Peserta/nik/'.$_GET[nik].'/tglSEP/'.$date;
+      $output = BpjsRequest::get($url);
+      echo $output;
+      exit();
+    }
+
     public function getJavascript()
     {
         header('Content-type: text/javascript');
@@ -421,9 +420,6 @@ class Admin extends AdminModule
         exit();
     }
 
-    /**
-    * module JavaScript
-    */
     public function getCss()
     {
         header('Content-type: text/css');

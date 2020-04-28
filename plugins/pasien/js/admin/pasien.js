@@ -1,3 +1,33 @@
+function cekNokaBPJS(){
+    var no_peserta = $("#no_peserta").val();
+    $.ajax({
+        url: '{?=url()?}/admin/pasien/noka_bpjs?noka='+no_peserta+'&t={?=$_SESSION[token]?}',
+    }).success(function (data) {
+        var json = data,
+        obj = JSON.parse(json);
+        console.log(obj);
+        $('#nm_pasien').val(obj.response.peserta.nama);
+        $('#no_ktp').val(obj.response.peserta.nik);
+        $('#tgl_lahir').val(obj.response.peserta.tglLahir);
+        $('#no_tlp').val(obj.response.peserta.mr.noTelepon);
+    });
+}
+
+function cekNikBPJS(){
+    var no_ktp = $("#no_ktp").val();
+    $.ajax({
+        url: '{?=url()?}/admin/pasien/nik_bpjs?nik='+no_ktp+'&t={?=$_SESSION[token]?}',
+    }).success(function (data) {
+        var json = data,
+        obj = JSON.parse(json);
+        console.log(obj);
+        $('#nm_pasien').val(obj.response.peserta.nama);
+        $('#no_peserta').val(obj.response.peserta.nokartu);
+        $('#tgl_lahir').val(obj.response.peserta.tglLahir);
+        $('#no_tlp').val(obj.response.peserta.mr.noTelepon);
+    });
+}
+
 // Datepicker
 $( function() {
   $( ".datepicker" ).datepicker({

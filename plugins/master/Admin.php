@@ -3,6 +3,7 @@
 namespace Plugins\Master;
 
 use Systems\AdminModule;
+use Systems\Lib\Fpdf\PDF_MC_Table;
 
 class Admin extends AdminModule
 {
@@ -157,6 +158,7 @@ class Admin extends AdminModule
         }
 
         $this->assign['addURL'] = url([ADMIN, 'master', 'poliklinikadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'poliklinikprint']);
 
         return $this->draw('poliklinik.manage.html', ['poliklinik' => $this->assign]);
 
@@ -233,6 +235,42 @@ class Admin extends AdminModule
         }
 
         redirect($location, $_POST);
+    }
+
+    public function getPoliklinikPrint()
+    {
+      $pasien = $this->db('poliklinik')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table();
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 200, 30);
+      $pdf->Line(10, 31, 200, 31);
+      $pdf->Text(10, 40, 'DATA POLIKLINIK');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(20,80,25,25,40));
+      $pdf->Row(array('Kode Poli','Nama Poli','Daftar Baru', 'Daftar Lama', 'Status'));
+      foreach ($pasien as $hasil) {
+        $status = 'Aktif';
+        if($hasil['status'] == '0') {
+          $status = 'Tidak Aktif';
+        }
+        $pdf->Row(array($hasil['kd_poli'],$hasil['nm_poli'],$hasil['registrasi'],$hasil['registrasilama'],$status));
+      }
+      $pdf->Output('laporan_pasien_'.date('Y-m-d').'.pdf','I');
+
     }
     /* End Master Poliklinik Section */
 
