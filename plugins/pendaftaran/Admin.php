@@ -103,14 +103,13 @@ class Admin extends AdminModule
 
         $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
         $this->assign['form']['no_rawat'] = $this->_setNoRawat();
-        //$this->assign['form']['no_rawat'] = '20200424000011';
+        $this->assign['pasien']['nm_pasien'] = '';
 
         return $this->draw('form.html', ['pendaftaran' => $this->assign]);
     }
 
     public function getEdit($id)
     {
-        //$id = '2020/04/24/000011';
         $id = revertNorawat($id);
         $this->_addHeaderFiles();
         $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
