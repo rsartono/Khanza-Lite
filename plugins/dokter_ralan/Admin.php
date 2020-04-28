@@ -3,6 +3,8 @@
 namespace Plugins\Dokter_Ralan;
 
 use Systems\AdminModule;
+use Systems\Lib\Fpdf\FPDF;
+use Systems\Lib\Fpdf\PDF_MC_Table;
 
 class Admin extends AdminModule
 {
