@@ -19,15 +19,15 @@
 																		<p>{$pasien.view.no_rkm_medis}</p>
 				                        </div>
 				                    </div>
-				                    <div class="profile-footer">
+														<div class="profile-footer hidden-xs">
 				                        <ul>
 				                            <li>
 				                                <span>Rawat Jalan</span>
-				                                <span>1.234</span>
+				                                <span>{$pasien.view.count_ralan}</span>
 				                            </li>
 				                            <li>
 				                                <span>Rawat Inap</span>
-				                                <span>1.201</span>
+																				<span>{$pasien.view.count_ranap}</span>
 				                            </li>
 				                        </ul>
 																<a href="{$pasien.print_kartu}" target="_blank" class="btn btn-primary btn-block">CETAK KARTU</a>
@@ -35,7 +35,7 @@
 				                    </div>
 				                </div>
 
-				                <div class="card card-about-me" style="margin-bottom:20px;">
+												<div class="card card-about-me hidden-xs" style="margin-bottom:20px;">
 				                    <div class="header">
 				                        <h3>Detil Pribadi</h3>
 				                    </div>
@@ -65,7 +65,7 @@
 				                                    Tempat / Tanggal Lahir
 				                                </div>
 				                                <div class="content">
-																						{$pasien.view.tmp_lahir} / {$pasien.view.tgl_lahir}
+																						{$pasien.view.tmp_lahir} / {$dokter_ralan.view.tgl_lahir}
 				                                </div>
 				                            </li>
 				                        </ul>
@@ -83,22 +83,84 @@
 
 				                            <div class="tab-content">
 				                                <div role="tabpanel" class="tab-pane fade in active" id="home">
-				                                    <div class="panel panel-default panel-post">
-				                                        <div class="panel-heading">
-				                                            <div class="media">
-				                                                <div class="media-body">
-				                                                    <h4 class="media-heading">
-				                                                        <a href="#">Klinik Penyakit Dalam</a>
-				                                                    </h4>
-				                                                    dr. Aris Sugiharjo, Sp.PD - 26 Maret 2020
-				                                                </div>
-				                                            </div>
-				                                        </div>
-				                                        <div class="panel-body">
-				                                            <div class="post">
-				                                            </div>
-				                                        </div>
-				                                    </div>
+																						<div class="panel panel-default panel-post">
+																						{if: !empty($pasien.riwayat)}
+																							{loop: $pasien.riwayat}
+																									<div class="panel-heading">
+																											<div class="media">
+																													<div class="media-body">
+																															<h4 class="media-heading">
+																																	<a href="#">{$value.tgl_registrasi} / {$value.nm_poli} / {$value.kd_poli}</a>
+																															</h4>
+																															{$value.nm_dokter} / {$value.kd_dokter}
+																													</div>
+																											</div>
+																									</div>
+																									<div class="panel-body">
+																											<div class="post">
+																													<div class="post-content">
+																															<p>
+																																	<dl class="dl-horizontal no-margin">
+																																			<dt>Subjective</dt>
+																																			<dd>{$value.keluhan}</dd>
+																																			<dt>Objective</dt>
+																																			<dd>
+																																				{if: !empty($value.pemeriksaan)}Pemeriksaan: {$value.pemeriksaan}<br>{/if}
+																																				{if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh}<br>{/if}
+																																				{if: !empty($value.tensi)}Tekanan darah: {$value.tensi}<br>{/if}
+																																				{if: !empty($value.nadi)}Nadi: {$value.nadi}<br>{/if}
+																																				{if: !empty($value.respirasi)}RR: {$value.respirasi}<br>{/if}
+																																				{if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi}<br>{/if}
+																																				{if: !empty($value.berat)}Berat badan: {$value.berat}<br>{/if}
+																																				{if: !empty($value.gcs)}GCS: {$value.gcs}{/if}
+																																			</dd>
+																																			<dt>Assessment</dt>
+																																			<dd>
+																																				{if: !empty($value.diagnosa_pasien)}
+																																					<div class="assessment-title">Diagnosa:</div>
+																																					<ul class="fa-ul">
+																																					{loop: $value.diagnosa_pasien as $data}
+																																						<li><i class="fa-li fa fa-check-square"></i>{$data.nm_penyakit}</li>
+																																					{/loop}
+																																					</ul>
+																																				{/if}
+																																				{if: !empty($value.rawat_jl_dr)}
+																																					<div class="assessment-title">Perawatan:</div>
+																																					<ul class="fa-ul">
+																																					{loop: $value.rawat_jl_dr as $data}
+																																						<li><i class="fa-li fa fa-check-square"></i>{$data.nm_perawatan}</li>
+																																					{/loop}
+																																					</ul>
+																																				{/if}
+																																			</dd>
+																																			<dt>Plan</dt>
+																																			<dd>
+																																				{if: !empty($value.rtl)}Tindak lanjut: {$value.rtl}<br>{/if}
+																																				{if: !empty($value.catatan_perawatan)}Catatan Perawatan: {$value.catatan_perawatan}<br>{/if}
+																																			</dd>
+																																	</dl>
+																															</p>
+																													</div>
+																											</div>
+																									</div>
+																									<div class="panel-footer">
+																											<ul>
+																													<li class="hidden-xs">
+																															{$value.status_lanjut}
+																													</li>
+																													<li>
+																															{$value.status_bayar}
+																													</li>
+																													<li>
+																															{$value.no_rawat}
+																													</li>
+																											</ul>
+																									</div>
+																							{/loop}
+																							{else}
+																							<div class="text-center">Kosong</div>
+																						{/if}
+																						</div>
 				                                </div>
 				                                <div role="tabpanel" class="tab-pane fade in" id="berkas_digital">
 				                                </div>

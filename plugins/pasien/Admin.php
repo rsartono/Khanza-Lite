@@ -162,9 +162,39 @@ class Admin extends AdminModule
         $this->assign['print_kartu'] = url([ADMIN, 'pasien', 'print_kartu', $no_rkm_medis]);
         $pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
 
+        $count_ralan = $this->db('reg_periksa')->where('no_rkm_medis', $no_rkm_medis)->where('status_lanjut', 'Ralan')->count();
+        $count_ranap = $this->db('reg_periksa')->where('no_rkm_medis', $no_rkm_medis)->where('status_lanjut', 'Ranap')->count();
+
         if (!empty($pasien)) {
             $this->assign['view'] = $pasien;
+            $this->assign['view']['count_ralan'] = $count_ralan;
+            $this->assign['view']['count_ranap'] = $count_ranap;
             $this->assign['fotoURL'] = url('/plugins/pasien/img/'.$pasien['jk'].'.png');
+
+            $rows = $this->db()->pdo()->prepare("SELECT b.*, a.nm_poli, c.nm_dokter FROM poliklinik a, reg_periksa b, dokter c WHERE b.no_rkm_medis = '$no_rkm_medis' AND a.kd_poli = b.kd_poli AND b.kd_dokter = c.kd_dokter ORDER BY b.tgl_registrasi DESC");
+            $rows->execute();
+            $rows = $rows->fetchAll();
+
+            foreach ($rows as &$row) {
+                $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
+                $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
+                $rawat_jl_dr = $this->db('rawat_jl_dr')->join('jns_perawatan', 'jns_perawatan.kd_jenis_prw = rawat_jl_dr.kd_jenis_prw')->where('no_rawat', $row['no_rawat'])->toArray();
+                $catatan_perawatan = $this->db('catatan_perawatan')->where('no_rawat', $row['no_rawat'])->oneArray();
+                $row['keluhan'] = $pemeriksaan_ralan['keluhan'];
+                $row['suhu_tubuh'] = $pemeriksaan_ralan['suhu_tubuh'];
+                $row['tensi'] = $pemeriksaan_ralan['tensi'];
+                $row['nadi'] = $pemeriksaan_ralan['nadi'];
+                $row['respirasi'] = $pemeriksaan_ralan['respirasi'];
+                $row['tinggi'] = $pemeriksaan_ralan['tinggi'];
+                $row['berat'] = $pemeriksaan_ralan['berat'];
+                $row['gcs'] = $pemeriksaan_ralan['gcs'];
+                $row['pemeriksaan'] = $pemeriksaan_ralan['pemeriksaan'];
+                $row['rtl'] = $pemeriksaan_ralan['rtl'];
+                $row['catatan_perawatan'] = $catatan_perawatan['catatan'];
+                $row['diagnosa_pasien'] = $diagnosa_pasien;
+                $row['rawat_jl_dr'] = $rawat_jl_dr;
+                $this->assign['riwayat'][] = $row;
+            }
 
             $this->assign['manageURL'] = url([ADMIN, 'pasien', 'manage']);
 
