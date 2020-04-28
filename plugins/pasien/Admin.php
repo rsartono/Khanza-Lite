@@ -188,10 +188,10 @@ class Admin extends AdminModule
 
       $pdf->Image($logo, 3, 5, '18', '18', 'png');
       $pdf->SetFont('Arial', '', 18);
-      $pdf->Text(22, 12, $this->core->getSettings('nama_instansi'));
+      $pdf->Text(24, 12, $this->core->getSettings('nama_instansi'));
       $pdf->SetFont('Arial', '', 8);
-      $pdf->Text(22, 17, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
-      $pdf->Text(22, 20, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Text(24, 17, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(24, 20, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
 
       $pdf->SetFont('Arial', '', 10);
       $pdf->Text(5, 40, 'No. Kartu');
