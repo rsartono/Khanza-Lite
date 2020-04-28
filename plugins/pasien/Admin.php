@@ -3,7 +3,7 @@
 namespace Plugins\Pasien;
 
 use Systems\AdminModule;
-use Systems\Lib\Fpdf\FPDF;
+//use Systems\Lib\Fpdf\FPDF;
 use Systems\Lib\Fpdf\PDF_MC_Table;
 
 class Admin extends AdminModule
@@ -196,7 +196,7 @@ class Admin extends AdminModule
       $pdf->SetFont('Arial', '', 20);
       $pdf->Text(22, 12, $this->core->getSettings('nama_instansi'));
       $pdf->SetFont('Arial', '', 8);
-      $pdf->Text(22, 17, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten').' - '.$this->core->getSettings('propinsi'));
+      $pdf->Text(22, 17, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
       $pdf->Text(22, 20, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
 
       $pdf->SetFont('Arial', '', 10);
@@ -213,6 +213,63 @@ class Admin extends AdminModule
 
     }
 
+    public function getPrint($phrase = null)
+    {
+      $phrase = '';
+      if(isset($_GET['s']))
+        $phrase = $_GET['s'];
+      $pasien = $this->db('pasien')->like('nm_pasien', '%'.$phrase.'%')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table();
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 200, 30);
+      $pdf->Line(10, 31, 200, 31);
+      $pdf->Text(10, 40, 'DATA PASIEN');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(20,60,35,75));
+      $pdf->Row(array('No. RM','Nama Pasien','No KTP', 'Alamat'));
+      foreach ($pasien as $hasil) {
+        $pdf->Row(array($hasil['no_rkm_medis'],$hasil['nm_pasien'],$hasil['no_ktp'],$hasil['alamat']));
+      }
+      $pdf->Output('laporan_pasien_'.date('Y-m-d').'.pdf','I');
+
+    }
+
+    public function getPrint_rm($id)
+    {
+      $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new FPDF();
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(5);
+      $pdf->SetLeftMargin(5);
+      $pdf->SetRightMargin(5);
+
+      $pdf->Image($logo, 5, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 12);
+      $pdf->Text(30, 22, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 26, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+
+      $pdf->Output('rekam_medik_pasien_'.$pasien['no_rm'].'.pdf','I');
+
+    }
 
     /**
     * save pasien data

@@ -206,7 +206,7 @@ class Admin extends AdminModule
           if ($this->_cekStatusBayar($id)) {
               $errors++;
               $this->notify('failure', 'Ada tagihan belum dibayar. Silahkan hubungi kasir.');
-          }          
+          }
         }
 
         // CREATE / EDIT
