@@ -62,3 +62,9 @@
         width: 50%;
     }
 }
+
+@media(max-width: 480px) {
+  #content-wrapper {
+      padding: 0;
+  }
+}
