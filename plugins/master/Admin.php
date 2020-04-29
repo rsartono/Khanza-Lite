@@ -192,7 +192,7 @@ class Admin extends AdminModule
 
     public function getPoliklinikDelete($id)
     {
-        if ($this->core->db('poliklinik')->where('kd_poli', $id)->update('status', 0)) {
+        if ($this->core->db('poliklinik')->where('kd_poli', $id)->update('status', '0')) {
             $this->notify('success', 'Hapus sukses');
         } else {
             $this->notify('failure', 'Hapus gagal');
