@@ -55,13 +55,13 @@ ini_set('max_execution_time', 300);
                 <div id="notify" class="alert-danger animated shake" style="margin-bottom:20px;">Silahkan isikan konfirgurasi database anda</div>
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                        <div class="input-group-addon"><i class="fa fa-globe"></i></div>
                         <input type="text" class="form-control" name="DBHOST" placeholder="Database Host" required autofocus>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                        <div class="input-group-addon"><i class="fa fa-user"></i></div>
                         <input type="text" class="form-control" name="DBUSER" placeholder="Database Username" required>
                     </div>
                 </div>
@@ -73,7 +73,7 @@ ini_set('max_execution_time', 300);
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                        <div class="input-group-addon"><i class="fa fa-database"></i></div>
                         <input type="text" class="form-control" name="DBNAME" placeholder="Database Name" required>
                     </div>
                 </div>
