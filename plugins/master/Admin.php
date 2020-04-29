@@ -219,7 +219,7 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if (!$id) {    // new
-                $_POST['status'] = 1;
+                $_POST['status'] = '1';
                 $query = $this->db('poliklinik')->save($_POST);
             } else {        // edit
                 $query = $this->db('poliklinik')->where('kd_poli', $id)->save($_POST);
