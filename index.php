@@ -1,6 +1,8 @@
 <?php
 header('Content-Type:text/html;charset=utf-8');
-
+if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
+            $_SERVER['HTTPS']='on';
+}
 define('BASE_DIR', __DIR__);
 require_once('config.php');
 
