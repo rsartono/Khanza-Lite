@@ -433,7 +433,7 @@ class Admin extends AdminModule
     {
       header('Content-type: text/html');
       $date = date('Y-m-d');
-      $url = BpjsApiUrl.'Peserta/nokartu/'.$_GET[noka].'/tglSEP/'.$date;
+      $url = BpjsApiUrl.'Peserta/nokartu/'.$_GET['noka'].'/tglSEP/'.$date;
       $output = BpjsRequest::get($url);
       echo $output;
       exit();
@@ -443,7 +443,7 @@ class Admin extends AdminModule
     {
       header('Content-type: text/html');
       $date = date('Y-m-d');
-      $url = BpjsApiUrl.'Peserta/nik/'.$_GET[nik].'/tglSEP/'.$date;
+      $url = BpjsApiUrl.'Peserta/nik/'.$_GET['nik'].'/tglSEP/'.$date;
       $output = BpjsRequest::get($url);
       echo $output;
       exit();
