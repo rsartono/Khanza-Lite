@@ -43,7 +43,7 @@
               			{if: !empty($pendaftaran.list)}
       								{loop: $pendaftaran.list}
       								<tr>
-                        <td><a href="{$value.print_buktidaftar}">{$value.no_rawat}</a></td>
+                        <td><a href="{$value.print_buktidaftar}" target="_blank" >{$value.no_rawat}</a></td>
       									<td>{$value.nm_pasien}</td>
                         <td>{$value.no_rkm_medis}</td>
                         <td>{$value.no_reg}</td>
@@ -71,7 +71,7 @@
       								</tr>
       								{/loop}
       								{else}
-      								<tr><td colspan="11" class="text-center">Kosong</td></tr>
+      								<tr><td colspan="12" class="text-center">Kosong</td></tr>
       							{/if}
       							</tbody>
       						</table>

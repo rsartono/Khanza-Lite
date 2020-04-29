@@ -1,4 +1,5 @@
 <?php
+define('BASE_DIR', __DIR__);
 require('config.php');
 $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
 ini_set('max_execution_time', 300);
@@ -20,7 +21,7 @@ ini_set('max_execution_time', 300);
     <script src="themes/admin/js/kalypto.min.js"></script>
 </head>
 
-<body style="background: #222 url('themes/admin/img/wallpaper.png');">
+<body style="background: #222 url('themes/admin/img/wallpaper.png'); background-repeat: no-repeat;  background-size: cover;">
     <section id="login" style="background: #222;padding:20px;">
         <div class="panel panel-default">
             <div class="panel-heading">

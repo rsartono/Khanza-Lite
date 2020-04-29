@@ -323,12 +323,12 @@ class Admin extends AdminModule
       	$pdf->Text(3, 50, 'No. RM');
         $pdf->Text(16, 50, ': '.$pendaftaran['no_rkm_medis']);
       	$pdf->Text(3, 55, 'Alamat');
-      	$pdf->Text(16, 55, ': '.substr($pasien['alamat'],0,20));
-      	$pdf->Text(18, 60, substr($pasien['alamat'],20,42));
+      	$pdf->Text(16, 55, ': '.substr($pasien['alamat'],0,23));
+      	$pdf->Text(18, 60, substr($pasien['alamat'],23,42));
       	$pdf->Text(3, 65, 'Ruang');
-      	$pdf->Text(16, 65, ': '.substr($poliklinik['nm_poli'],0,20));
+      	$pdf->Text(16, 65, ': '.substr($poliklinik['nm_poli'],0,23));
       	$pdf->Text(3, 70, 'Dokter');
-      	$pdf->Text(16, 70, ': '.substr($dokter['nm_dokter'],0,20));
+      	$pdf->Text(16, 70, ': '.substr($dokter['nm_dokter'],0,23));
       	$pdf->Text(3, 75, 'Bayar');
       	$pdf->Text(16, 75, ': '.$penjab['png_jawab']);
       	$pdf->SetFont('Arial', '', 7);
