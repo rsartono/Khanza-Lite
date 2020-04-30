@@ -135,7 +135,7 @@ class Admin extends AdminModule
         if(isset($_GET['s']))
           $phrase = $_GET['s'];
 
-        $status = '1';
+        $status = '0';
         if(isset($_GET['status']))
           $status = $_GET['status'];
 
