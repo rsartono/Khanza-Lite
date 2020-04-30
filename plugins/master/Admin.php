@@ -160,6 +160,7 @@ class Admin extends AdminModule
                 $row = htmlspecialchars_array($row);
                 $row['editURL'] = url([ADMIN, 'master', 'poliklinikedit', $row['kd_poli']]);
                 $row['delURL']  = url([ADMIN, 'master', 'poliklinikdelete', $row['kd_poli']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'poliklinikrestore', $row['kd_poli']]);
                 $row['viewURL'] = url([ADMIN, 'master', 'poliklinikview', $row['kd_poli']]);
                 $this->assign['list'][] = $row;
             }
@@ -205,6 +206,16 @@ class Admin extends AdminModule
             $this->notify('success', 'Hapus sukses');
         } else {
             $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'poliklinik']));
+    }
+
+    public function getPoliklinikRestore($id)
+    {
+        if ($this->core->db('poliklinik')->where('kd_poli', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
         }
         redirect(url([ADMIN, 'master', 'poliklinik']));
     }
