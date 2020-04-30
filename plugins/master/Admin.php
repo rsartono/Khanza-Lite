@@ -27,12 +27,8 @@ class Admin extends AdminModule
         if(isset($_GET['s']))
           $phrase = $_GET['s'];
 
-        $status = 'AKTIF';
-        if(isset($_GET['status']) && $_GET['status'] == '0')
-          $status = 'CUTI,KELUAR';
-
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif IN ('AKTIF')");
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?)");
         $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $totalRecords = $totalRecords->fetchAll();
 
@@ -42,7 +38,7 @@ class Admin extends AdminModule
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif IN ('CUTI,KELUAR') LIMIT $perpage OFFSET $offset");
+        $query = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) LIMIT $perpage OFFSET $offset");
         $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
@@ -51,8 +47,6 @@ class Admin extends AdminModule
             foreach ($rows as $row) {
                 $row = htmlspecialchars_array($row);
                 $row['editURL'] = url([ADMIN, 'master', 'pegawaiedit', $row['id']]);
-                $row['delURL']  = url([ADMIN, 'master', 'pegawaidelete', $row['id']]);
-                $row['restoreURL']  = url([ADMIN, 'master', 'pegawairestore', $row['id']]);
                 $row['viewURL'] = url([ADMIN, 'master', 'pegawaiview', $row['id']]);
                 $this->assign['list'][] = $row;
             }
@@ -96,26 +90,6 @@ class Admin extends AdminModule
         } else {
             redirect(url([ADMIN, 'master', 'pegawai']));
         }
-    }
-
-    public function getPegawaiDelete($id)
-    {
-        if ($this->core->db('pegawai')->where('id', $id)->update('stts_aktif', 'KELUAR')) {
-            $this->notify('success', 'Hapus sukses');
-        } else {
-            $this->notify('failure', 'Hapus gagal');
-        }
-        redirect(url([ADMIN, 'master', 'pegawai']));
-    }
-
-    public function getPegawaiRestore($id)
-    {
-        if ($this->core->db('pegawai')->where('id', $id)->update('stts_aktif', 'AKTIF')) {
-            $this->notify('success', 'Restore sukses');
-        } else {
-            $this->notify('failure', 'Restore gagal');
-        }
-        redirect(url([ADMIN, 'master', 'pegawai']));
     }
 
     public function postPegawaiSave($id = null)
