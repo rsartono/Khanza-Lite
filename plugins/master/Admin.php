@@ -10,12 +10,183 @@ class Admin extends AdminModule
     public function navigation()
     {
         return [
+            'Pegawai' => 'pegawai',
             'Dokter' => 'dokter',
             'Poliklinik' => 'poliklinik',
             'Data Barang' => 'databarang',
             'Jenis Perawatan' => 'jnsperawatan',
         ];
     }
+
+    /* Master Pegawai Section */
+    public function getPegawai($page = 1)
+    {
+        $perpage = '10';
+
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $status = 'AKTIF';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
+        // pagination
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
+
+        $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'pegawai', '%d']));
+        $this->assign['pagination'] = $pagination->nav('pagination','5');
+        $this->assign['totalRecords'] = $totalRecords;
+
+        // list
+        $offset = $pagination->offset();
+        $query = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif = '$status' LIMIT $perpage OFFSET $offset");
+        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $rows = $query->fetchAll();
+
+        $this->assign['list'] = [];
+        if (count($rows)) {
+            foreach ($rows as $row) {
+                $row = htmlspecialchars_array($row);
+                $row['editURL'] = url([ADMIN, 'master', 'pegawaiedit', $row['id']]);
+                $row['delURL']  = url([ADMIN, 'master', 'pegawaidelete', $row['id']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'pegawairestore', $row['id']]);
+                $row['viewURL'] = url([ADMIN, 'master', 'pegawaiview', $row['id']]);
+                $this->assign['list'][] = $row;
+            }
+        }
+
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'pegawaiadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'pegawaiprint']);
+
+        return $this->draw('pegawai.manage.html', ['pegawai' => $this->assign]);
+
+    }
+
+    public function getPegawaiAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kd_poli' => '',
+              'nm_poli' => '',
+              'registrasi' => '',
+              'registrasilama' => '',
+              'status' => ''
+            ];
+        }
+
+        $this->assign['title'] = 'Tambah Pegawai';
+
+        return $this->draw('pegawai.form.html', ['pegawai' => $this->assign]);
+    }
+
+    public function getPegawaiEdit($id)
+    {
+        $user = $this->db('pegawai')->oneArray($id);
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Pegawai';
+
+            return $this->draw('pegawai.form.html', ['pegawai' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'master', 'pegawai']));
+        }
+    }
+
+    public function getPegawaiDelete($id)
+    {
+        if ($this->core->db('pegawai')->where('id', $id)->update('status', '0')) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'pegawai']));
+    }
+
+    public function getPegawaiRestore($id)
+    {
+        if ($this->core->db('pegawai')->where('id', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'pegawai']));
+    }
+
+    public function postPegawaiSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'master', 'pegawaiadd']);
+        } else {
+            $location = url([ADMIN, 'master', 'pegawaiedit', $id]);
+        }
+
+        if (checkEmptyFields(['nik', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $_POST['stts_aktif'] = 'AKTIF';
+                $query = $this->db('pegawai')->save($_POST);
+            } else {        // edit
+                $query = $this->db('pegawai')->where('id', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getPegawaiPrint()
+    {
+      $pasien = $this->db('pegawai')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table();
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 200, 30);
+      $pdf->Line(10, 31, 200, 31);
+      $pdf->Text(10, 40, 'DATA PEGAWAI');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(20,80,25,25,40));
+      $pdf->Row(array('Kode Poli','Nama Poli','Daftar Baru', 'Daftar Lama', 'Status'));
+      foreach ($pasien as $hasil) {
+        $pdf->Row(array($hasil['nik'],$hasil['nama'],$hasil['tmp_lahir'],$hasil['tgl_lahir'],$hasil['stts_aktif']));
+      }
+      $pdf->Output('laporan_pegawai_'.date('Y-m-d').'.pdf','I');
+
+    }
+    /* End Master Poliklinik Section */
 
     /* Master Dokter Section */
     public function getDokter($page = 1)
