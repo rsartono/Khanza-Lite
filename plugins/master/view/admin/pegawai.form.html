@@ -7,13 +7,6 @@
             </div>
             <div class="panel-body">
                  <div class="row clearfix">
-                     <div class="col-md-6">
-                     </div>
-                     <div class="col-md-6">
-                     </div>
-                 </div>
-
-                 <div class="row clearfix">
                      <div class="col-md-4">
                          <div class="form-group">
                              <label>Kode Pegawai</label>
@@ -149,7 +142,6 @@
            							</div>
                      </div>
                  </div>
-
                  <div class="row clearfix">
                      <div class="col-md-4">
                          <div class="form-group">
@@ -202,27 +194,24 @@
                          </div>
                      </div>
                  </div>
-
-                <div class="form-group">
-  									<label>Indexins</label>
-  									<select name="indexins" class="form-control">
-  										{loop: $pegawai.departemen}
-  											<option value="{$value.dep_id}"{if: $value.dep_id == $pegawai.form.indexins} selected{/if}>{$value.nama}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-  									<label>BPD</label>
-  									<select name="bpd" class="form-control">
-  										{loop: $pegawai.bank}
-  											<option value="{$value.namabank}"{if: $value.namabank == $pegawai.form.bpd} selected{/if}>{$value.namabank}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-                    <label>Rekening</label>
-                    <input type="text" name="rekening" class="form-control" value="{$pegawai.form.rekening}"/>
-                </div>
+                 <div class="row clearfix">
+                     <div class="col-md-6">
+                         <div class="form-group">
+           									<label>BPD</label>
+           									<select name="bpd" class="form-control">
+           										{loop: $pegawai.bank}
+           											<option value="{$value.namabank}"{if: $value.namabank == $pegawai.form.bpd} selected{/if}>{$value.namabank}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="form-group">
+                             <label>Rekening</label>
+                             <input type="text" name="rekening" class="form-control" value="{$pegawai.form.rekening}"/>
+                         </div>
+                     </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -259,6 +248,14 @@
                     <label>Index</label>
                     <input type="text" name="indek" class="form-control" value="{$pegawai.form.indek}"/>
                 </div>
+                <div class="form-group">
+  									<label>Indexins</label>
+  									<select name="indexins" class="form-control">
+  										{loop: $pegawai.departemen}
+  											<option value="{$value.dep_id}"{if: $value.dep_id == $pegawai.form.indexins} selected{/if}>{$value.nama}</option>
+  										{/loop}
+  									</select>
+  							</div>
                 <div class="form-group">
                     <label>Mulai Kontrak</label>
                     <input type="text" name="mulai_kontrak" class="form-control datepicker" value="{$pegawai.form.mulai_kontrak}"/>
