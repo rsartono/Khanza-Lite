@@ -11,6 +11,7 @@ class Admin extends AdminModule
     {
         return [
             'Dokter' => 'dokter',
+            'Petugas' => 'petugas',
             'Poliklinik' => 'poliklinik',
             'Data Barang' => 'databarang',
             'Jenis Perawatan' => 'jnsperawatan',
@@ -57,22 +58,28 @@ class Admin extends AdminModule
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
-            $this->assign['form'] = ['kd_poli' => '', 'nm_poli' => '', 'registrasi' => '', 'registrasilama' => '', 'status' => ''];
+            $this->assign['form'] = [
+              'kd_dokter' => '',
+              'nm_dokter' => '',
+              'registrasi' => '',
+              'registrasilama' => '',
+              'status' => ''
+            ];
         }
 
-        $this->assign['title'] = 'Tambah Poliklinik';
+        $this->assign['title'] = 'Tambah Dokter';
 
-        return $this->draw('poliklinik.form.html', ['poliklinik' => $this->assign]);
+        return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
     }
 
     public function getDokterEdit($id)
     {
-        $user = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
+        $user = $this->db('dokter')->where('kd_dokter', $id)->oneArray();
         if (!empty($user)) {
             $this->assign['form'] = $user;
-            $this->assign['title'] = 'Edit Poliklinik';
+            $this->assign['title'] = 'Edit Dokter';
 
-            return $this->draw('poliklinik.form.html', ['poliklinik' => $this->assign]);
+            return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
         } else {
             redirect(url([ADMIN, 'master', 'dokter']));
         }
@@ -93,12 +100,12 @@ class Admin extends AdminModule
         $errors = 0;
 
         if (!$id) {
-            $location = url([ADMIN, 'master', 'poliklinikadd']);
+            $location = url([ADMIN, 'master', 'dokteradd']);
         } else {
-            $location = url([ADMIN, 'master', 'poliklinikedit', $id]);
+            $location = url([ADMIN, 'master', 'dokteredit', $id]);
         }
 
-        if (checkEmptyFields(['kd_poli', 'nm_poli'], $_POST)) {
+        if (checkEmptyFields(['kd_dokter', 'nm_dokter'], $_POST)) {
             $this->notify('failure', 'Isian kosong');
             redirect($location, $_POST);
         }
@@ -108,9 +115,9 @@ class Admin extends AdminModule
 
             if (!$id) {    // new
                 $_POST['status'] = 1;
-                $query = $this->db('poliklinik')->save($_POST);
+                $query = $this->db('dokter')->save($_POST);
             } else {        // edit
-                $query = $this->db('poliklinik')->where('kd_poli', $id)->save($_POST);
+                $query = $this->db('dokter')->where('kd_dokter', $id)->save($_POST);
             }
 
             if ($query) {

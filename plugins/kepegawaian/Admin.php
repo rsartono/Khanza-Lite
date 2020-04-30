@@ -12,7 +12,7 @@ class Admin extends AdminModule
         return [
             'Data Pegawai' => 'manage',
             'Tambah Baru' => 'add',
-            'Master' => 'master',
+            'Master Pegawai' => 'master',
         ];
     }
 
