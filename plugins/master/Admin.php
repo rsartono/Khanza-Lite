@@ -136,7 +136,7 @@ class Admin extends AdminModule
           $phrase = $_GET['s'];
 
         $status = '1';
-        if(isset($_GET['status']) && $_GET['status'] == 'trash')
+        if(isset($_GET['status']))
           $status = '0';
 
         // pagination
