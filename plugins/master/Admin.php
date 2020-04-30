@@ -138,7 +138,7 @@ class Admin extends AdminModule
         $status = '0';
 
         // pagination
-        $totalRecords = $this->core->db('poliklinik')->where('status', '$status')->orLike('kd_poli', '%'.$phrase.'%')->orLike('nm_poli', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->core->db('poliklinik')->where('status', $status)->like('kd_poli', '%'.$phrase.'%')->orLike('nm_poli', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'poliklinik', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
