@@ -62,6 +62,7 @@ class Admin extends AdminModule
 
     public function getPegawaiAdd()
     {
+        $this->_addHeaderFiles();
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
@@ -113,6 +114,7 @@ class Admin extends AdminModule
 
     public function getPegawaiEdit($id)
     {
+        $this->_addHeaderFiles();
         $user = $this->db('pegawai')->oneArray($id);
         if (!empty($user)) {
             $this->assign['form'] = $user;
