@@ -140,7 +140,10 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->core->db('poliklinik')->where('status', $status)->like('kd_poli', '%'.$phrase.'%')->orLike('nm_poli', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
+
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'poliklinik', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
