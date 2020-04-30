@@ -107,6 +107,17 @@ class Admin extends AdminModule
         $this->assign['jk'] = $this->_addEnum('pegawai', 'jk');
         $this->assign['ms_kerja'] = $this->_addEnum('pegawai', 'ms_kerja');
         $this->assign['stts_aktif'] = $this->_addEnum('pegawai', 'stts_aktif');
+        $this->assign['jnj_jabatan'] = $this->db('jnj_jabatan')->toArray();
+        $this->assign['kode_kelompok'] = $this->db('kelompok_jabatan')->toArray();
+        $this->assign['kode_resiko'] = $this->db('resiko_kerja')->toArray();
+        $this->assign['departemen'] = $this->db('departemen')->toArray();
+        $this->assign['bidang'] = $this->db('bidang')->toArray();
+        $this->assign['stts_wp'] = $this->db('stts_wp')->toArray();
+        $this->assign['stts_kerja'] = $this->db('stts_kerja')->toArray();
+        $this->assign['pendidikan'] = $this->db('pendidikan')->toArray();
+        $this->assign['bank'] = $this->db('bank')->toArray();
+        $this->assign['emergency_index'] = $this->db('emergency_index')->toArray();
+
         $this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
 
         return $this->draw('pegawai.form.html', ['pegawai' => $this->assign]);
@@ -119,6 +130,20 @@ class Admin extends AdminModule
         if (!empty($user)) {
             $this->assign['form'] = $user;
             $this->assign['title'] = 'Edit Pegawai';
+            
+            $this->assign['jk'] = $this->_addEnum('pegawai', 'jk');
+            $this->assign['ms_kerja'] = $this->_addEnum('pegawai', 'ms_kerja');
+            $this->assign['stts_aktif'] = $this->_addEnum('pegawai', 'stts_aktif');
+            $this->assign['jnj_jabatan'] = $this->db('jnj_jabatan')->toArray();
+            $this->assign['kode_kelompok'] = $this->db('kelompok_jabatan')->toArray();
+            $this->assign['kode_resiko'] = $this->db('resiko_kerja')->toArray();
+            $this->assign['departemen'] = $this->db('departemen')->toArray();
+            $this->assign['bidang'] = $this->db('bidang')->toArray();
+            $this->assign['stts_wp'] = $this->db('stts_wp')->toArray();
+            $this->assign['stts_kerja'] = $this->db('stts_kerja')->toArray();
+            $this->assign['pendidikan'] = $this->db('pendidikan')->toArray();
+            $this->assign['bank'] = $this->db('bank')->toArray();
+            $this->assign['emergency_index'] = $this->db('emergency_index')->toArray();
 
             $this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
             return $this->draw('pegawai.form.html', ['pegawai' => $this->assign]);
