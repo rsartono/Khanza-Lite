@@ -7,19 +7,13 @@
             </div>
             <div class="panel-body">
                  <div class="row clearfix">
-                     <div class="col-md-4">
+                     <div class="col-md-6">
                          <div class="form-group">
-                             <label>Kode Pegawai</label>
+                             <label>Kode Pegawai (NIP)</label>
                              <input type="text" name="nik" class="form-control" value="{$pegawai.form.nik}" />
                          </div>
                      </div>
-                     <div class="col-md-4">
-                         <div class="form-group">
-                             <label>Nomor KTP</label>
-                             <input type="text" name="no_ktp" class="form-control" value="{$pegawai.form.no_ktp}"/>
-                         </div>
-                     </div>
-                     <div class="col-md-4">
+                     <div class="col-md-6">
                          <div class="form-group">
                              <label>Nama Pegawai</label>
                              <input type="text" name="nama" class="form-control" value="{$pegawai.form.nama}"/>
@@ -227,6 +221,10 @@
                       <img src="{$pegawai.fotoURL}" width="96" height="96" class="img-thumbnail" id="photoPreview" style="cursor:pointer;" onclick="$('input[name=photo]').click()" />
                       <input type="file" name="photo" class="form-control hidden" />
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Nomor KTP</label>
+                    <input type="text" name="no_ktp" class="form-control" value="{$pegawai.form.no_ktp}"/>
                 </div>
                 <div class="form-group">
                     <label>Status</label>
