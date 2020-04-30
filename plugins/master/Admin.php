@@ -162,6 +162,7 @@ class Admin extends AdminModule
             }
         }
 
+        $this->assign['getStatus'] = $_GET['status'];
         $this->assign['addURL'] = url([ADMIN, 'master', 'poliklinikadd']);
         $this->assign['printURL'] = url([ADMIN, 'master', 'poliklinikprint']);
 
