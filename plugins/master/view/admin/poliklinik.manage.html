@@ -7,7 +7,7 @@
                     <li class="{if: empty($poliklinik.getStatus)}active{/if}">
                         <a href="{?=url(ADMIN.'/master/poliklinik')?}" role="tab">Aktif</a>
                     </li>
-                    <li class="{if: $poliklinik.getStatus == '0'}active{/if}">
+                    <li class="{if: !empty($poliklinik.getStatus)}active{/if}">
                         <a href="{?=url(ADMIN.'/master/poliklinik?status=0')?}" role="tab">Tidak Aktif</a>
                     </li>
                     <li>
