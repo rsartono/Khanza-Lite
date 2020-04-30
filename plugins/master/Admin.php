@@ -29,10 +29,10 @@ class Admin extends AdminModule
 
         $status = 'AKTIF';
         if(isset($_GET['status']) && $_GET['status'] == '0')
-          $status = 'CUTI,KELUAR,TENAGA\ LUAR';
+          $status = 'CUTI,KELUAR';
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif IN ($status)");
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif IN ('AKTIF')");
         $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $totalRecords = $totalRecords->fetchAll();
 
@@ -42,7 +42,7 @@ class Admin extends AdminModule
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif IN ($status) LIMIT $perpage OFFSET $offset");
+        $query = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) AND stts_aktif IN ('CUTI,KELUAR') LIMIT $perpage OFFSET $offset");
         $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
