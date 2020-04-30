@@ -134,20 +134,16 @@
                   <div class="form-group">
 											<label>Indexins</label>
 											<select name="indexins" class="form-control">
-												{loop: $pegawai.indexins}
-													<option value="{$value.dep_id}"{if: $value.dep_id == $pegawai.form.indexins} selected{/if}>{$value.indexins}</option>
+												{loop: $pegawai.departemen}
+													<option value="{$value.dep_id}"{if: $value.dep_id == $pegawai.form.indexins} selected{/if}>{$value.nama}</option>
 												{/loop}
 											</select>
 									</div>
                   <div class="form-group">
-                      <label>BPD</label>
-                      <input type="text" name="bpd" class="form-control" value="{$pegawai.form.bpd}"/>
-                  </div>
-                  <div class="form-group">
 											<label>BPD</label>
 											<select name="bpd" class="form-control">
-												{loop: $pegawai.bpd}
-													<option value="{$value.bpd}"{if: $value.bpd == $pegawai.form.namabank} selected{/if}>{$value.bpd}</option>
+												{loop: $pegawai.bank}
+													<option value="{$value.namabank}"{if: $value.namabank == $pegawai.form.bpd} selected{/if}>{$value.namabank}</option>
 												{/loop}
 											</select>
 									</div>
