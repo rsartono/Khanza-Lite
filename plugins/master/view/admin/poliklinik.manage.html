@@ -2,13 +2,19 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Data Poliklinik <span class="pull-right text-success"><a href="{$poliklinik.printURL}" target="_blank"><b>[ <i class="fa fa-print"></i> <span class="hidden-xs">Print</span> ]</b></a> <a href="{$poliklinik.addURL}"><b>[ <i class="fa fa-plus"></i> <span class="hidden-xs">Add</span> ]</b></a></span></h3>
+                <h3 class="panel-title">Kelola Data Poliklinik</h3>
                 <ul class="nav nav-tabs">
                     <li class="{if: $value.getStatus == ''}active{/if}">
-                        <a href="{?=url(ADMIN.'/modules/master/poliklinik')?}" role="tab">Aktif</a>
+                        <a href="{?=url(ADMIN.'/master/poliklinik')?}" role="tab">Aktif</a>
                     </li>
                     <li class="{if: $value.getStatus == 'trash'}active{/if}">
-                        <a href="{?=url(ADMIN.'/modules/master/poliklinik?status=trash')?}" role="tab">Tidak Aktif</a>
+                        <a href="{?=url(ADMIN.'/master/poliklinik?status=trash')?}" role="tab">Tidak Aktif</a>
+                    </li>
+                    <li>
+                        <a href="{$poliklinik.printURL}" role="tab">Cetak</a>
+                    </li>
+                    <li>
+                        <a href="{$poliklinik.addURL}" role="tab">Tambah</a>
                     </li>
 				        </ul>
             </div>
