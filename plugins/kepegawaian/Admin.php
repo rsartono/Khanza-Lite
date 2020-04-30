@@ -16,7 +16,6 @@ class Admin extends AdminModule
         ];
     }
 
-    /* Master Pegawai Section */
     public function getManage($page = 1)
     {
         $perpage = '10';
@@ -216,8 +215,10 @@ class Admin extends AdminModule
       $pdf->Output('laporan_pegawai_'.date('Y-m-d').'.pdf','I');
 
     }
-    /* End Master Poliklinik Section */
 
+    public function getMaster()
+    {
+    }
 
     public function getCSS()
     {
