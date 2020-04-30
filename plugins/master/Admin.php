@@ -72,11 +72,11 @@ class Admin extends AdminModule
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
             $this->assign['form'] = [
-              'kd_poli' => '',
-              'nm_poli' => '',
-              'registrasi' => '',
-              'registrasilama' => '',
-              'status' => ''
+              'nik' => '',
+              'nama' => '',
+              'tmp_lahir' => '',
+              'tgl_lahir' => '',
+              'stts_aktif' => ''
             ];
         }
 
