@@ -136,6 +136,8 @@ class Admin extends AdminModule
           $phrase = $_GET['s'];
 
         $status = '0';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
 
         // pagination
         $totalRecords = $this->core->db('poliklinik')->where('status', $status)->like('kd_poli', '%'.$phrase.'%')->orLike('nm_poli', '%'.$phrase.'%')->toArray();
