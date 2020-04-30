@@ -4,7 +4,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Kelola Data Poliklinik</h3>
                 <ul class="nav nav-tabs">
-                    <li class="{if: $value.getStatus == ''}active{/if}">
+                    <li class="{if: $value.getStatus !== 'trash'}active{/if}">
                         <a href="{?=url(ADMIN.'/master/poliklinik')?}" role="tab">Aktif</a>
                     </li>
                     <li class="{if: $value.getStatus == 'trash'}active{/if}">
