@@ -46,7 +46,7 @@
                   <div class="form-group">
 											<label>Resiko Kerja</label>
 											<select name="kode_resiko" class="form-control">
-												{loop: $pegawai.kode_resiko}
+												{loop: $pegawai.resiko_kerja}
 													<option value="{$value.kode_resiko}"{if: $value.kode_resiko == $pegawai.form.kode_resiko} selected{/if}>{$value.nama_resiko}</option>
 												{/loop}
 											</select>
