@@ -52,9 +52,13 @@
 											</select>
 									</div>
                   <div class="form-group">
-                      <label>Emergency</label>
-                      <input type="text" name="kode_emergency" class="form-control" value="{$pegawai.form.kode_emergency}"/>
-                  </div>
+											<label>Emergency</label>
+											<select name="kode_emergency" class="form-control">
+												{loop: $pegawai.emergency_index}
+													<option value="{$value.kode_emergency}"{if: $value.kode_emergency == $pegawai.form.kode_emergency} selected{/if}>{$value.nama_emergency}</option>
+												{/loop}
+											</select>
+									</div>
                   <div class="form-group">
 											<label>Departemen</label>
 											<select name="departemen" class="form-control">
