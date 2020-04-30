@@ -5,44 +5,89 @@
                 <h3 class="panel-title">{$pegawai.title}</h3>
             </div>
             <div class="panel-body">
-    		<form name="pegawai" action="{?=url(ADMIN.'/master/pegawaisave/'.@$pegawai.form.id)?}" method="POST">
-    			<fieldset>
-                  <div class="form-group">
-                      <label>Kode Pegawai</label>
-                      <input type="text" name="nik" class="form-control" value="{$pegawai.form.nik}" />
-                  </div>
-                  <div class="form-group">
-                      <label>Nama Pegawai</label>
-                      <input type="text" name="nama" class="form-control" value="{$pegawai.form.nama}"/>
-                  </div>
-                  <div class="form-group">
-                      <label>Jenis Kelamin</label>
-                      <select name="jk" id="jk" class="form-control">
-                        {loop: $pegawai.jk}
-                          <option value="{$value}"{if: $value == $pegawai.form.jk} selected{/if}>{$value}</option>
-                        {/loop}
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label>Jabatan</label>
-                      <input type="text" name="jbtn" class="form-control" value="{$pegawai.form.jbtn}"/>
-                  </div>
-                  <div class="form-group">
-											<label>Jenjang Jabatan</label>
-											<select name="jnj_jabatan" class="form-control">
-												{loop: $pegawai.jnj_jabatan}
-													<option value="{$value.kode}"{if: $value.kode == $pegawai.form.jbtn} selected{/if}>{$value.nama}</option>
-												{/loop}
-											</select>
-									</div>
-                  <div class="form-group">
-											<label>Kelompok Jabatan</label>
-											<select name="kode_kelompok" class="form-control">
-												{loop: $pegawai.kelompok_jabatan}
-													<option value="{$value.kode_kelompok}"{if: $value.kode_kelompok == $pegawai.form.kode_kelompok} selected{/if}>{$value.nama_kelompok}</option>
-												{/loop}
-											</select>
-									</div>
+    		       <form name="pegawai" action="{?=url(ADMIN.'/master/pegawaisave/'.@$pegawai.form.id)?}" method="POST">
+                   <div class="row clearfix">
+                       <div class="col-md-6">
+                       </div>
+                       <div class="col-md-6">
+                       </div>
+                   </div>
+
+                   <div class="row clearfix">
+                       <div class="col-md-6">
+                           <div class="form-group">
+                               <label>Kode Pegawai</label>
+                               <input type="text" name="nik" class="form-control" value="{$pegawai.form.nik}" />
+                           </div>
+                       </div>
+                       <div class="col-md-6">
+                           <div class="form-group">
+                               <label>Nama Pegawai</label>
+                               <input type="text" name="nama" class="form-control" value="{$pegawai.form.nama}"/>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row clearfix">
+                       <div class="col-md-4">
+                           <div class="form-group">
+                               <label>Tempat Lahir</label>
+                               <input type="text" name="tmp_lahir" class="form-control" value="{$pegawai.form.tmp_lahir}"/>
+                           </div>
+                       </div>
+                       <div class="col-md-4">
+                           <div class="form-group">
+                               <label>Tanggal Lahir</label>
+                               <input type="text" name="tgl_lahir" class="form-control datepicker" value="{$pegawai.form.tgl_lahir}"/>
+                           </div>
+                       </div>
+                       <div class="col-md-4">
+                           <div class="form-group">
+                               <label>Jenis Kelamin</label>
+                               <select name="jk" id="jk" class="form-control">
+                                 {loop: $pegawai.jk}
+                                   <option value="{$value}"{if: $value == $pegawai.form.jk} selected{/if}>{$value}</option>
+                                 {/loop}
+                               </select>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="form-group">
+                       <label>Alamat</label>
+                       <textarea name="alamat" class="form-control" rows="6">{$pegawai.form.alamat}</textarea>
+                   </div>
+                   <div class="form-group">
+                       <label>Kota</label>
+                       <input type="text" name="kota" class="form-control" value="{$pegawai.form.kota}"/>
+                   </div>
+                   <div class="row clearfix">
+                       <div class="col-md-4">
+                           <div class="form-group">
+                               <label>Jabatan</label>
+                               <input type="text" name="jbtn" class="form-control" value="{$pegawai.form.jbtn}"/>
+                           </div>
+                       </div>
+                       <div class="col-md-4">
+                           <div class="form-group">
+         											<label>Jenjang Jabatan</label>
+         											<select name="jnj_jabatan" class="form-control">
+         												{loop: $pegawai.jnj_jabatan}
+         													<option value="{$value.kode}"{if: $value.kode == $pegawai.form.jbtn} selected{/if}>{$value.nama}</option>
+         												{/loop}
+         											</select>
+         									 </div>
+                       </div>
+                       <div class="col-md-4">
+                           <div class="form-group">
+         											<label>Kelompok Jabatan</label>
+         											<select name="kode_kelompok" class="form-control">
+         												{loop: $pegawai.kelompok_jabatan}
+         													<option value="{$value.kode_kelompok}"{if: $value.kode_kelompok == $pegawai.form.kode_kelompok} selected{/if}>{$value.nama_kelompok}</option>
+         												{/loop}
+         											</select>
+         									 </div>
+                       </div>
+                   </div>
+
                   <div class="form-group">
 											<label>Resiko Kerja</label>
 											<select name="kode_resiko" class="form-control">
@@ -106,22 +151,6 @@
                   <div class="form-group">
                       <label>Gapok</label>
                       <input type="text" name="gapok" class="form-control" value="{$pegawai.form.gapok}"/>
-                  </div>
-                  <div class="form-group">
-                      <label>Tempat Lahir</label>
-                      <input type="text" name="tmp_lahir" class="form-control" value="{$pegawai.form.tmp_lahir}"/>
-                  </div>
-                  <div class="form-group">
-                      <label>Tanggal Lahir</label>
-                      <input type="text" name="tgl_lahir" class="form-control datepicker" value="{$pegawai.form.tgl_lahir}"/>
-                  </div>
-                  <div class="form-group">
-                      <label>Alamat</label>
-                      <input type="text" name="alamat" class="form-control" value="{$pegawai.form.alamat}"/>
-                  </div>
-                  <div class="form-group">
-                      <label>Kota</label>
-                      <input type="text" name="kota" class="form-control" value="{$pegawai.form.kota}"/>
                   </div>
                   <div class="form-group">
                       <label>Mulai Kerja</label>
@@ -201,8 +230,7 @@
     	            <div class="form-group">
     	                <input type="submit" name="save" class="btn btn-primary" value="Simpan" />
     	            </div>
-                </fieldset>
-            </form>
+               </form>
             </div>
         </div>
     </div>
