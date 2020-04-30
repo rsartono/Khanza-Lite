@@ -140,7 +140,7 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = $status");
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = '$status'");
         $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $totalRecords = $totalRecords->fetchAll();
 
@@ -150,7 +150,7 @@ class Admin extends AdminModule
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = $status LIMIT $perpage OFFSET $offset");
+        $query = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
         $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
