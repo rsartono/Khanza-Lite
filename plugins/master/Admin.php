@@ -100,7 +100,7 @@ class Admin extends AdminModule
 
     public function getPegawaiDelete($id)
     {
-        if ($this->core->db('pegawai')->where('id', $id)->update('status', '0')) {
+        if ($this->core->db('pegawai')->where('id', $id)->update('stts_aktif', 'KELUAR')) {
             $this->notify('success', 'Hapus sukses');
         } else {
             $this->notify('failure', 'Hapus gagal');
@@ -110,7 +110,7 @@ class Admin extends AdminModule
 
     public function getPegawaiRestore($id)
     {
-        if ($this->core->db('pegawai')->where('id', $id)->update('status', '1')) {
+        if ($this->core->db('pegawai')->where('id', $id)->update('stts_aktif', 'AKTIF')) {
             $this->notify('success', 'Restore sukses');
         } else {
             $this->notify('failure', 'Restore gagal');
