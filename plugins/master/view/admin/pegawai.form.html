@@ -18,7 +18,7 @@
                   <div class="form-group">
                       <label>Jenis Kelamin</label>
                       <select name="jk" id="jk" class="form-control">
-                        {loop: $pasien.jk}
+                        {loop: $pegawai.jk}
                           <option value="{$value}"{if: $value == $pegawai.form.jk} selected{/if}>{$value}</option>
                         {/loop}
                       </select>
