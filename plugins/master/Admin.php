@@ -140,15 +140,15 @@ class Admin extends AdminModule
           $status = '0';
 
         // pagination
-        $totalRecords = $this->core->db('poliklinik')->like('kd_poli', '%'.$phrase.'%')->orLike('nm_poli', '%'.$phrase.'%')->orLike('status', $status)->toArray();
+        $totalRecords = $this->core->db('poliklinik')->like('kd_poli', '%'.$phrase.'%')->orLike('nm_poli', '%'.$phrase.'%')->orWhere('status', $status)->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'poliklinik', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ? OR status LIKE ?) LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%', $status]);
+        $query = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = $status LIMIT $perpage OFFSET $offset");
+        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
         $this->assign['list'] = [];
