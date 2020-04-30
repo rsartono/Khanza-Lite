@@ -713,4 +713,12 @@ class Admin extends AdminModule
         $this->core->addJS(url([ADMIN, 'master', 'javascript']), 'footer');
     }
 
+    private function _addEnum($table_name, $column_name) {
+      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
+      $result->execute();
+      $result = $result->fetch();
+      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
+      return $result;
+    }
+
 }
