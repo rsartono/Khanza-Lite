@@ -1,0 +1,34 @@
+<article class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{$dokter.title}</h3>
+            </div>
+            <div class="panel-body">
+    			<fieldset>
+            <form name="dokter" action="{?=url(ADMIN.'/master/doktersave/'.@$dokter.form.kd_dokter)?}" method="POST">
+                  <div class="form-group">
+                      <label>Kode Dokter</label>
+                      <input type="text" name="kd_dokter" class="form-control" value="{$dokter.form.kd_dokter}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Nama Dokter</label>
+                      <input type="text" name="nm_dokter" class="form-control" value="{$dokter.form.nm_dokter}"/>
+                  </div>
+                  <div class="form-group">
+                      <label>Biaya Registrasi</label>
+                      <input type="text" name="registrasi" class="form-control" value="{$poliklinik.form.registrasi}"/>
+                  </div>
+                  <div class="form-group">
+                      <label>Biaya Registrasi Lama</label>
+                      <input type="text" name="registrasilama" class="form-control" value="{$poliklinik.form.registrasilama}"/>
+                  </div>
+    	            <div class="form-group">
+    	                <input type="submit" name="save" class="btn btn-primary" value="Simpan" />
+    	            </div>
+                </fieldset>
+            </form>
+            </div>
+        </div>
+    </div>
+</article>

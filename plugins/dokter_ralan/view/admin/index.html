@@ -29,14 +29,14 @@
                         <th>Nama Pasien</th>
                         <th>No. RM</th>
                         <th>No. Reg</th>
-                        <th>Klinik</th>
-                        <th>Dokter</th>
+                        <!--<th>Klinik</th>
+                        <th>Dokter</th>-->
       									<th>Jenis Bayar</th>
                         <th>Alamat</th>
                         <th>Tgl. Reg</th>
                         <th>Jam. Reg</th>
                         <th>Status</th>
-      									<th class="text-right">Aksi</th>
+      									<!--<th class="text-right">Aksi</th>-->
       								</tr>
       							</thead>
       							<tbody>
@@ -47,25 +47,25 @@
       									<td>{$value.nm_pasien}</td>
                         <td>{$value.no_rkm_medis}</td>
                         <td>{$value.no_reg}</td>
-                        <td>{$value.nm_poli}</td>
-      									<td>{$value.nm_dokter}</td>
+                        <!--<td>{$value.nm_poli}</td>
+      									<td>{$value.nm_dokter}</td>-->
                         <td>{$value.png_jawab}</td>
                         <td>{$value.almt_pj}</td>
                         <td>{$value.tgl_registrasi}</td>
                         <td>{$value.jam_reg}</td>
                         <td>{$value.status_bayar}</td>
-      									<td class="text-right">
+      									<!--<td class="text-right">
       										<a href="{$value.viewURL}" class="btn btn-primary btn-xs">
       											<i class="fa fa-search"></i> <span class="hidden-xs">View</span>
       										</a>
       										<a href="{$value.editURL}" class="btn btn-success btn-xs">
       											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
       										</a>
-      									</td>
+      									</td>-->
       								</tr>
       								{/loop}
       								{else}
-      								<tr><td colspan="12" class="text-center">Data pasien tidak ditemukan</td></tr>
+      								<tr><td colspan="9" class="text-center">Data pasien tidak ditemukan</td></tr>
       							{/if}
       							</tbody>
       						</table>

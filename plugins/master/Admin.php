@@ -61,13 +61,23 @@ class Admin extends AdminModule
             $this->assign['form'] = [
               'kd_dokter' => '',
               'nm_dokter' => '',
-              'registrasi' => '',
-              'registrasilama' => '',
+              'jk' => '',
+              'tmp_lahir' => '',
+              'tgl_lahir' => '',
+              'gol_drh' => '',
+              'agama' => '',
+              'almt_tgl' => '',
+              'no_telp' => '',
+              'stts_nikah' => '',
+              'kd_sps' => '',
+              'alumni' => '',
+              'no_ijn_praktek' => '',
               'status' => ''
             ];
         }
 
         $this->assign['title'] = 'Tambah Dokter';
+        $this->assign['jk'] = $this->_addEnum('dokter', 'jk');
 
         return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
     }
