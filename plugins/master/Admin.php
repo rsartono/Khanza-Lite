@@ -179,7 +179,7 @@ class Admin extends AdminModule
       $pdf->Ln(34);
       $pdf->SetFont('Arial', '', 10);
       $pdf->SetWidths(array(20,80,25,25,40));
-      $pdf->Row(array('Kode Poli','Nama Poli','Daftar Baru', 'Daftar Lama', 'Status'));
+      $pdf->Row(array('Kode Pegawai','Nama Pegawai','Tempat Lahir', 'Tanggal Lahir', 'Status'));
       foreach ($pasien as $hasil) {
         $pdf->Row(array($hasil['nik'],$hasil['nama'],$hasil['tmp_lahir'],$hasil['tgl_lahir'],$hasil['stts_aktif']));
       }
