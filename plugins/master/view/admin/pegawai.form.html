@@ -66,13 +66,25 @@
                      <input type="text" name="kota" class="form-control" value="{$pegawai.form.kota}"/>
                  </div>
                  <div class="row clearfix">
-                     <div class="col-md-4">
+                     <div class="col-md-6">
+                         <div class="form-group">
+           									<label>Pendidikan</label>
+           									<select name="pendidikan" class="form-control">
+           										{loop: $pegawai.pendidikan}
+           											<option value="{$value.tingkat}"{if: $value.tingkat == $pegawai.form.pendidikan} selected{/if}>{$value.tingkat}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                     <div class="col-md-6">
                          <div class="form-group">
                              <label>Jabatan</label>
                              <input type="text" name="jbtn" class="form-control" value="{$pegawai.form.jbtn}"/>
                          </div>
                      </div>
-                     <div class="col-md-4">
+                 </div>
+                 <div class="row clearfix">
+                     <div class="col-md-6">
                          <div class="form-group">
        											<label>Jenjang Jabatan</label>
        											<select name="jnj_jabatan" class="form-control">
@@ -82,7 +94,7 @@
        											</select>
        									 </div>
                      </div>
-                     <div class="col-md-4">
+                     <div class="col-md-6">
                          <div class="form-group">
        											<label>Kelompok Jabatan</label>
        											<select name="kode_kelompok" class="form-control">
@@ -93,83 +105,104 @@
        									 </div>
                      </div>
                  </div>
+                 <div class="row clearfix">
+                     <div class="col-md-6">
+                         <div class="form-group">
+           									<label>Departemen</label>
+           									<select name="departemen" class="form-control">
+           										{loop: $pegawai.departemen}
+           											<option value="{$value.dep_id}"{if: $value.dep_id == $pegawai.form.departemen} selected{/if}>{$value.nama}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="form-group">
+           									<label>Bidang</label>
+           									<select name="bidang" class="form-control">
+           										{loop: $pegawai.bidang}
+           											<option value="{$value.nama}"{if: $value.nama == $pegawai.form.bidang} selected{/if}>{$value.nama}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                 </div>
+                 <div class="row clearfix">
+                     <div class="col-md-6">
+                         <div class="form-group">
+           									<label>Resiko Kerja</label>
+           									<select name="kode_resiko" class="form-control">
+           										{loop: $pegawai.resiko_kerja}
+           											<option value="{$value.kode_resiko}"{if: $value.kode_resiko == $pegawai.form.kode_resiko} selected{/if}>{$value.nama_resiko}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="form-group">
+           									<label>Emergency</label>
+           									<select name="kode_emergency" class="form-control">
+           										{loop: $pegawai.emergency_index}
+           											<option value="{$value.kode_emergency}"{if: $value.kode_emergency == $pegawai.form.kode_emergency} selected{/if}>{$value.nama_emergency}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                 </div>
 
-                <div class="form-group">
-  									<label>Resiko Kerja</label>
-  									<select name="kode_resiko" class="form-control">
-  										{loop: $pegawai.resiko_kerja}
-  											<option value="{$value.kode_resiko}"{if: $value.kode_resiko == $pegawai.form.kode_resiko} selected{/if}>{$value.nama_resiko}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-  									<label>Emergency</label>
-  									<select name="kode_emergency" class="form-control">
-  										{loop: $pegawai.emergency_index}
-  											<option value="{$value.kode_emergency}"{if: $value.kode_emergency == $pegawai.form.kode_emergency} selected{/if}>{$value.nama_emergency}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-  									<label>Departemen</label>
-  									<select name="departemen" class="form-control">
-  										{loop: $pegawai.departemen}
-  											<option value="{$value.dep_id}"{if: $value.dep_id == $pegawai.form.departemen} selected{/if}>{$value.nama}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-  									<label>Bidang</label>
-  									<select name="bidang" class="form-control">
-  										{loop: $pegawai.bidang}
-  											<option value="{$value.nama}"{if: $value.nama == $pegawai.form.bidang} selected{/if}>{$value.nama}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-  									<label>Status Wajib Pajak</label>
-  									<select name="stts_wp" class="form-control">
-  										{loop: $pegawai.stts_wp}
-  											<option value="{$value.stts}"{if: $value.stts == $pegawai.form.stts_wp} selected{/if}>{$value.stts}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-  									<label>Status Kerja</label>
-  									<select name="stts_kerja" class="form-control">
-  										{loop: $pegawai.stts_kerja}
-  											<option value="{$value.stts}"{if: $value.stts == $pegawai.form.stts_kerja} selected{/if}>{$value.stts}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-                    <label>Nomor NPWP</label>
-                    <input type="text" name="npwp" class="form-control" value="{$pegawai.form.npwp}"/>
-                </div>
-                <div class="form-group">
-  									<label>Pendidikan</label>
-  									<select name="pendidikan" class="form-control">
-  										{loop: $pegawai.pendidikan}
-  											<option value="{$value.tingkat}"{if: $value.tingkat == $pegawai.form.pendidikan} selected{/if}>{$value.tingkat}</option>
-  										{/loop}
-  									</select>
-  							</div>
-                <div class="form-group">
-                    <label>Gapok</label>
-                    <input type="text" name="gapok" class="form-control" value="{$pegawai.form.gapok}"/>
-                </div>
-                <div class="form-group">
-                    <label>Mulai Kerja</label>
-                    <input type="text" name="mulai_kerja" class="form-control datepicker" value="{$pegawai.form.mulai_kerja}"/>
-                </div>
-                <div class="form-group">
-                    <label>Masa Kerja</label>
-                    <select name="ms_kerja" id="ms_kerja" class="form-control">
-                      {loop: $pegawai.ms_kerja}
-                        <option value="{$value}"{if: $value == $pegawai.form.ms_kerja} selected{/if}>{$value}</option>
-                      {/loop}
-                    </select>
-                </div>
+                 <div class="row clearfix">
+                     <div class="col-md-4">
+                         <div class="form-group">
+           									<label>Status Kerja</label>
+           									<select name="stts_kerja" class="form-control">
+           										{loop: $pegawai.stts_kerja}
+           											<option value="{$value.stts}"{if: $value.stts == $pegawai.form.stts_kerja} selected{/if}>{$value.stts}</option>
+           										{/loop}
+           									</select>
+         							</div>
+                     </div>
+                     <div class="col-md-4">
+                         <div class="form-group">
+           									<label>Status Wajib Pajak</label>
+           									<select name="stts_wp" class="form-control">
+           										{loop: $pegawai.stts_wp}
+           											<option value="{$value.stts}"{if: $value.stts == $pegawai.form.stts_wp} selected{/if}>{$value.stts}</option>
+           										{/loop}
+           									</select>
+           							</div>
+                     </div>
+                     <div class="col-md-4">
+                         <div class="form-group">
+                             <label>Nomor NPWP</label>
+                             <input type="text" name="npwp" class="form-control" value="{$pegawai.form.npwp}"/>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="row clearfix">
+                     <div class="col-md-4">
+                         <div class="form-group">
+                             <label>Gapok</label>
+                             <input type="text" name="gapok" class="form-control" value="{$pegawai.form.gapok}"/>
+                         </div>
+                     </div>
+                     <div class="col-md-4">
+                         <div class="form-group">
+                             <label>Mulai Kerja</label>
+                             <input type="text" name="mulai_kerja" class="form-control datepicker" value="{$pegawai.form.mulai_kerja}"/>
+                         </div>
+                     </div>
+                     <div class="col-md-4">
+                         <div class="form-group">
+                             <label>Masa Kerja</label>
+                             <select name="ms_kerja" id="ms_kerja" class="form-control">
+                               {loop: $pegawai.ms_kerja}
+                                 <option value="{$value}"{if: $value == $pegawai.form.ms_kerja} selected{/if}>{$value}</option>
+                               {/loop}
+                             </select>
+                         </div>
+                     </div>
+                 </div>
+
                 <div class="form-group">
   									<label>Indexins</label>
   									<select name="indexins" class="form-control">
