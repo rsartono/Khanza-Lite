@@ -106,7 +106,7 @@ class Admin extends AdminModule
         $this->assign['jk'] = $this->_addEnum('pegawai', 'jk');
         $this->assign['ms_kerja'] = $this->_addEnum('pegawai', 'ms_kerja');
         $this->assign['stts_aktif'] = $this->_addEnum('pegawai', 'stts_aktif');
-        //$this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
+        $this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
 
         return $this->draw('pegawai.form.html', ['pegawai' => $this->assign]);
     }
@@ -118,7 +118,7 @@ class Admin extends AdminModule
             $this->assign['form'] = $user;
             $this->assign['title'] = 'Edit Pegawai';
 
-            //$this->assign['fotoURL'] = url(UPLOADS.'/users/'.$user['foto']);
+            $this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
             return $this->draw('pegawai.form.html', ['pegawai' => $this->assign]);
         } else {
             redirect(url([ADMIN, 'master', 'pegawai']));
@@ -145,7 +145,7 @@ class Admin extends AdminModule
 
             if (!$id) {    // new
                 //$_POST['stts_aktif'] = 'AKTIF';
-                $_POST['foto'] = '-';
+                //$_POST['foto'] = '-';
                 $query = $this->db('pegawai')->save($_POST);
             } else {        // edit
                 $query = $this->db('pegawai')->where('id', $id)->save($_POST);
