@@ -24,17 +24,17 @@
                       </select>
                   </div>
                   <div class="form-group">
+                      <label>Jabatan</label>
+                      <input type="text" name="jbtn" class="form-control" value="{$pegawai.form.jbtn}"/>
+                  </div>
+                  <div class="form-group">
 											<label>Jabatan</label>
-											<select name="jbtn" class="form-control">
-												{loop: $pasien.jnj_jabatan}
-													<option value="{$value.kode}"{if: $value.kode == $pasien.form.jbtn} selected{/if}>{$value.nama}</option>
+											<select name="jnj_jabatan" class="form-control">
+												{loop: $pegawai.jnj_jabatan}
+													<option value="{$value.kode}"{if: $value.kode == $pegawai.form.jbtn} selected{/if}>{$value.nama}</option>
 												{/loop}
 											</select>
 									</div>
-                  <div class="form-group">
-                      <label>Jenjang Jabatan</label>
-                      <input type="text" name="jnj_jabatan" class="form-control" value="{$pegawai.form.jnj_jabatan}"/>
-                  </div>
                   <div class="form-group">
                       <label>Kelompok</label>
                       <input type="text" name="kode_kelompok" class="form-control" value="{$pegawai.form.kode_kelompok}"/>
