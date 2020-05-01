@@ -2,7 +2,21 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Data Barang</h3>
+                <h3 class="panel-title">{$databarang.title}</h3>
+                <ul class="nav nav-tabs">
+                    <li class="{if: empty($databarang.getStatus)}active{/if}">
+                        <a href="{?=url(ADMIN.'/master/databarang')?}" role="tab">Aktif</a>
+                    </li>
+                    <li class="{if: !empty($databarang.getStatus)}active{/if}">
+                        <a href="{?=url(ADMIN.'/master/databarang?status=0')?}" role="tab">Tidak Aktif</a>
+                    </li>
+                    <!--<li>
+                        <a href="{$databarang.printURL}" target="_blank" role="tab">Cetak</a>
+                    </li>-->
+                    <li>
+                        <a href="{$databarang.addURL}" role="tab">Tambah</a>
+                    </li>
+				        </ul>
             </div>
             <div class="panel-body">
               <div class="row clearfix">
@@ -25,9 +39,29 @@
     						<table class="table table-striped no-margin">
     							<thead>
     								<tr>
-    									<th>Kode Barang</th>
-    									<th>Nama Barang</th>
-    									<th class="text-right">Harga Beli</th>
+                      <th>Kode Barang</th>
+      								<th>Nama Barang</th>
+                      <th>Satuan Besar</th>
+                      <th>Satuan</th>
+                      <th>Letak</th>
+                      <th class="text-right">Harga Beli</th>
+                      <th class="text-right">Harga Ralan</th>
+                      <th class="text-right">Kelas1</th>
+                      <th class="text-right">Kelas2</th>
+                      <th class="text-right">Kelas3</th>
+                      <th class="text-right">Utama</th>
+                      <th class="text-right">VIP</th>
+                      <th class="text-right">VVIP</th>
+                      <th class="text-right">Beli Luar</th>
+                      <th class="text-right">Beli Bebas</th>
+                      <th class="text-right">Karyawan</th>
+                      <th>Stok Minimal</th>
+                      <th>Jenis</th>
+                      <th>Kapasitas</th>
+                      <th>Expired</th>
+                      <th>Industri</th>
+                      <th>Kategori</th>
+                      <th>Golongan</th>
     									<th class="text-right">Aksi</th>
     								</tr>
     							</thead>
@@ -35,9 +69,29 @@
             						{if: !empty($databarang.list)}
     								{loop: $databarang.list}
     								<tr>
-    									<td>{$value.kode_brng}</td>
-    									<td>{$value.nama_brng}</td>
-    									<td class="text-right">{?=number_format($value.h_beli,0,",",".")?}</td>
+    									<td><a href="{$value.editURL}">{$value.kode_brng}</a></td>
+                      <td>{$value.nama_brng}</td>
+                      <td>{$value.kode_satbesar}</td>
+                      <td>{$value.kode_sat}</td>
+                      <td>{$value.letak_barang}</td>
+                      <td class="text-right">{?=number_format($value.h_beli,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.ralan,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.kelas1,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.kelas2,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.kelas3,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.utama,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.vip,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.vvip,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.beliluar,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.jualbebas,0,",",".")?}</td>
+                      <td class="text-right">{?=number_format($value.karyawan,0,",",".")?}</td>
+                      <td>{$value.stokminimal}</td>
+                      <td>{$value.kdjns}</td>
+                      <td>{$value.kapasitas}</td>
+                      <td>{$value.expire}</td>
+                      <td>{$value.kode_industri}</td>
+                      <td>{$value.kode_kategori}</td>
+                      <td>{$value.kode_golongan}</td>
     									<td class="text-right">
     										<a href="{$value.viewURL}" class="btn btn-primary btn-xs">
     											<i class="fa fa-search"></i> <span class="hidden-xs">Tampil</span>
@@ -52,7 +106,7 @@
     								</tr>
     								{/loop}
     								{else}
-    								<tr><td colspan="4" class="text-center">Kosong</td></tr>
+    								<tr><td colspan="23" class="text-center">Kosong</td></tr>
     								{/if}
     							</tbody>
     						</table>

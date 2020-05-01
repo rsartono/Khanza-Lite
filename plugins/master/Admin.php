@@ -14,13 +14,17 @@ class Admin extends AdminModule
             'Petugas' => 'petugas',
             'Poliklinik' => 'poliklinik',
             'Data Barang' => 'databarang',
-            'Jenis Perawatan' => 'jnsperawatan',
+            'Perawatan Ralan' => 'jnsperawatan',
+            'Perawatan Ranap' => 'jnsperawatan_ranap',
+            'Perawatan Laboratorium' => 'jnsperawatan_lab',
+            'Perawatan Radiologi' => 'jnsperawatan_rad',
         ];
     }
 
     /* Master Dokter Section */
     public function getDokter($page = 1)
     {
+        $this->_addHeaderFiles();
         $perpage = '10';
         $phrase = '';
         if(isset($_GET['s']))
@@ -101,9 +105,10 @@ class Admin extends AdminModule
 
     public function getDokterEdit($id)
     {
-        $user = $this->db('dokter')->where('kd_dokter', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $this->_addHeaderFiles();
+        $row = $this->db('dokter')->where('kd_dokter', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Dokter';
 
             return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
@@ -173,6 +178,7 @@ class Admin extends AdminModule
     /* Master Petugas Section */
     public function getPetugas($page = 1)
     {
+        $this->_addHeaderFiles();
         $perpage = '10';
         $phrase = '';
         if(isset($_GET['s']))
@@ -252,9 +258,10 @@ class Admin extends AdminModule
 
     public function getPetugasEdit($id)
     {
-        $user = $this->db('petugas')->where('nip', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $this->_addHeaderFiles();
+        $row = $this->db('petugas')->where('nip', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Petugas';
 
             return $this->draw('petugas.form.html', ['petugas' => $this->assign]);
@@ -324,6 +331,7 @@ class Admin extends AdminModule
     /* Master Poliklinik Section */
     public function getPoliklinik($page = 1)
     {
+        $this->_addHeaderFiles();
         $perpage = '10';
 
         $phrase = '';
@@ -370,6 +378,7 @@ class Admin extends AdminModule
 
     public function getPoliklinikAdd()
     {
+        $this->_addHeaderFiles();
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
@@ -389,9 +398,10 @@ class Admin extends AdminModule
 
     public function getPoliklinikEdit($id)
     {
-        $user = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $this->_addHeaderFiles();
+        $row = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Poliklinik';
 
             return $this->draw('poliklinik.form.html', ['poliklinik' => $this->assign]);
@@ -497,20 +507,28 @@ class Admin extends AdminModule
     /* Master Databarang Section */
     public function getDatabarang($page = 1)
     {
+        $this->_addHeaderFiles();
         $perpage = '10';
         $phrase = '';
         if(isset($_GET['s']))
           $phrase = $_GET['s'];
 
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
         // pagination
-        $totalRecords = $this->core->db('databarang')->like('kode_brng', '%'.$phrase.'%')->orLike('nama_brng', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM databarang WHERE (kode_brng LIKE ? OR nama_brng LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
+        //$totalRecords = $this->core->db('databarang')->like('kode_brng', '%'.$phrase.'%')->orLike('nama_brng', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'databarang', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM databarang WHERE (kode_brng LIKE ? OR nama_brng LIKE ?) LIMIT $perpage OFFSET $offset");
+        $query = $this->db()->pdo()->prepare("SELECT * FROM databarang WHERE (kode_brng LIKE ? OR nama_brng LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
         $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
@@ -520,10 +538,16 @@ class Admin extends AdminModule
                 $row = htmlspecialchars_array($row);
                 $row['editURL'] = url([ADMIN, 'master', 'databarangedit', $row['kode_brng']]);
                 $row['delURL']  = url([ADMIN, 'master', 'databarangdelete', $row['kode_brng']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'databarangrestore', $row['kode_brng']]);
                 $row['viewURL'] = url([ADMIN, 'master', 'databarangview', $row['kode_brng']]);
                 $this->assign['list'][] = $row;
             }
         }
+
+        $this->assign['title'] = 'Kelola Databarang';
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'databarangadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'databarangprint']);
 
         return $this->draw('databarang.manage.html', ['databarang' => $this->assign]);
 
@@ -531,38 +555,79 @@ class Admin extends AdminModule
 
     public function getDatabarangAdd()
     {
+        $this->_addHeaderFiles();
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
-            $this->assign['form'] = ['kd_poli' => '', 'nm_poli' => '', 'registrasi' => '', 'registrasilama' => '', 'status' => ''];
+            $this->assign['form'] = [
+              'kode_brng' => '',
+              'nama_brng' => '',
+              'kode_satbesar' => '',
+              'kode_sat' => '',
+              'letak_barang' => '',
+              'dasar' => '',
+              'h_beli' => '',
+              'ralan' => '',
+              'kelas1' => '',
+              'kelas2' => '',
+              'kelas3' => '',
+              'utama' => '',
+              'vip' => '',
+              'vvip' => '',
+              'beliluar' => '',
+              'jualbebas' => '',
+              'karyawan' => '',
+              'stokminimal' => '',
+              'kdjns' => '',
+              'isi' => '',
+              'kapasitas' => '',
+              'expire' => '',
+              'status' => '',
+              'kode_industri' => '',
+              'kode_kategori' => '',
+              'kode_golongan' => ''
+            ];
         }
 
-        $this->assign['title'] = 'Tambah Poliklinik';
+        $this->assign['title'] = 'Tambah Databarang';
+        $this->assign['status'] = $this->_addEnum('databarang', 'status');
+        $this->assign['kdjns'] = $this->db('jenis')->toArray();
+        $this->assign['kode_sat'] = $this->db('kodesatuan')->toArray();
+        $this->assign['kode_industri'] = $this->db('industrifarmasi')->toArray();
+        $this->assign['kode_kategori'] = $this->db('kategori_barang')->toArray();
+        $this->assign['kode_golongan'] = $this->db('golongan_barang')->toArray();
 
-        return $this->draw('poliklinik.form.html', ['poliklinik' => $this->assign]);
+        return $this->draw('databarang.form.html', ['databarang' => $this->assign]);
     }
 
     public function getDatabarangEdit($id)
     {
-        $user = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
-            $this->assign['title'] = 'Edit Poliklinik';
+        $this->_addHeaderFiles();
+        $row = $this->db('databarang')->where('kode_brng', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Databarang';
+            $this->assign['status'] = $this->_addEnum('databarang', 'status');
+            $this->assign['kdjns'] = $this->db('jenis')->toArray();
+            $this->assign['kode_sat'] = $this->db('kodesatuan')->toArray();
+            $this->assign['kode_industri'] = $this->db('industrifarmasi')->toArray();
+            $this->assign['kode_kategori'] = $this->db('kategori_barang')->toArray();
+            $this->assign['kode_golongan'] = $this->db('golongan_barang')->toArray();
 
-            return $this->draw('poliklinik.form.html', ['poliklinik' => $this->assign]);
+            return $this->draw('databarang.form.html', ['databarang' => $this->assign]);
         } else {
-            redirect(url([ADMIN, 'master', 'poliklinik']));
+            redirect(url([ADMIN, 'master', 'databarang']));
         }
     }
 
     public function getDatabarangDelete($id)
     {
-        if ($this->core->db('poliklinik')->where('kd_poli', $id)->update('status', '0')) {
+        if ($this->core->db('databarang')->where('kode_brng', $id)->update('status', '0')) {
             $this->notify('success', 'Hapus sukses');
         } else {
             $this->notify('failure', 'Hapus gagal');
         }
-        redirect(url([ADMIN, 'master', 'poliklinik']));
+        redirect(url([ADMIN, 'master', 'databarang']));
     }
 
     public function postDatabarangSave($id = null)
@@ -570,12 +635,12 @@ class Admin extends AdminModule
         $errors = 0;
 
         if (!$id) {
-            $location = url([ADMIN, 'master', 'poliklinikadd']);
+            $location = url([ADMIN, 'master', 'databarangadd']);
         } else {
-            $location = url([ADMIN, 'master', 'poliklinikedit', $id]);
+            $location = url([ADMIN, 'master', 'databarangedit', $id]);
         }
 
-        if (checkEmptyFields(['kd_poli', 'nm_poli'], $_POST)) {
+        if (checkEmptyFields(['kode_brng', 'nama_brng'], $_POST)) {
             $this->notify('failure', 'Isian kosong');
             redirect($location, $_POST);
         }
@@ -585,9 +650,9 @@ class Admin extends AdminModule
 
             if (!$id) {    // new
                 $_POST['status'] = 1;
-                $query = $this->db('poliklinik')->save($_POST);
+                $query = $this->db('databarang')->save($_POST);
             } else {        // edit
-                $query = $this->db('poliklinik')->where('kd_poli', $id)->save($_POST);
+                $query = $this->db('databarang')->where('kode_brng', $id)->save($_POST);
             }
 
             if ($query) {
@@ -606,6 +671,7 @@ class Admin extends AdminModule
     /* Master Jns_Perawatan Section */
     public function getJnsPerawatan($page = 1)
     {
+        $this->_addHeaderFiles();
         $perpage = '10';
         $phrase = '';
         if(isset($_GET['s']))
@@ -640,6 +706,7 @@ class Admin extends AdminModule
 
     public function getJnsPerawatanAdd()
     {
+        $this->_addHeaderFiles();
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
@@ -653,9 +720,10 @@ class Admin extends AdminModule
 
     public function getJnsPerawatanEdit($id)
     {
-        $user = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $this->_addHeaderFiles();
+        $row = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Poliklinik';
 
             return $this->draw('jnsperawatan.form.html', ['poliklinik' => $this->assign]);
