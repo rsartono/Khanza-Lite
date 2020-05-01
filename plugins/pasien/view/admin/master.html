@@ -3,7 +3,46 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Master Bahasa Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
+                <h3 class="panel-title">Kelola Master Cara Bayar <a href="{?=url(ADMIN.'/pasien/carabayaradd/')?}" class="pull-right" role="tab">[ + ]</a></h3>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive no-margin">
+                <table class="table table-striped no-margin">
+                  <thead>
+                    <tr>
+                      <th>Kode Cara Bayar</th>
+                      <th>Nama Cara Bayar</th>
+                      <th class="text-right">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                        {if: !empty($pasien.cara_bayar)}
+                    {loop: $pasien.cara_bayar}
+                    <tr>
+                      <td>{$value.kd_pj}</td>
+                      <td>{$value.png_jawab}</td>
+                      <td class="text-right">
+                        <a href="{$value.editURL}" class="btn btn-success btn-xs">
+                          <i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
+                        </a>
+                        <a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
+    											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+    										</a>
+                      </td>
+                    </tr>
+                    {/loop}
+                    {else}
+                    <tr><td colspan="9" class="text-center">Data cara bayar tidak ditemukan</td></tr>
+                    {/if}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Kelola Master Bahasa Pasien <a href="{?=url(ADMIN.'/pasien/bahasapasienadd/')?}" class="pull-right" role="tab">[ + ]</a></h3>
             </div>
             <div class="panel-body">
     					<div class="table-responsive no-margin">
@@ -42,7 +81,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Master Suku Bangsa Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
+                <h3 class="panel-title">Kelola Master Suku Bangsa Pasien <a href="{?=url(ADMIN.'/pasien/sukubangsaadd/')?}" class="pull-right" role="tab">[ + ]</a></h3>
             </div>
             <div class="panel-body">
     					<div class="table-responsive no-margin">
@@ -81,7 +120,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Master Cacat Fisik Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
+                <h3 class="panel-title">Kelola Master Cacat Fisik Pasien <a href="{?=url(ADMIN.'/pasien/cacatfisikadd/')?}" class="pull-right" role="tab">[ + ]</a></h3>
             </div>
             <div class="panel-body">
     					<div class="table-responsive no-margin">
@@ -120,7 +159,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Master Perusahaan Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
+                <h3 class="panel-title">Kelola Master Perusahaan Pasien <a href="{?=url(ADMIN.'/pasien/perusahaanpasienadd/')?}" class="pull-right" role="tab">[ + ]</a></h3>
             </div>
             <div class="panel-body">
     					<div class="table-responsive no-margin">

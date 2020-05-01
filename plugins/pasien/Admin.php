@@ -207,32 +207,414 @@ class Admin extends AdminModule
 
     public function getMaster()
     {
-        $rows = $this->db('perusahaan_pasien')->toArray();
-        $this->assign['perusahaan_pasien'] = [];
+        $rows = $this->db('penjab')->toArray();
+        $this->assign['cara_bayar'] = [];
         foreach ($rows as $row) {
-            $this->assign['perusahaan_pasien'][] = $row;
+            $row['editURL'] = url([ADMIN, 'pasien', 'carabayaredit', $row['kd_pj']]);
+            $row['delURL']  = url([ADMIN, 'pasien', 'carabayardelete', $row['kd_pj']]);
+            $this->assign['cara_bayar'][] = $row;
         }
 
         $rows = $this->db('bahasa_pasien')->toArray();
         $this->assign['bahasa_pasien'] = [];
         foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'pasien', 'bahasapasienedit', $row['id']]);
+            $row['delURL']  = url([ADMIN, 'pasien', 'bahasapasiendelete', $row['id']]);
             $this->assign['bahasa_pasien'][] = $row;
         }
 
         $rows = $this->db('suku_bangsa')->toArray();
         $this->assign['suku_bangsa'] = [];
         foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'pasien', 'sukubangsaedit', $row['id']]);
+            $row['delURL']  = url([ADMIN, 'pasien', 'sukubangsadelete', $row['id']]);
             $this->assign['suku_bangsa'][] = $row;
         }
 
         $rows = $this->db('cacat_fisik')->toArray();
         $this->assign['cacat_fisik'] = [];
         foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'pasien', 'cacatfisikedit', $row['id']]);
+            $row['delURL']  = url([ADMIN, 'pasien', 'cacatfisikdelete', $row['id']]);
             $this->assign['cacat_fisik'][] = $row;
+        }
+
+        $rows = $this->db('perusahaan_pasien')->toArray();
+        $this->assign['perusahaan_pasien'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'pasien', 'perusahaanpasienedit', $row['kode_perusahaan']]);
+            $row['delURL']  = url([ADMIN, 'pasien', 'perusahaanpasiendelete', $row['kode_perusahaan']]);
+            $this->assign['perusahaan_pasien'][] = $row;
         }
 
         return $this->draw('master.html', ['pasien' => $this->assign]);
     }
+
+    public function getCarabayarAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kd_pj' => '',
+              'png_jawab' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Cara Bayar';
+
+        return $this->draw('carabayar.form.html', ['pasien' => $this->assign]);
+    }
+
+    public function getCarabayarEdit($id)
+    {
+        $user = $this->db('penjab')->where('kd_pj', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Cara Bayar';
+
+            return $this->draw('carabayar.form.html', ['pasien' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pasien', 'master']));
+        }
+    }
+
+    public function postCarabayarSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('penjab')->where('kd_pj', $_POST['kd_pj'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'pasien', 'master']);
+        } else {
+            $location = url([ADMIN, 'pasien', 'carabayaredit', $id]);
+        }
+
+        if (checkEmptyFields(['kd_pj', 'png_jawab'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('penjab')->save($_POST);
+            } else {        // edit
+                $query = $this->db('penjab')->where('kd_pj', $_POST['kd_pj'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getBahasapasienAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'id' => '',
+              'nama_bahasa' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Bahasa Pasien';
+
+        return $this->draw('bahasapasien.form.html', ['pasien' => $this->assign]);
+    }
+
+    public function getBahasapasienEdit($id)
+    {
+        $rows = $this->db('bahasa_pasien')->where('id', $id)->oneArray();
+        if (!empty($rows)) {
+            $this->assign['form'] = $rows;
+            $this->assign['title'] = 'Edit Bahasa Pasien';
+
+            return $this->draw('bahasapasien.form.html', ['pasien' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pasien', 'master']));
+        }
+    }
+
+    public function getBahasapasienDelete($id)
+    {
+        if ($this->core->db('bahasa_pasien')->where('id', $id)->delete()) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'pasien', 'master']));
+    }
+
+    public function postBahasapasienSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'pasien', 'master']);
+        } else {
+            $location = url([ADMIN, 'pasien', 'bahasapasienedit', $id]);
+        }
+
+        if (checkEmptyFields(['id', 'nama_bahasa'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $query = $this->db('bahasa_pasien')->save($_POST);
+            } else {        // edit
+                $query = $this->db('bahasa_pasien')->where('id', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getSukubangsaAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'id' => '',
+              'nama_suku_bangsa' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Suku Bangsa Pasien';
+
+        return $this->draw('sukubangsa.form.html', ['pasien' => $this->assign]);
+    }
+
+    public function getSukubangsaEdit($id)
+    {
+        $rows = $this->db('suku_bangsa')->where('id', $id)->oneArray();
+        if (!empty($rows)) {
+            $this->assign['form'] = $rows;
+            $this->assign['title'] = 'Edit Suku Bangsa Pasien';
+
+            return $this->draw('sukubangsa.form.html', ['pasien' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pasien', 'master']));
+        }
+    }
+
+    public function getSukubangsaDelete($id)
+    {
+        if ($this->core->db('suku_bangsa')->where('id', $id)->delete()) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'pasien', 'master']));
+    }
+
+    public function postSukubangsaSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'pasien', 'master']);
+        } else {
+            $location = url([ADMIN, 'pasien', 'sukubangsaedit', $id]);
+        }
+
+        if (checkEmptyFields(['id', 'nama_suku_bangsa'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $query = $this->db('suku_bangsa')->save($_POST);
+            } else {        // edit
+                $query = $this->db('suku_bangsa')->where('id', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getCacatfisikAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'id' => '',
+              'nama_cacat' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Cacat Fisik Pasien';
+
+        return $this->draw('cacatfisik.form.html', ['pasien' => $this->assign]);
+    }
+
+    public function getCacatfisikEdit($id)
+    {
+        $rows = $this->db('cacat_fisik')->where('id', $id)->oneArray();
+        if (!empty($rows)) {
+            $this->assign['form'] = $rows;
+            $this->assign['title'] = 'Edit Cacat Fisik Pasien';
+
+            return $this->draw('cacatfisik.form.html', ['pasien' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pasien', 'master']));
+        }
+    }
+
+    public function getCacatfisikDelete($id)
+    {
+        if ($this->core->db('cacat_fisik')->where('id', $id)->delete()) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'pasien', 'master']));
+    }
+
+    public function postCacatfisikSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'pasien', 'master']);
+        } else {
+            $location = url([ADMIN, 'pasien', 'cacatfisikedit', $id]);
+        }
+
+        if (checkEmptyFields(['id', 'nama_cacat'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $query = $this->db('cacat_fisik')->save($_POST);
+            } else {        // edit
+                $query = $this->db('cacat_fisik')->where('id', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getPerusahaanpasienAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode_perusahaan' => '',
+              'nama_perusahaan' => '',
+              'alamat' => '',
+              'kota' => '',
+              'no_telp' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Perusahaan Pasien';
+
+        return $this->draw('perusahaanpasien.form.html', ['pasien' => $this->assign]);
+    }
+
+    public function getPerusahaanpasienEdit($id)
+    {
+        $rows = $this->db('perusahaan_pasien')->where('kode_perusahaan', $id)->oneArray();
+        if (!empty($rows)) {
+            $this->assign['form'] = $rows;
+            $this->assign['title'] = 'Edit Perusahaan Pasien';
+
+            return $this->draw('perusahaanpasien.form.html', ['pasien' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pasien', 'master']));
+        }
+    }
+
+    public function getPerusahaanpasienDelete($id)
+    {
+        if ($this->core->db('perusahaan_pasien')->where('kode_perusahaan', $id)->delete()) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'pasien', 'master']));
+    }
+
+    public function postPerusahaanpasienSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'pasien', 'master']);
+        } else {
+            $location = url([ADMIN, 'pasien', 'perusahaanpasienedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode_perusahaan', 'nama_perusahaan'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $query = $this->db('perusahaan_pasien')->save($_POST);
+            } else {        // edit
+                $query = $this->db('perusahaan_pasien')->where('kode_perusahaan', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
     public function getPrint_kartu($id)
     {
       $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();

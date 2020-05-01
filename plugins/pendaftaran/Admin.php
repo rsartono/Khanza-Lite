@@ -15,8 +15,7 @@ class Admin extends AdminModule
         return [
             'Kelola'    => 'manage',
             'Tambah Baru'                => 'add',
-            'Jadwal Dokter'          => 'jadwal',
-            'Master Pendaftaran'                => 'master'
+            'Jadwal Dokter'          => 'jadwal'
         ];
     }
 
@@ -204,7 +203,6 @@ class Admin extends AdminModule
             $this->notify('failure', 'Pasiens sudah terdaftar ditanggal yang sama.');
         }
 
-        // check if pasien already exists
         if(CEKSTATUSBAYAR) {
           if ($this->_cekStatusBayar($id)) {
               $errors++;
@@ -227,70 +225,6 @@ class Admin extends AdminModule
                 $query = $this->db('reg_periksa')->where('no_rawat', $_POST['no_rawat'])->save($_POST);
             }
 
-
-            if ($query) {
-                $this->notify('success', 'Simpan sukes');
-            } else {
-                $this->notify('failure', 'Simpan gagal');
-            }
-
-            redirect($location);
-        }
-
-        redirect($location, $_POST);
-    }
-
-    public function getCarabayarAdd()
-    {
-        if (!empty($redirectData = getRedirectData())) {
-            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
-        } else {
-            $this->assign['form'] = [
-              'kd_pj' => '',
-              'png_jawab' => ''
-            ];
-        }
-        $this->assign['title'] = 'Tambah Cara Bayar';
-
-        return $this->draw('carabayar.form.html', ['pendaftaran' => $this->assign]);
-    }
-
-    public function getCarabayarEdit($id)
-    {
-        $user = $this->db('penjab')->where('kd_pj', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
-            $this->assign['title'] = 'Edit Cara Bayar';
-
-            return $this->draw('carabayar.form.html', ['pendaftaran' => $this->assign]);
-        } else {
-            redirect(url([ADMIN, 'pendaftaran', 'master']));
-        }
-    }
-
-    public function postCarabayarSave($id = null)
-    {
-        $errors = 0;
-
-        if (!$id) {
-            $location = url([ADMIN, 'pendaftaran', 'master']);
-        } else {
-            $location = url([ADMIN, 'pendaftaran', 'carabayaredit', $id]);
-        }
-
-        if (checkEmptyFields(['kd_pj', 'png_jawab'], $_POST)) {
-            $this->notify('failure', 'Isian kosong');
-            redirect($location, $_POST);
-        }
-
-        if (!$errors) {
-            unset($_POST['save']);
-
-            if (!$id) {    // new
-                $query = $this->db('penjab')->save($_POST);
-            } else {        // edit
-                $query = $this->db('penjab')->where('kd_pj', $id)->save($_POST);
-            }
 
             if ($query) {
                 $this->notify('success', 'Simpan sukes');
@@ -426,18 +360,6 @@ class Admin extends AdminModule
         break;
       }
       exit();
-    }
-
-    public function getMaster()
-    {
-        $rows = $this->db('penjab')->toArray();
-        $this->assign['cara_bayar'] = [];
-        foreach ($rows as $row) {
-            $row['editURL'] = url([ADMIN, 'pendaftaran', 'carabayaredit', $row['kd_pj']]);
-            $this->assign['cara_bayar'][] = $row;
-        }
-
-        return $this->draw('master.html', ['pendaftaran' => $this->assign]);
     }
 
     public function getJadwal()
