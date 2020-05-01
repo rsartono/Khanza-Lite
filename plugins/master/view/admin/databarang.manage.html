@@ -10,9 +10,9 @@
                     <li class="{if: !empty($databarang.getStatus)}active{/if}">
                         <a href="{?=url(ADMIN.'/master/databarang?status=0')?}" role="tab">Tidak Aktif</a>
                     </li>
-                    <!--<li>
+                    <li>
                         <a href="{$databarang.printURL}" target="_blank" role="tab">Cetak</a>
-                    </li>-->
+                    </li>
                     <li>
                         <a href="{$databarang.addURL}" role="tab">Tambah</a>
                     </li>
@@ -99,9 +99,15 @@
     										<a href="{$value.editURL}" class="btn btn-success btn-xs">
     											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
     										</a>
-    										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
-    											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
-    										</a>
+                        {if: $value.status == '1'}
+                          <a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
+      											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+      										</a>
+                        {else}
+                          <a href="{$value.restoreURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin merestore?">
+      											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Restrore</span>
+      										</a>
+                        {/if}
     									</td>
     								</tr>
     								{/loop}

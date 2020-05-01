@@ -2,26 +2,70 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{$poliklinik.title}</h3>
+                <h3 class="panel-title">{$jnsperawatan.title}</h3>
             </div>
             <div class="panel-body">
-    		<form name="poliklinik" action="{?=url(ADMIN.'/master/polikliniksave/'.@$poliklinik.form.kd_poli)?}" method="POST">
+    		<form name="jnsperawatan" action="{?=url(ADMIN.'/master/jnsperawatansave/'.@$jnsperawatan.form.kd_jenis_prw)?}" method="POST">
     			<fieldset>
                   <div class="form-group">
-                      <label>Kode Poli</label>
-                      <input type="text" name="kd_poli" class="form-control" value="{$poliklinik.form.kd_poli}" />
+                      <label>Kode Jenis Perawatan</label>
+                      <input type="text" name="kd_jenis_prw" class="form-control" value="{$jnsperawatan.form.kd_jenis_prw}" />
                   </div>
                   <div class="form-group">
-                      <label>Nama Poli</label>
-                      <input type="text" name="nm_poli" class="form-control" value="{$poliklinik.form.nm_poli}"/>
+                      <label>Nama Perawatan</label>
+                      <input type="text" name="nm_perawatan" class="form-control" value="{$jnsperawatan.form.nm_perawatan}" />
                   </div>
                   <div class="form-group">
-                      <label>Biaya Registrasi</label>
-                      <input type="text" name="registrasi" class="form-control" value="{$poliklinik.form.registrasi}"/>
+                      <label>Kode Kategori</label>
+                      <input type="text" name="kd_kategori" class="form-control" value="{$jnsperawatan.form.kd_kategori}" />
                   </div>
                   <div class="form-group">
-                      <label>Biaya Registrasi Lama</label>
-                      <input type="text" name="registrasilama" class="form-control" value="{$poliklinik.form.registrasilama}"/>
+                      <label>Material</label>
+                      <input type="text" name="material" class="form-control" value="{$jnsperawatan.form.material}" />
+                  </div>
+                  <div class="form-group">
+                      <label>BHP</label>
+                      <input type="text" name="bhp" class="form-control" value="{$jnsperawatan.form.bhp}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Tarif Tindakan Dokter</label>
+                      <input type="text" name="tarif_tindakandr" class="form-control" value="{$jnsperawatan.form.tarif_tindakandr}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Tarif Tindakan Perawat</label>
+                      <input type="text" name="tarif_tindakanpr" class="form-control" value="{$jnsperawatan.form.tarif_tindakanpr}" />
+                  </div>
+                  <div class="form-group">
+                      <label>KSO</label>
+                      <input type="text" name="kso" class="form-control" value="{$jnsperawatan.form.kso}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Menejemen</label>
+                      <input type="text" name="menejemen" class="form-control" value="{$jnsperawatan.form.menejemen}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Total Bayar Dokter</label>
+                      <input type="text" name="total_byrdr" class="form-control" value="{$jnsperawatan.form.total_byrdr}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Total Bayar Perawat</label>
+                      <input type="text" name="total_byrpr" class="form-control" value="{$jnsperawatan.form.total_byrpr}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Total Bayar Dokter dan Perawat</label>
+                      <input type="text" name="total_byrdrpr" class="form-control" value="{$jnsperawatan.form.total_byrdrpr}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Cara Bayar</label>
+                      <input type="text" name="kd_pj" class="form-control" value="{$jnsperawatan.form.kd_pj}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Poliklinik</label>
+                      <input type="text" name="kd_poli" class="form-control" value="{$jnsperawatan.form.kd_poli}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Status</label>
+                      <input type="text" name="status" class="form-control" value="{$jnsperawatan.form.status}" />
                   </div>
     	            <div class="form-group">
     	                <input type="submit" name="save" class="btn btn-primary" value="Simpan" />

@@ -15,7 +15,6 @@ class Admin extends AdminModule
             'Poliklinik' => 'poliklinik',
             'Data Barang' => 'databarang',
             'Perawatan Ralan' => 'jnsperawatan',
-            'Perawatan Ranap' => 'jnsperawatan_ranap',
             'Perawatan Laboratorium' => 'jnsperawatan_lab',
             'Perawatan Radiologi' => 'jnsperawatan_rad',
         ];
@@ -521,7 +520,6 @@ class Admin extends AdminModule
         $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM databarang WHERE (kode_brng LIKE ? OR nama_brng LIKE ?) AND status = '$status'");
         $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $totalRecords = $totalRecords->fetchAll();
-        //$totalRecords = $this->core->db('databarang')->like('kode_brng', '%'.$phrase.'%')->orLike('nama_brng', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'databarang', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
@@ -630,6 +628,16 @@ class Admin extends AdminModule
         redirect(url([ADMIN, 'master', 'databarang']));
     }
 
+    public function getDatabarangRestore($id)
+    {
+        if ($this->core->db('databarang')->where('kode_brng', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'databarang']));
+    }
+
     public function postDatabarangSave($id = null)
     {
         $errors = 0;
@@ -649,7 +657,7 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if (!$id) {    // new
-                $_POST['status'] = 1;
+                $_POST['status'] = '1';
                 $query = $this->db('databarang')->save($_POST);
             } else {        // edit
                 $query = $this->db('databarang')->where('kode_brng', $id)->save($_POST);
@@ -677,7 +685,14 @@ class Admin extends AdminModule
         if(isset($_GET['s']))
           $phrase = $_GET['s'];
 
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
         // pagination
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
         $totalRecords = $this->core->db('jns_perawatan')->like('kd_jenis_prw', '%'.$phrase.'%')->orLike('nm_perawatan', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'jnsperawatan', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
@@ -685,7 +700,7 @@ class Admin extends AdminModule
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) LIMIT $perpage OFFSET $offset");
+        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
         $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
@@ -695,10 +710,16 @@ class Admin extends AdminModule
                 $row = htmlspecialchars_array($row);
                 $row['editURL'] = url([ADMIN, 'master', 'jnsperawatanedit', $row['kd_jenis_prw']]);
                 $row['delURL']  = url([ADMIN, 'master', 'jnsperawatandelete', $row['kd_jenis_prw']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'jnsperawatanrestore', $row['kd_jenis_prw']]);
                 $row['viewURL'] = url([ADMIN, 'master', 'jnsperawatanview', $row['kd_jenis_prw']]);
                 $this->assign['list'][] = $row;
             }
         }
+
+        $this->assign['title'] = 'Kelola Jenis Perawatan';
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'jnsperawatanadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'jnsperawatanprint']);
 
         return $this->draw('jnsperawatan.manage.html', ['jnsperawatan' => $this->assign]);
 
@@ -710,34 +731,60 @@ class Admin extends AdminModule
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
-            $this->assign['form'] = ['kd_poli' => '', 'nm_poli' => '', 'registrasi' => '', 'registrasilama' => '', 'status' => ''];
+            $this->assign['form'] = [
+              'kd_jenis_prw' => '',
+              'nm_perawatan' => '',
+              'kd_kategori' => '',
+              'material' => '',
+              'bhp' => '',
+              'tarif_tindakandr' => '',
+              'tarif_tindakanpr' => '',
+              'kso' => '',
+              'menejemen' => '',
+              'total_byrdr' => '',
+              'total_byrpr' => '',
+              'total_byrdrpr' => '',
+              'kd_pj' => '',
+              'kd_poli' => '',
+              'status' => ''
+            ];
         }
 
-        $this->assign['title'] = 'Tambah Poliklinik';
+        $this->assign['title'] = 'Tambah Jenis Perawatan';
 
-        return $this->draw('jnsperawatan.form.html', ['poliklinik' => $this->assign]);
+        return $this->draw('jnsperawatan.form.html', ['jnsperawatan' => $this->assign]);
     }
 
     public function getJnsPerawatanEdit($id)
     {
         $this->_addHeaderFiles();
-        $row = $this->db('poliklinik')->where('kd_poli', $id)->oneArray();
+        $row = $this->db('jns_perawatan')->where('kd_jenis_prw', $id)->oneArray();
         if (!empty($row)) {
             $this->assign['form'] = $row;
-            $this->assign['title'] = 'Edit Poliklinik';
+            $this->assign['title'] = 'Edit Jenis Perawatan';
 
-            return $this->draw('jnsperawatan.form.html', ['poliklinik' => $this->assign]);
+            return $this->draw('jnsperawatan.form.html', ['jnsperawatan' => $this->assign]);
         } else {
-            redirect(url([ADMIN, 'master', 'poliklinik']));
+            redirect(url([ADMIN, 'master', 'jnsperawatan']));
         }
     }
 
     public function getJnsPerawatanDelete($id)
     {
-        if ($this->core->db('poliklinik')->where('kd_poli', $id)->update('status', '0')) {
+        if ($this->core->db('jns_perawatan')->where('kd_jenis_prw', $id)->update('status', '0')) {
             $this->notify('success', 'Hapus sukses');
         } else {
             $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'jnsperawatan']));
+    }
+
+    public function getJnsPerawatanRestore($id)
+    {
+        if ($this->core->db('jns_perawatan')->where('kd_jenis_prw', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
         }
         redirect(url([ADMIN, 'master', 'jnsperawatan']));
     }
@@ -747,13 +794,13 @@ class Admin extends AdminModule
         $errors = 0;
 
         if (!$id) {
-            $location = url([ADMIN, 'master', 'poliklinikadd']);
+            $location = url([ADMIN, 'master', 'jnsperawatanadd']);
         } else {
-            $location = url([ADMIN, 'master', 'poliklinikedit', $id]);
+            $location = url([ADMIN, 'master', 'jnsperawatanedit', $id]);
         }
 
-        if (checkEmptyFields(['kd_poli', 'nm_poli'], $_POST)) {
-            $this->notify('failure', 'Isian kosong');
+        if (checkEmptyFields(['kd_jenis_prw', 'nm_perawatan'], $_POST)) {
+            $this->notify('failure', 'Isian masih ada yang kosong');
             redirect($location, $_POST);
         }
 
@@ -761,10 +808,10 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if (!$id) {    // new
-                $_POST['status'] = 1;
-                $query = $this->db('poliklinik')->save($_POST);
+                $_POST['status'] = '1';
+                $query = $this->db('jns_perawatan')->save($_POST);
             } else {        // edit
-                $query = $this->db('poliklinik')->where('kd_poli', $id)->save($_POST);
+                $query = $this->db('jns_perawatan')->where('kd_jenis_prw', $id)->save($_POST);
             }
 
             if ($query) {

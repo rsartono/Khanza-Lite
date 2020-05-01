@@ -2,7 +2,21 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Jenis Perawatan</h3>
+                <h3 class="panel-title">{$jnsperawatan.title}</h3>
+                <ul class="nav nav-tabs">
+                    <li class="{if: empty($jnsperawatan.getStatus)}active{/if}">
+                        <a href="{?=url(ADMIN.'/master/jnsperawatan')?}" role="tab">Aktif</a>
+                    </li>
+                    <li class="{if: !empty($jnsperawatan.getStatus)}active{/if}">
+                        <a href="{?=url(ADMIN.'/master/jnsperawatan?status=0')?}" role="tab">Tidak Aktif</a>
+                    </li>
+                    <li>
+                        <a href="{$jnsperawatan.printURL}" target="_blank" role="tab">Cetak</a>
+                    </li>
+                    <li>
+                        <a href="{$jnsperawatan.addURL}" role="tab">Tambah</a>
+                    </li>
+                </ul>
             </div>
             <div class="panel-body">
               <div class="row clearfix">
@@ -45,9 +59,15 @@
     										<a href="{$value.editURL}" class="btn btn-success btn-xs">
     											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
     										</a>
-    										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
-    											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
-    										</a>
+                        {if: $value.status == '1'}
+                          <a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
+      											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+      										</a>
+                        {else}
+                          <a href="{$value.restoreURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin merestore?">
+      											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Restrore</span>
+      										</a>
+                        {/if}
     									</td>
     								</tr>
     								{/loop}
