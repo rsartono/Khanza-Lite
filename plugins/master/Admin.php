@@ -15,8 +15,8 @@ class Admin extends AdminModule
             'Poliklinik' => 'poliklinik',
             'Data Barang' => 'databarang',
             'Perawatan Ralan' => 'jnsperawatan',
-            'Perawatan Laboratorium' => 'jnsperawatan_lab',
-            'Perawatan Radiologi' => 'jnsperawatan_rad',
+            'Perawatan Laboratorium' => 'jnsperawatanlab',
+            'Perawatan Radiologi' => 'jnsperawatanrad',
         ];
     }
 
@@ -674,6 +674,60 @@ class Admin extends AdminModule
 
         redirect($location, $_POST);
     }
+
+    public function getDatabarangPrint()
+    {
+      $pasien = $this->db('databarang')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table('L','mm','Legal');
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 345, 30);
+      $pdf->Line(10, 31, 345, 31);
+      $pdf->Text(10, 40, 'DATA DATABARANG');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(25,50,20,20,20,20,20,20,20,20,20,20,20,20,20,20));
+      $pdf->Row(array('Kode Barang', 'Nama Barang', 'H. Dasar', 'H. Beli', 'Ralan', 'Kelas 1', 'Kelas 2', 'Kelas 3', 'Utama', 'VIP', 'VVIP', 'Beli Luar', 'Jual Bebas', 'Karyawan', 'Status'));
+
+      foreach ($pasien as $hasil) {
+        $status = 'Aktif';
+        if($hasil['status'] == '0') {
+          $status = 'Tidak Aktif';
+        }
+        $pdf->Row(array(
+          $hasil['kode_brng'],
+          $hasil['nama_brng'],
+          number_format($hasil['dasar'],0,",","."),
+          number_format($hasil['h_beli'],0,",","."),
+          number_format($hasil['ralan'],0,",","."),
+          number_format($hasil['kelas1'],0,",","."),
+          number_format($hasil['kelas2'],0,",","."),
+          number_format($hasil['kelas3'],0,",","."),
+          number_format($hasil['utama'],0,",","."),
+          number_format($hasil['vip'],0,",","."),
+          number_format($hasil['vvip'],0,",","."),
+          number_format($hasil['beliluar'],0,",","."),
+          number_format($hasil['jualbebas'],0,",","."),
+          number_format($hasil['karyawan'],0,",","."),
+          $status
+        ));
+      }
+      $pdf->Output('laporan_pasien_'.date('Y-m-d').'.pdf','I');
+
+    }
+
     /* End Master Databarang Section */
 
     /* Master Jns_Perawatan Section */
@@ -751,6 +805,10 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Jenis Perawatan';
+        $this->assign['status'] = $this->_addEnum('jns_perawatan', 'status');
+        $this->assign['kd_kategori'] = $this->db('kategori_perawatan')->toArray();
+        $this->assign['kd_pj'] = $this->db('penjab')->toArray();
+        $this->assign['kd_poli'] = $this->db('poliklinik')->toArray();
 
         return $this->draw('jnsperawatan.form.html', ['jnsperawatan' => $this->assign]);
     }
@@ -762,6 +820,10 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Jenis Perawatan';
+            $this->assign['status'] = $this->_addEnum('jns_perawatan', 'status');
+            $this->assign['kd_kategori'] = $this->db('kategori_perawatan')->toArray();
+            $this->assign['kd_pj'] = $this->db('penjab')->toArray();
+            $this->assign['kd_poli'] = $this->db('poliklinik')->toArray();
 
             return $this->draw('jnsperawatan.form.html', ['jnsperawatan' => $this->assign]);
         } else {
@@ -825,7 +887,431 @@ class Admin extends AdminModule
 
         redirect($location, $_POST);
     }
+
+    public function getJnsPerawatanPrint()
+    {
+      $pasien = $this->db('jns_perawatan')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table('L','mm','Legal');
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 345, 30);
+      $pdf->Line(10, 31, 345, 31);
+      $pdf->Text(10, 40, 'DATA JENIS PERAWATAN RAWAT JALAN');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(30,75,20,20,20,20,20,25,20,30,35,20));
+      $pdf->Row(array('Kd. Perawatan', 'Nama Perawatan', 'B. Material', 'B. BHP', 'B. Dokter', 'B. Perawat', 'KSO', 'Manajemen', 'Ttl. Dokter', 'Ttl. Perawat', 'Ttl. Dokter/Perawat', 'Status'));
+
+      foreach ($pasien as $hasil) {
+        $status = 'Aktif';
+        if($hasil['status'] == '0') {
+          $status = 'Tidak Aktif';
+        }
+        $pdf->Row(array($hasil['kd_jenis_prw'], $hasil['nm_perawatan'], $hasil['material'], $hasil['bhp'], $hasil['tarif_tindakandr'], $hasil['tarif_tindakanpr'], $hasil['kso'], $hasil['menejemen'], $hasil['total_byrdr'], $hasil['total_byrpr'], $hasil['total_byrdrpr'], $status));
+      }
+      $pdf->Output('laporan_pasien_'.date('Y-m-d').'.pdf','I');
+
+    }
+
     /* End Master Jns_Perawatan Section */
+
+    /* Master Jns_Perawatan Lab Section */
+    public function getJnsPerawatanLab($page = 1)
+    {
+        $this->_addHeaderFiles();
+        $perpage = '10';
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
+        // pagination
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_lab WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
+        $totalRecords = $this->core->db('jns_perawatan_lab')->like('kd_jenis_prw', '%'.$phrase.'%')->orLike('nm_perawatan', '%'.$phrase.'%')->toArray();
+        $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'jnsperawatanlab', '%d']));
+        $this->assign['pagination'] = $pagination->nav('pagination','5');
+        $this->assign['totalRecords'] = $totalRecords;
+
+        // list
+        $offset = $pagination->offset();
+        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_lab WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
+        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $rows = $query->fetchAll();
+
+        $this->assign['list'] = [];
+        if (count($rows)) {
+            foreach ($rows as $row) {
+                $row = htmlspecialchars_array($row);
+                $row['editURL'] = url([ADMIN, 'master', 'jnsperawatanlabedit', $row['kd_jenis_prw']]);
+                $row['delURL']  = url([ADMIN, 'master', 'jnsperawatanlabdelete', $row['kd_jenis_prw']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'jnsperawatanlabrestore', $row['kd_jenis_prw']]);
+                $row['viewURL'] = url([ADMIN, 'master', 'jnsperawatanlabview', $row['kd_jenis_prw']]);
+                $this->assign['list'][] = $row;
+            }
+        }
+
+        $this->assign['title'] = 'Kelola Jenis Perawatan Laboratorium';
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'jnsperawatanlabadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'jnsperawatanlabprint']);
+
+        return $this->draw('jnsperawatanlab.manage.html', ['jnsperawatanlab' => $this->assign]);
+
+    }
+
+    public function getJnsPerawatanLabAdd()
+    {
+        $this->_addHeaderFiles();
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kd_jenis_prw' => '',
+              'nm_perawatan' => '',
+              'bagian_rs' => '',
+              'bhp' => '',
+              'tarif_perujuk' => '',
+              'tarif_tindakan_dokter' => '',
+              'tarif_tindakan_petugas' => '',
+              'kso' => '',
+              'menejemen' => '',
+              'total_byr' => '',
+              'kd_pj' => '',
+              'status' => '',
+              'kelas' => ''
+            ];
+        }
+
+        $this->assign['title'] = 'Tambah Jenis Perawatan Laboratorium';
+        $this->assign['status'] = $this->_addEnum('jns_perawatan_lab', 'status');
+        $this->assign['kelas'] = $this->_addEnum('jns_perawatan_lab', 'kelas');
+        $this->assign['kd_pj'] = $this->db('penjab')->toArray();
+
+        return $this->draw('jnsperawatanlab.form.html', ['jnsperawatanlab' => $this->assign]);
+    }
+
+    public function getJnsPerawatanLabEdit($id)
+    {
+        $this->_addHeaderFiles();
+        $row = $this->db('jns_perawatan_lab')->where('kd_jenis_prw', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Jenis Perawatan Laboratorium';
+            $this->assign['status'] = $this->_addEnum('jns_perawatan_lab', 'status');
+            $this->assign['kelas'] = $this->_addEnum('jns_perawatan_lab', 'kelas');
+            $this->assign['kd_pj'] = $this->db('penjab')->toArray();
+
+            return $this->draw('jnsperawatanlab.form.html', ['jnsperawatanlab' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'master', 'jnsperawatanlab']));
+        }
+    }
+
+    public function getJnsPerawatanLabDelete($id)
+    {
+        if ($this->core->db('jns_perawatan_lab')->where('kd_jenis_prw', $id)->update('status', '0')) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'jnsperawatanlab']));
+    }
+
+    public function getJnsPerawatanLabRestore($id)
+    {
+        if ($this->core->db('jns_perawatan_lab')->where('kd_jenis_prw', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'jnsperawatanlab']));
+    }
+
+    public function postJnsPerawatanLabSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'master', 'jnsperawatanlabadd']);
+        } else {
+            $location = url([ADMIN, 'master', 'jnsperawatanlabedit', $id]);
+        }
+
+        if (checkEmptyFields(['kd_jenis_prw', 'nm_perawatan'], $_POST)) {
+            $this->notify('failure', 'Isian masih ada yang kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $_POST['status'] = '1';
+                $query = $this->db('jns_perawatan_lab')->save($_POST);
+            } else {        // edit
+                $query = $this->db('jns_perawatan_lab')->where('kd_jenis_prw', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getJnsPerawatanLabPrint()
+    {
+      $pasien = $this->db('jns_perawatan_lab')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table('L','mm','Legal');
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 345, 30);
+      $pdf->Line(10, 31, 345, 31);
+      $pdf->Ln(34);
+      $pdf->Text(10, 40, 'DATA JENIS PERAWATAN LABORATORIUM');
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(30,80,30,20,20,20,20,20,25,25,25,20));
+      $pdf->Row(array('Kd. Perawatan', 'Nama Perawatan', 'B. Rumah Sakit', 'B. BHP', 'B. Perujuk', 'B. Dokter', 'B. Petugas', 'KSO', 'Manajemen', 'Total Biaya', 'Kelas', 'Status'));
+
+      foreach ($pasien as $hasil) {
+        $status = 'Aktif';
+        if($hasil['status'] == '0') {
+          $status = 'Tidak Aktif';
+        }
+        $pdf->Row(array($hasil['kd_jenis_prw'], $hasil['nm_perawatan'], $hasil['bagian_rs'], $hasil['bhp'], $hasil['tarif_perujuk'], $hasil['tarif_tindakan_dokter'], $hasil['tarif_tindakan_petugas'], $hasil['kso'], $hasil['menejemen'], $hasil['total_byr'], $hasil['kelas'], $status));
+      }
+      $pdf->Output('laporan_pasien_'.date('Y-m-d').'.pdf','I');
+
+    }
+
+    /* End Master Jns_Perawatan Lab Section */
+
+    /* Master Jns_Perawatan Rad Section */
+    public function getJnsPerawatanRad($page = 1)
+    {
+        $this->_addHeaderFiles();
+        $perpage = '10';
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
+        // pagination
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_radiologi WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
+        $totalRecords = $this->core->db('jns_perawatan_radiologi')->like('kd_jenis_prw', '%'.$phrase.'%')->orLike('nm_perawatan', '%'.$phrase.'%')->toArray();
+        $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'jns_perawatan_radiologi', '%d']));
+        $this->assign['pagination'] = $pagination->nav('pagination','5');
+        $this->assign['totalRecords'] = $totalRecords;
+
+        // list
+        $offset = $pagination->offset();
+        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_radiologi WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
+        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $rows = $query->fetchAll();
+
+        $this->assign['list'] = [];
+        if (count($rows)) {
+            foreach ($rows as $row) {
+                $row = htmlspecialchars_array($row);
+                $row['editURL'] = url([ADMIN, 'master', 'jnsperawatanradedit', $row['kd_jenis_prw']]);
+                $row['delURL']  = url([ADMIN, 'master', 'jnsperawatanraddelete', $row['kd_jenis_prw']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'jnsperawatanradrestore', $row['kd_jenis_prw']]);
+                $row['viewURL'] = url([ADMIN, 'master', 'jnsperawatanradview', $row['kd_jenis_prw']]);
+                $this->assign['list'][] = $row;
+            }
+        }
+
+        $this->assign['title'] = 'Kelola Jenis Perawatan Laboratorium';
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'jnsperawatanradadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'jnsperawatanradprint']);
+
+        return $this->draw('jnsperawatanrad.manage.html', ['jnsperawatanrad' => $this->assign]);
+
+    }
+
+    public function getJnsPerawatanRadAdd()
+    {
+        $this->_addHeaderFiles();
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kd_jenis_prw' => '',
+              'nm_perawatan' => '',
+              'bagian_rs' => '',
+              'bhp' => '',
+              'tarif_perujuk' => '',
+              'tarif_tindakan_dokter' => '',
+              'tarif_tindakan_petugas' => '',
+              'kso' => '',
+              'menejemen' => '',
+              'total_byr' => '',
+              'kd_pj' => '',
+              'status' => '',
+              'kelas' => ''
+            ];
+        }
+
+        $this->assign['title'] = 'Tambah Jenis Perawatan Laboratorium';
+        $this->assign['status'] = $this->_addEnum('jns_perawatan_radiologi', 'status');
+        $this->assign['kelas'] = $this->_addEnum('jns_perawatan_radiologi', 'kelas');
+        $this->assign['kd_pj'] = $this->db('penjab')->toArray();
+
+        return $this->draw('jnsperawatanrad.form.html', ['jnsperawatanrad' => $this->assign]);
+    }
+
+    public function getJnsPerawatanRadEdit($id)
+    {
+        $this->_addHeaderFiles();
+        $row = $this->db('jns_perawatan_radiologi')->where('kd_jenis_prw', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Jenis Perawatan Laboratorium';
+            $this->assign['status'] = $this->_addEnum('jns_perawatan_radiologi', 'status');
+            $this->assign['kelas'] = $this->_addEnum('jns_perawatan_radiologi', 'kelas');
+            $this->assign['kd_pj'] = $this->db('penjab')->toArray();
+
+            return $this->draw('jnsperawatanrad.form.html', ['jnsperawatanrad' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'master', 'jnsperawatanrad']));
+        }
+    }
+
+    public function getJnsPerawatanRadDelete($id)
+    {
+        if ($this->core->db('jns_perawatan_radiologi')->where('kd_jenis_prw', $id)->update('status', '0')) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'jnsperawatanrad']));
+    }
+
+    public function getJnsPerawatanRadRestore($id)
+    {
+        if ($this->core->db('jns_perawatan_radiologi')->where('kd_jenis_prw', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'jnsperawatanrad']));
+    }
+
+    public function postJnsPerawatanRadSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'master', 'jnsperawatanradadd']);
+        } else {
+            $location = url([ADMIN, 'master', 'jnsperawatanradedit', $id]);
+        }
+
+        if (checkEmptyFields(['kd_jenis_prw', 'nm_perawatan'], $_POST)) {
+            $this->notify('failure', 'Isian masih ada yang kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $_POST['status'] = '1';
+                $query = $this->db('jns_perawatan_radiologi')->save($_POST);
+            } else {        // edit
+                $query = $this->db('jns_perawatan_radiologi')->where('kd_jenis_prw', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getJnsPerawatanRadPrint()
+    {
+      $pasien = $this->db('jns_perawatan_radiologi')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table('L','mm','Legal');
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 345, 30);
+      $pdf->Line(10, 31, 345, 31);
+      $pdf->Ln(34);
+      $pdf->Text(10, 40, 'DATA JENIS PERAWATAN RADIOLOGI');
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(30,80,30,20,20,20,20,20,25,25,25,20));
+      $pdf->Row(array('Kd. Perawatan', 'Nama Perawatan', 'B. Rumah Sakit', 'B. BHP', 'B. Perujuk', 'B. Dokter', 'B. Petugas', 'KSO', 'Manajemen', 'Total Biaya', 'Kelas', 'Status'));
+
+      foreach ($pasien as $hasil) {
+        $status = 'Aktif';
+        if($hasil['status'] == '0') {
+          $status = 'Tidak Aktif';
+        }
+        $pdf->Row(array($hasil['kd_jenis_prw'], $hasil['nm_perawatan'], $hasil['bagian_rs'], $hasil['bhp'], $hasil['tarif_perujuk'], $hasil['tarif_tindakan_dokter'], $hasil['tarif_tindakan_petugas'], $hasil['kso'], $hasil['menejemen'], $hasil['total_byr'], $hasil['kelas'], $status));
+      }
+      $pdf->Output('laporan_pasien_'.date('Y-m-d').'.pdf','I');
+
+    }
+
+    /* End Master Jns_Perawatan Rad Section */
 
     public function getCSS()
     {
