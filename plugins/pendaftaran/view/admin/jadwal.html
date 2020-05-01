@@ -28,7 +28,7 @@
                       <td>{$value.nm_poli}</td>
                       <td>{$value.kuota}</td>
     									<td class="text-right">
-    										<a href="{?=url(ADMIN.'/pendaftaran/jadwaledit/?kd_dokter=$value.kd_dokter&hari=$value.hari_kerja)?}" class="btn btn-success btn-xs">
+    										<a href="{$value.editURL}" class="btn btn-success btn-xs">
     											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
     										</a>
     										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">

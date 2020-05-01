@@ -8,6 +8,10 @@ $( function() {
   });
 } );
 
+$( function() {
+  $('.timepicker').timepicker();
+} );
+
 $(document).ready(function(){
     var keyword = '';
     load_data(keyword);

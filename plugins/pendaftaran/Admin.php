@@ -306,6 +306,7 @@ class Admin extends AdminModule
 
     public function getJadwalAdd()
     {
+        $this->_addHeaderFiles();
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
@@ -319,31 +320,39 @@ class Admin extends AdminModule
             ];
         }
         $this->assign['title'] = 'Tambah Jadwal Dokter';
-
+        $this->assign['dokter'] = $this->db('dokter')->toArray();
+        $this->assign['poliklinik'] = $this->db('poliklinik')->toArray();
+        $this->assign['hari_kerja'] = $this->_addEnum('jadwal', 'hari_kerja');
+        $this->assign['postUrl'] = url([ADMIN, 'pendaftaran', 'jadwalsave', $this->assign['form']['kd_dokter'], $this->assign['form']['hari_kerja']]);
         return $this->draw('jadwal.form.html', ['pendaftaran' => $this->assign]);
     }
 
-    public function getJadwalEdit($id)
+    public function getJadwalEdit($id, $hari_kerja)
     {
-        $user = $this->db('jadwal')->where('kd_dokter', $_GET['kd_dokter'])->where('hari_kerja', $_GET['hari'])->oneArray();
+        $this->_addHeaderFiles();
+        $user = $this->db('jadwal')->where('kd_dokter', $id)->where('hari_kerja', $hari_kerja)->oneArray();
         if (!empty($user)) {
             $this->assign['form'] = $user;
             $this->assign['title'] = 'Edit Jadwal';
+            $this->assign['hari_kerja'] = $this->_addEnum('jadwal', 'hari_kerja');
+            $this->assign['dokter'] = $this->db('dokter')->toArray();
+            $this->assign['poliklinik'] = $this->db('poliklinik')->toArray();
 
+            $this->assign['postUrl'] = url([ADMIN, 'pendaftaran', 'jadwalsave', $this->assign['form']['kd_dokter'], $this->assign['form']['hari_kerja']]);
             return $this->draw('jadwal.form.html', ['pendaftaran' => $this->assign]);
         } else {
             redirect(url([ADMIN, 'pendaftaran', 'jadwal']));
         }
     }
 
-    public function postJadwalSave($id = null)
+    public function postJadwalSave($id = null, $hari_kerja = null)
     {
         $errors = 0;
 
         if (!$id) {
             $location = url([ADMIN, 'pendaftaran', 'jadwal']);
         } else {
-            $location = url([ADMIN, 'pendaftaran', 'jadwaledit', $id]);
+            $location = url([ADMIN, 'pendaftaran', 'jadwaledit', $_POST['kd_dokter'], $_POST['hari_kerja']]);
         }
 
         if (checkEmptyFields(['kd_dokter', 'hari_kerja', 'kd_poli'], $_POST)) {
@@ -357,7 +366,7 @@ class Admin extends AdminModule
             if (!$id) {    // new
                 $query = $this->db('jadwal')->save($_POST);
             } else {        // edit
-                $query = $this->db('jadwal')->where('kd_dokter', $_GET['kd_dokter'])->where('hari_kerja', $_GET['hari'])->save($_POST);
+                $query = $this->db('jadwal')->where('kd_dokter', $id)->where('hari_kerja', $hari_kerja)->save($_POST);
             }
 
             if ($query) {
@@ -436,7 +445,7 @@ class Admin extends AdminModule
         $rows = $this->db('jadwal')->join('dokter', 'dokter.kd_dokter = jadwal.kd_dokter')->join('poliklinik', 'poliklinik.kd_poli = jadwal.kd_poli')->toArray();
         $this->assign['jadwal'] = [];
         foreach ($rows as $row) {
-            $row['editURL'] = url([ADMIN, 'pendaftaran', 'jadwaledit', $row['kd_pj']]);
+            $row['editURL'] = url([ADMIN, 'pendaftaran', 'jadwaledit', $row['kd_dokter'], $row['hari_kerja']]);
             $this->assign['jadwal'][] = $row;
         }
 
@@ -557,9 +566,11 @@ class Admin extends AdminModule
     {
         // CSS
         $this->core->addCSS(url('assets/css/jquery-ui.css'));
+        $this->core->addCSS(url('assets/css/jquery.timepicker.css'));
 
         // JS
         $this->core->addJS(url('assets/jscripts/jquery-ui.js'), 'footer');
+        $this->core->addJS(url('assets/jscripts/jquery.timepicker.js'), 'footer');
 
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'pendaftaran', 'css']));
