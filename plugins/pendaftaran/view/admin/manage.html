@@ -3,6 +3,23 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Kelola Pendaftaran Pasien</h3>
+                <ul class="nav nav-tabs">
+                  <li>
+                      <a href="#" role="tab">Kemarin</a>
+                  </li>
+                  <li class="active">
+                      <a href="#" role="tab">Sekarang</a>
+                  </li>
+                  <li>
+                      <a href="#" role="tab">7 Hari Terakhir</a>
+                  </li>
+                  <li>
+                      <a href="#" role="tab">30 Hari Terakhir</a>
+                  </li>
+                  <li>
+                      <a href="#" role="tab">Kustom</a>
+                  </li>
+				        </ul>
             </div>
             <div class="panel-body">
                 <div class="row clearfix">
@@ -58,7 +75,7 @@
       										<a href="{$value.print_buktidaftar}" target="_blank" class="btn btn-primary btn-xs">
       											<i class="fa fa-print"></i> <span class="hidden-xs">Cetak</span>
       										</a>
-                          <a href="{$value.BridgingBPJS}" target="_blank" class="btn btn-warning btn-xs">
+                          <a href="{$value.bridgingBPJS}" class="btn btn-warning btn-xs">
       											<i class="fa fa-print"></i> <span class="hidden-xs">BPJS</span>
       										</a>
       										<a href="{$value.editURL}" class="btn btn-success btn-xs">

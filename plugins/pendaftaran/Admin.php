@@ -50,6 +50,7 @@ class Admin extends AdminModule
               $row['editURL'] = url([ADMIN, 'pendaftaran', 'edit', convertNorawat($row['no_rawat'])]);
               $row['delURL']  = url([ADMIN, 'pendaftaran', 'delete', convertNorawat($row['no_rawat'])]);
               $row['viewURL'] = url([ADMIN, 'pendaftaran', 'view', convertNorawat($row['no_rawat'])]);
+              $row['bridgingBPJS'] = url([ADMIN, 'pendaftaran', 'bridgingbpjs', convertNorawat($row['no_rawat'])]);
               $row['print_buktidaftar'] = url([ADMIN, 'pendaftaran', 'print_buktidaftar', convertNorawat($row['no_rawat'])]);
               $this->assign['list'][] = $row;
           }
@@ -236,6 +237,30 @@ class Admin extends AdminModule
         }
 
         redirect($location, $_POST);
+    }
+
+    public function getBridgingBPJS($id)
+    {
+        $id = revertNorawat($id);
+        $this->_addHeaderFiles();
+        $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
+        $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
+        $this->assign['dokter'] = $this->core->db('dokter')->toArray();
+        $this->assign['status_lanjut'] = $this->_addEnum('reg_periksa', 'status_lanjut');
+        $this->assign['status_bayar'] = $this->_addEnum('reg_periksa', 'status_bayar');
+        $this->assign['penjab'] = $this->core->db('penjab')->toArray();
+
+        if (!empty($pasien)) {
+            $this->assign['form'] = $pasien;
+            $this->assign['form']['norawat'] = convertNorawat($pasien['no_rawat']);
+            $this->assign['title'] = 'Edit Pendaftaran Pasien';
+            $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
+            $this->assign['pasien'] = $this->db('pasien')->where('no_rkm_medis', $pasien['no_rkm_medis'])->oneArray();
+
+            return $this->draw('bridgingbpjs.form.html', ['pendaftaran' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'pendaftaran', 'manage']));
+        }
     }
 
     public function getJadwalAdd()
