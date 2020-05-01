@@ -15,7 +15,8 @@ class Admin extends AdminModule
     {
         return [
             'Kelola'    => 'manage',
-            'Tambah Baru'                => 'add'
+            'Tambah Baru'                => 'add',
+            'Master Pasien'                => 'master'
         ];
     }
 
@@ -105,7 +106,7 @@ class Admin extends AdminModule
         $this->assign['stts_nikah'] = $this->_addEnum('pasien', 'stts_nikah');
         $this->assign['pnd'] = $this->_addEnum('pasien', 'pnd');
         $this->assign['keluarga'] = $this->_addEnum('pasien', 'keluarga');
-        $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'HINDU', 'BUDHA');
+        $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
         $this->assign['penjab'] = $this->db('penjab')->toArray();
         $this->assign['suku_bangsa'] = $this->db('suku_bangsa')->toArray();
         $this->assign['bahasa_pasien'] = $this->db('bahasa_pasien')->toArray();
@@ -204,6 +205,34 @@ class Admin extends AdminModule
         }
     }
 
+    public function getMaster()
+    {
+        $rows = $this->db('perusahaan_pasien')->toArray();
+        $this->assign['perusahaan_pasien'] = [];
+        foreach ($rows as $row) {
+            $this->assign['perusahaan_pasien'][] = $row;
+        }
+
+        $rows = $this->db('bahasa_pasien')->toArray();
+        $this->assign['bahasa_pasien'] = [];
+        foreach ($rows as $row) {
+            $this->assign['bahasa_pasien'][] = $row;
+        }
+
+        $rows = $this->db('suku_bangsa')->toArray();
+        $this->assign['suku_bangsa'] = [];
+        foreach ($rows as $row) {
+            $this->assign['suku_bangsa'][] = $row;
+        }
+
+        $rows = $this->db('cacat_fisik')->toArray();
+        $this->assign['cacat_fisik'] = [];
+        foreach ($rows as $row) {
+            $this->assign['cacat_fisik'][] = $row;
+        }
+
+        return $this->draw('master.html', ['pasien' => $this->assign]);
+    }
     public function getPrint_kartu($id)
     {
       $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();

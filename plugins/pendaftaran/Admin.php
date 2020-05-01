@@ -14,7 +14,8 @@ class Admin extends AdminModule
     {
         return [
             'Kelola'    => 'manage',
-            'Tambah Baru'                => 'add'
+            'Tambah Baru'                => 'add',
+            'Master'                => 'master'
         ];
     }
 
@@ -284,6 +285,16 @@ class Admin extends AdminModule
       exit();
     }
 
+    public function getMaster()
+    {
+        $rows = $this->db('penjab')->toArray();
+        $this->assign['cara_bayar'] = [];
+        foreach ($rows as $row) {
+            $this->assign['cara_bayar'][] = $row;
+        }
+
+        return $this->draw('master.html', ['pendaftaran' => $this->assign]);
+    }
     public function getPrint_BuktiDaftar($id)
     {
         $pendaftaran = $this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->oneArray();

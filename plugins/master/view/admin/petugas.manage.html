@@ -2,26 +2,26 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Data Dokter</h3>
+                <h3 class="panel-title">Kelola Data Petugas</h3>
                 <ul class="nav nav-tabs">
-                    <li class="{if: empty($dokter.getStatus)}active{/if}">
-                        <a href="{?=url(ADMIN.'/master/dokter')?}" role="tab">Aktif</a>
+                    <li class="{if: empty($petugas.getStatus)}active{/if}">
+                        <a href="{?=url(ADMIN.'/master/petugas')?}" role="tab">Aktif</a>
                     </li>
-                    <li class="{if: !empty($dokter.getStatus)}active{/if}">
-                        <a href="{?=url(ADMIN.'/master/dokter?status=0')?}" role="tab">Tidak Aktif</a>
-                    </li>
-                    <li>
-                        <a href="{$dokter.printURL}" target="_blank" role="tab">Cetak</a>
+                    <li class="{if: !empty($petugas.getStatus)}active{/if}">
+                        <a href="{?=url(ADMIN.'/master/petugas?status=0')?}" role="tab">Tidak Aktif</a>
                     </li>
                     <li>
-                        <a href="{$dokter.addURL}" role="tab">Tambah</a>
+                        <a href="{$petugas.printURL}" target="_blank" role="tab">Cetak</a>
+                    </li>
+                    <li>
+                        <a href="{$petugas.addURL}" role="tab">Tambah</a>
                     </li>
 				        </ul>
             </div>
             <div class="panel-body">
               <div class="row clearfix">
                 <div class="col col-md-6">
-                  <h3 style="margin-top:5px;margin-bottom:15px;">Jumlah: {?=count($dokter.totalRecords)?}</h3>
+                  <h3 style="margin-top:5px;margin-bottom:15px;">Jumlah: {?=count($petugas.totalRecords)?}</h3>
                 </div>
                 <div class="col col-md-6">
                   <form action="" class="searchbox-input form-inline pull-right padding-bottom-lg" style="margin-top:5px;margin-bottom:15px;">
@@ -39,19 +39,19 @@
     						<table class="table table-striped no-margin">
     							<thead>
     								<tr>
-    									<th>Kode Dokter</th>
-    									<th>Nama Dokter</th>
-    									<th class="text-right">No. SIP</th>
+    									<th>Kode Pegawai</th>
+    									<th>Nama Pegawai</th>
+    									<th>Alamat</th>
     									<th class="text-right">Aksi</th>
     								</tr>
     							</thead>
     							<tbody>
-            						{if: !empty($dokter.list)}
-    								{loop: $dokter.list}
+            						{if: !empty($petugas.list)}
+    								{loop: $petugas.list}
     								<tr>
-    									<td>{$value.kd_dokter}</td>
-    									<td>{$value.nm_dokter}</td>
-    									<td class="text-right">{$value.no_ijn_praktek}</td>
+    									<td>{$value.nip}</td>
+    									<td>{$value.nama}</td>
+    									<td>{$value.alamat}</td>
     									<td class="text-right">
     										<a href="{$value.viewURL}" class="btn btn-primary btn-xs">
     											<i class="fa fa-search"></i> <span class="hidden-xs">Tampil</span>
@@ -77,7 +77,7 @@
     							</tbody>
     						</table>
     					</div>
-					{$dokter.pagination}
+					{$petugas.pagination}
             </div>
         </div>
     </div>

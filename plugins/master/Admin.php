@@ -26,15 +26,21 @@ class Admin extends AdminModule
         if(isset($_GET['s']))
           $phrase = $_GET['s'];
 
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
         // pagination
-        $totalRecords = $this->core->db('dokter')->like('kd_dokter', '%'.$phrase.'%')->orLike('nm_dokter', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM dokter WHERE (kd_dokter LIKE ? OR nm_dokter LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'dokter', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM dokter WHERE (kd_dokter LIKE ? OR nm_dokter LIKE ?) LIMIT $perpage OFFSET $offset");
+        $query = $this->db()->pdo()->prepare("SELECT * FROM dokter WHERE (kd_dokter LIKE ? OR nm_dokter LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
         $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $rows = $query->fetchAll();
 
@@ -44,10 +50,15 @@ class Admin extends AdminModule
                 $row = htmlspecialchars_array($row);
                 $row['editURL'] = url([ADMIN, 'master', 'dokteredit', $row['kd_dokter']]);
                 $row['delURL']  = url([ADMIN, 'master', 'dokterdelete', $row['kd_dokter']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'dokterrestore', $row['kd_dokter']]);
                 $row['viewURL'] = url([ADMIN, 'master', 'dokterview', $row['kd_dokter']]);
                 $this->assign['list'][] = $row;
             }
         }
+
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'dokteradd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'dokterprint']);
 
         return $this->draw('dokter.manage.html', ['dokter' => $this->assign]);
 
@@ -55,6 +66,7 @@ class Admin extends AdminModule
 
     public function getDokterAdd()
     {
+        $this->_addHeaderFiles();
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
@@ -77,7 +89,12 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Dokter';
+        $this->assign['kd_dokter'] = $this->db('pegawai')->toArray();
         $this->assign['jk'] = $this->_addEnum('dokter', 'jk');
+        $this->assign['gol_drh'] = $this->_addEnum('dokter', 'gol_drh');
+        $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
+        $this->assign['stts_nikah'] = $this->_addEnum('dokter', 'stts_nikah');
+        $this->assign['kd_sps'] = $this->db('spesialis')->toArray();
 
         return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
     }
@@ -105,6 +122,16 @@ class Admin extends AdminModule
         redirect(url([ADMIN, 'master', 'dokter']));
     }
 
+    public function getDokterRestore($id)
+    {
+        if ($this->core->db('dokter')->where('kd_dokter', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'dokter']));
+    }
+
     public function postDokterSave($id = null)
     {
         $errors = 0;
@@ -115,16 +142,16 @@ class Admin extends AdminModule
             $location = url([ADMIN, 'master', 'dokteredit', $id]);
         }
 
-        if (checkEmptyFields(['kd_dokter', 'nm_dokter'], $_POST)) {
+        /*if (checkEmptyFields(['kd_dokter', 'nm_dokter'], $_POST)) {
             $this->notify('failure', 'Isian kosong');
             redirect($location, $_POST);
-        }
+        }*/
 
         if (!$errors) {
             unset($_POST['save']);
 
             if (!$id) {    // new
-                $_POST['status'] = 1;
+                $_POST['status'] = '1';
                 $query = $this->db('dokter')->save($_POST);
             } else {        // edit
                 $query = $this->db('dokter')->where('kd_dokter', $id)->save($_POST);
@@ -143,6 +170,157 @@ class Admin extends AdminModule
     }
     /* End Master Dokter Section */
 
+    /* Master Petugas Section */
+    public function getPetugas($page = 1)
+    {
+        $perpage = '10';
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
+        // pagination
+        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM petugas WHERE (nip LIKE ? OR nama LIKE ?) AND status = '$status'");
+        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $totalRecords = $totalRecords->fetchAll();
+
+        $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'petugas', '%d']));
+        $this->assign['pagination'] = $pagination->nav('pagination','5');
+        $this->assign['totalRecords'] = $totalRecords;
+
+        // list
+        $offset = $pagination->offset();
+        $query = $this->db()->pdo()->prepare("SELECT * FROM petugas WHERE (nip LIKE ? OR nama LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
+        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
+        $rows = $query->fetchAll();
+
+        $this->assign['list'] = [];
+        if (count($rows)) {
+            foreach ($rows as $row) {
+                $row = htmlspecialchars_array($row);
+                $row['editURL'] = url([ADMIN, 'master', 'petugasedit', $row['nip']]);
+                $row['delURL']  = url([ADMIN, 'master', 'petugasdelete', $row['nip']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'petugasrestore', $row['nip']]);
+                $row['viewURL'] = url([ADMIN, 'master', 'petugasview', $row['nip']]);
+                $this->assign['list'][] = $row;
+            }
+        }
+
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'petugasadd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'petugasprint']);
+
+        return $this->draw('petugas.manage.html', ['petugas' => $this->assign]);
+
+    }
+
+    public function getPetugasAdd()
+    {
+        $this->_addHeaderFiles();
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'nip' => '',
+              'nama' => '',
+              'jk' => '',
+              'tmp_lahir' => '',
+              'tgl_lahir' => '',
+              'gol_darah' => '',
+              'agama' => '',
+              'alamat' => '',
+              'no_telp' => '',
+              'stts_nikah' => '',
+              'kd_jbtn' => '',
+              'status' => ''
+            ];
+        }
+
+        $this->assign['title'] = 'Tambah Petugas';
+        $this->assign['nip'] = $this->db('pegawai')->toArray();
+        $this->assign['jk'] = $this->_addEnum('petugas', 'jk');
+        $this->assign['gol_darah'] = $this->_addEnum('petugas', 'gol_darah');
+        $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
+        $this->assign['stts_nikah'] = $this->_addEnum('petugas', 'stts_nikah');
+        $this->assign['kd_jbtn'] = $this->db('jabatan')->toArray();
+
+        return $this->draw('petugas.form.html', ['petugas' => $this->assign]);
+    }
+
+    public function getPetugasEdit($id)
+    {
+        $user = $this->db('petugas')->where('nip', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Petugas';
+
+            return $this->draw('petugas.form.html', ['petugas' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'master', 'petugas']));
+        }
+    }
+
+    public function getPetugasDelete($id)
+    {
+        if ($this->core->db('petugas')->where('nip', $id)->update('status', '0')) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'petugas']));
+    }
+
+    public function getPetugasRestore($id)
+    {
+        if ($this->core->db('petugas')->where('nip', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'petugas']));
+    }
+
+    public function postPetugasSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'master', 'petugasadd']);
+        } else {
+            $location = url([ADMIN, 'master', 'petugasedit', $id]);
+        }
+
+        /*if (checkEmptyFields(['nip', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }*/
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $_POST['status'] = '1';
+                $query = $this->db('petugas')->save($_POST);
+            } else {        // edit
+                $query = $this->db('petugas')->where('nip', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+    /* End Master Petugas Section */
+
     /* Master Poliklinik Section */
     public function getPoliklinik($page = 1)
     {
@@ -160,7 +338,6 @@ class Admin extends AdminModule
         $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = '$status'");
         $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
         $totalRecords = $totalRecords->fetchAll();
-
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'poliklinik', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
@@ -196,7 +373,13 @@ class Admin extends AdminModule
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
-            $this->assign['form'] = ['kd_poli' => '', 'nm_poli' => '', 'registrasi' => '', 'registrasilama' => '', 'status' => ''];
+            $this->assign['form'] = [
+              'kd_poli' => '',
+              'nm_poli' => '',
+              'registrasi' => '',
+              'registrasilama' => '',
+              'status' => ''
+            ];
         }
 
         $this->assign['title'] = 'Tambah Poliklinik';
