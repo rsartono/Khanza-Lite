@@ -22,7 +22,7 @@ class Admin extends AdminModule
     public function getManage()
     {
         //$rows = $this->db('lite_roles')->where('id', '!=', '1')->toArray();
-        $rows = $this->db()->pdo()->prepare("SELECT lite_roles.*, pegawai.nama as nama FROM lite_roles, pegawai WHERE pegawai.nik = lite_roles.username AND lite_roles.id !=1");
+        $rows = $this->db()->pdo()->prepare("SELECT lite_roles.*, pegawai.nama as nama, AES_DECRYPT(user.password,'windi') as password FROM lite_roles, pegawai, user WHERE pegawai.nik = lite_roles.username AND pegawai.nik = AES_DECRYPT(user.id_user,'nur') AND lite_roles.id !=1");
         $rows->execute();
         $rows = $rows->fetchAll();
 
@@ -113,6 +113,11 @@ class Admin extends AdminModule
             $errors++;
             $this->notify('failure', 'Pengguna sudah ada');
         }
+        // check if password is longer than 5 characters
+        if (isset($_POST['password']) && strlen($_POST['password']) < 5) {
+            $errors++;
+            $this->notify('failure', 'Kata kunci terlalu pendek');
+        }
         // access to modules
         if ((count($_POST['access']) == count($this->_getModules())) || ($id == 1)) {
             $_POST['access'] = 'all';
@@ -126,7 +131,16 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if (!$id) {    // new
-                $query = $this->db('lite_roles')->save($_POST);
+                $this->core->db()->pdo()->exec("DROP TABLE IF EXISTS temp_user");
+                $this->core->db()->pdo()->exec("CREATE TABLE IF NOT EXISTS temp_user LIKE user");
+                $this->core->db()->pdo()->exec("INSERT INTO temp_user SELECT * FROM user WHERE id_user=(SELECT id_user FROM user LIMIT 1)");
+                $this->core->db()->pdo()->exec("UPDATE temp_user SET id_user=AES_ENCRYPT('$_POST[username]','nur'), password=AES_ENCRYPT('$_POST[username]','windi')");
+                $insert = $this->core->db()->pdo()->exec("INSERT INTO user SELECT * FROM temp_user");
+                $this->core->db()->pdo()->exec("DROP TABLE temp_user");
+                if($insert) {
+                  $query = $this->db('lite_roles')->save($_POST);
+                }
+
             } else {        // edit
                 $query = $this->db('lite_roles')->where('id', $id)->save($_POST);
             }
@@ -236,9 +250,10 @@ class Admin extends AdminModule
 
     private function _addInfoUser() {
         // get users
-        $user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(user.id_user,'nur') as username, pegawai.nama as nama FROM user, pegawai WHERE pegawai.nik = AES_DECRYPT(user.id_user,'nur')");
-        $user->execute();
-        $user = $user->fetchAll();
+        //$user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(user.id_user,'nur') as username, pegawai.nama as nama FROM user, pegawai WHERE pegawai.nik = AES_DECRYPT(user.id_user,'nur')");
+        //$user->execute();
+        //$user = $user->fetchAll();
+        $user = $this->db('pegawai')->toArray();
 
         if (count($user)) {
           $this->assign['user'] = [];

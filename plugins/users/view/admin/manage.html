@@ -9,8 +9,9 @@
 					<table class="table table-striped no-margin">
 						<thead>
 							<tr>
+                <th>Nama Lengkap</th>
 								<th>Nama Pengguna</th>
-								<th>Nama Lengkap</th>
+                <th>Kata Kunci</th>
 								<th>Role</th>
                 <th>Access</th>
 								<th class="text-right">Aksi</th>
@@ -19,8 +20,9 @@
 						<tbody>
 							{loop: $users}
 							<tr>
+                <td>{$value.nama}</td>
 								<td><a href="{$value.editURL}">{$value.username}</a></td>
-								<td>{$value.nama}</td>
+                <td>{$value.password}</td>
 								<td>{$value.role}</td>
                 <td>{$value.access}</td>
 								<td class="text-right">
