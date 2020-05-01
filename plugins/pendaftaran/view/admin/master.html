@@ -3,7 +3,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Master Cara Bayar <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
+                <h3 class="panel-title">Kelola Master Cara Bayar <a href="{?=url(ADMIN.'/pendaftaran/carabayaradd/')?}" class="pull-right" role="tab">[ + ]</a></h3>
             </div>
             <div class="panel-body">
     					<div class="table-responsive no-margin">
@@ -24,9 +24,6 @@
     									<td class="text-right">
     										<a href="{$value.editURL}" class="btn btn-success btn-xs">
     											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
-    										</a>
-    										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
-    											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
     										</a>
     									</td>
     								</tr>

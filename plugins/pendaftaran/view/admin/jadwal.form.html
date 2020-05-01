@@ -1,0 +1,42 @@
+<article class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{$pendaftaran.title}</h3>
+            </div>
+            <div class="panel-body">
+    		<form name="pendaftaran" action="{?=url(ADMIN.'/pendaftaran/jadwalsave/'.@$pendaftaran.form.kd_dokter)?}" method="POST">
+    			<fieldset>
+                  <div class="form-group">
+                      <label>Kode Dokter</label>
+                      <input type="text" name="kd_dokter" class="form-control" value="{$pendaftaran.form.kd_dokter}" />
+                  </div>
+                  <div class="form-group">
+                      <label>Hari Kerjs</label>
+                      <input type="text" name="hari_kerja" class="form-control" value="{$pendaftaran.form.hari_kerja}"/>
+                  </div>
+                  <div class="form-group">
+                      <label>Jam Mulai</label>
+                      <input type="text" name="jam_mulai" class="form-control" value="{$pendaftaran.form.jam_mulai}"/>
+                  </div>
+                  <div class="form-group">
+                      <label>Jam Selesai</label>
+                      <input type="text" name="jam_selesai" class="form-control" value="{$pendaftaran.form.jam_selesai}"/>
+                  </div>
+                  <div class="form-group">
+                      <label>Kode Poli</label>
+                      <input type="text" name="kd_poli" class="form-control" value="{$pendaftaran.form.kd_poli}"/>
+                  </div>
+                  <div class="form-group">
+                      <label>Kuota</label>
+                      <input type="text" name="kuota" class="form-control" value="{$pendaftaran.form.kuota}"/>
+                  </div>
+    	            <div class="form-group">
+    	                <input type="submit" name="save" class="btn btn-primary" value="Simpan" />
+    	            </div>
+                </fieldset>
+            </form>
+            </div>
+        </div>
+    </div>
+</article>

@@ -3,51 +3,6 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Kelola Master Perusahaan Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
-            </div>
-            <div class="panel-body">
-    					<div class="table-responsive no-margin">
-    						<table class="table table-striped no-margin">
-    							<thead>
-    								<tr>
-    									<th>Kode Perusahaan</th>
-    									<th>Nama Perusahaan</th>
-                      <th>Alamat</th>
-    									<th>Kota</th>
-                      <th>No. Telepon</th>
-    									<th class="text-right">Aksi</th>
-    								</tr>
-    							</thead>
-    							<tbody>
-            						{if: !empty($pasien.perusahaan_pasien)}
-    								{loop: $pasien.perusahaan_pasien}
-    								<tr>
-    									<td>{$value.kode_perusahaan}</td>
-    									<td>{$value.nama_perusahaan}</td>
-                      <td>{$value.alamat}</td>
-    									<td>{$value.kota}</td>
-                      <td>{$value.no_telp}</td>
-    									<td class="text-right">
-    										<a href="{$value.editURL}" class="btn btn-success btn-xs">
-    											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
-    										</a>
-    										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
-    											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
-    										</a>
-    									</td>
-    								</tr>
-    								{/loop}
-    								{else}
-    								<tr><td colspan="9" class="text-center">Data perusahaan pasien tidak ditemukan</td></tr>
-    								{/if}
-    							</tbody>
-    						</table>
-    					</div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
                 <h3 class="panel-title">Kelola Master Bahasa Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
             </div>
             <div class="panel-body">
@@ -156,6 +111,51 @@
     								{/loop}
     								{else}
     								<tr><td colspan="9" class="text-center">Data cacat fisik pasien tidak ditemukan</td></tr>
+    								{/if}
+    							</tbody>
+    						</table>
+    					</div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Kelola Master Perusahaan Pasien <a href="#" class="pull-right" role="tab">[ + ]</a></h3>
+            </div>
+            <div class="panel-body">
+    					<div class="table-responsive no-margin">
+    						<table class="table table-striped no-margin">
+    							<thead>
+    								<tr>
+    									<th>Kode Perusahaan</th>
+    									<th>Nama Perusahaan</th>
+                      <th>Alamat</th>
+    									<th>Kota</th>
+                      <th>No. Telepon</th>
+    									<th class="text-right">Aksi</th>
+    								</tr>
+    							</thead>
+    							<tbody>
+            						{if: !empty($pasien.perusahaan_pasien)}
+    								{loop: $pasien.perusahaan_pasien}
+    								<tr>
+    									<td>{$value.kode_perusahaan}</td>
+    									<td>{$value.nama_perusahaan}</td>
+                      <td>{$value.alamat}</td>
+    									<td>{$value.kota}</td>
+                      <td>{$value.no_telp}</td>
+    									<td class="text-right">
+    										<a href="{$value.editURL}" class="btn btn-success btn-xs">
+    											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
+    										</a>
+    										<a href="{$value.delURL}" class="btn btn-danger btn-xs" data-confirm="Yakin ingin menghapus?">
+    											<i class="fa fa-trash-o"></i> <span class="hidden-xs">Hapus</span>
+    										</a>
+    									</td>
+    								</tr>
+    								{/loop}
+    								{else}
+    								<tr><td colspan="9" class="text-center">Data perusahaan pasien tidak ditemukan</td></tr>
     								{/if}
     							</tbody>
     						</table>
