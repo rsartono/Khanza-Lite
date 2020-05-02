@@ -6,12 +6,11 @@
 
 	ini_set('memory_limit', '-1');
 
-	define('VERSION', '3.0');
   define('DBHOST', 'localhost');
   define('DBPORT', '3306');
-  define('DBNAME', 'sik');
   define('DBUSER', 'root');
   define('DBPASS', '');
+	define('DBNAME', 'sik');
 	define('HOMEPAGE', 'dashboard');
 	define('CEKSTATUSBAYAR', false);
 
@@ -52,4 +51,4 @@
 	]));
 
 	// Developer mode
-	define('DEV_MODE', false);
+	define('DEV_MODE', true);
