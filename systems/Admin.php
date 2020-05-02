@@ -39,7 +39,7 @@ class Admin extends Main
         $this->assign['path']           = url();
         $this->assign['title']          = $this->getSettings('nama_instansi');
         $this->assign['logo']           = $this->getSettings('logo');
-        $this->assign['version']              = $this->options->get('settings.version');
+        $this->assign['version']        = $this->options->get('settings.version');
 
         $this->assign['update_access']  = ($access == 'all') || in_array('settings', explode(',', $access)) ? true : false;
 
