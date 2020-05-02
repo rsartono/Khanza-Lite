@@ -85,7 +85,7 @@ class Admin extends AdminModule
             $this->assign['fotoURL'] = url(MODULES.'/dokter_ralan/img/'.$pasien['jk'].'.png');
             $this->assign['manageURL'] = url([ADMIN, 'dokter_ralan', 'manage']);
             $rows = $this->db('reg_periksa')
-                ->where('no_rkm_medis', $no_rkm_medis)
+                ->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])
                 ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
                 ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
                 ->desc('tgl_registrasi')
