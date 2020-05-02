@@ -20,30 +20,30 @@ class Admin extends Main
     public function drawTheme($file)
     {
         if(isset($_SESSION['opensimrs_user']) && $_SESSION['opensimrs_user'] == 1) {
-            $nama = 'Administrator';
+            $nama     = 'Administrator';
             $username = $this->db('lite_roles')->where('id', 1)->oneArray();
             $username = $username['username'];
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         } else {
             $username = $this->getUserInfo('username', null, true);
-            $pegawai = $this->db('pegawai')->where('nik', $username)->oneArray();
-            $nama = $pegawai['nama'];
+            $pegawai  = $this->db('pegawai')->where('nik', $username)->oneArray();
+            $nama     = $pegawai['nama'];
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         }
         $access = $this->getUserInfo('access');
 
-        $this->assign['nama']      = !empty($nama) ? $nama : $this->getUserInfo('nama');
-        $this->assign['username']      = !empty($username) ? $username : $this->getUserInfo('username');
+        $this->assign['nama']           = !empty($nama) ? $nama : $this->getUserInfo('nama');
+        $this->assign['username']       = !empty($username) ? $username : $this->getUserInfo('username');
 
-        $this->assign['notify']        = $this->getNotify();
-        $this->assign['path']          = url();
-        $this->assign['title']         = $this->getSettings('nama_instansi');
-        $this->assign['logo']          = $this->getSettings('logo');
-        $this->assign['version']       = VERSION;
-        $this->assign['update_access'] = ($access == 'all') || in_array('settings', explode(',', $access)) ? true : false;
+        $this->assign['notify']         = $this->getNotify();
+        $this->assign['path']           = url();
+        $this->assign['title']          = $this->getSettings('nama_instansi');
+        $this->assign['logo']           = $this->getSettings('logo');
+        $this->assign['version']        = VERSION;
+        $this->assign['update_access']  = ($access == 'all') || in_array('settings', explode(',', $access)) ? true : false;
 
-        $this->assign['header'] = isset_or($this->appends['header'], ['']);
-        $this->assign['footer'] = isset_or($this->appends['footer'], ['']);
+        $this->assign['header']         = isset_or($this->appends['header'], ['']);
+        $this->assign['footer']         = isset_or($this->appends['footer'], ['']);
 
         $this->tpl->set('opensimrs', $this->assign);
         echo $this->tpl->draw(THEMES.'/admin/'.$file, true);
@@ -200,11 +200,11 @@ class Admin extends Main
             // Reset fail attempts for this IP
             $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
 
-            $_SESSION['opensimrs_user']   = $row_admin['id'];
+            $_SESSION['opensimrs_user']       = $row_admin['id'];
             $_SESSION['opensimrs_username']   = $row_admin['username'];
-            $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
-            $_SESSION['userAgent']  = $_SERVER['HTTP_USER_AGENT'];
-            $_SESSION['IPaddress']  = $_SERVER['REMOTE_ADDR'];
+            $_SESSION['token']                = bin2hex(openssl_random_pseudo_bytes(6));
+            $_SESSION['userAgent']            = $_SERVER['HTTP_USER_AGENT'];
+            $_SESSION['IPaddress']            = $_SERVER['REMOTE_ADDR'];
 
             if ($remember_me) {
                 $token = str_gen(64, "1234567890qwertyuiop[]asdfghjkl;zxcvbnm,./");
@@ -218,11 +218,11 @@ class Admin extends Main
             // Reset fail attempts for this IP
             $this->db('lite_login_attempts')->where('ip', $_SERVER['REMOTE_ADDR'])->save(['attempts' => 0]);
 
-            $_SESSION['opensimrs_user']   = $row_user['id'];
+            $_SESSION['opensimrs_user']       = $row_user['id'];
             $_SESSION['opensimrs_username']   = $row_user['username'];
-            $_SESSION['token']      = bin2hex(openssl_random_pseudo_bytes(6));
-            $_SESSION['userAgent']  = $_SERVER['HTTP_USER_AGENT'];
-            $_SESSION['IPaddress']  = $_SERVER['REMOTE_ADDR'];
+            $_SESSION['token']                = bin2hex(openssl_random_pseudo_bytes(6));
+            $_SESSION['userAgent']            = $_SERVER['HTTP_USER_AGENT'];
+            $_SESSION['IPaddress']            = $_SERVER['REMOTE_ADDR'];
 
             if ($remember_me) {
                 $token = str_gen(64, "1234567890qwertyuiop[]asdfghjkl;zxcvbnm,./");

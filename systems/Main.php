@@ -5,13 +5,16 @@ namespace Systems;
 use Systems\Lib\QueryBuilder;
 use Systems\Lib\Templates;
 use Systems\Lib\Router;
+use Systems\Lib\Options;
 
 abstract class Main
 {
     public $tpl;
+    public $options;
     public $router;
     public $appends = [];
     public $module = null;
+    protected static $optionsCache = [];
     protected static $userCache = [];
 
     public function __construct()
@@ -28,6 +31,7 @@ abstract class Main
             $this->freshInstall();
         }
 
+        $this->options = new Options($this);
         $this->tpl = new Templates($this);
         $this->router = new Router;
 
@@ -37,6 +41,20 @@ abstract class Main
     public function db($table = null)
     {
         return new QueryBuilder($table);
+    }
+
+    public function getOptions($module = 'settings', $field = null, $refresh = false)
+    {
+        if ($refresh) {
+            $this->options->reload();
+        }
+
+        return $this->options->get($module, $field);
+    }
+
+    public function setOptions($module, $field, $value)
+    {
+        return $this->options->set($module, $field, $value);
     }
 
     public function getSettings($parameter)
