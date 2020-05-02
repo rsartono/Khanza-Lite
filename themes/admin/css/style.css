@@ -118,7 +118,7 @@ top: 25px; }
 
 .sidebar-nav {
     position: absolute;
-    /*top: 75px;*/
+    top: 135px;
     width: 250px;
     margin: 0;
     padding: 0;
@@ -844,7 +844,7 @@ select[multiple].form-control {
 
     #content-wrapper {
         position: relative;
-        top: 0;
+        top: 0
     }
 
     #wrapper.toggled #navbar-wrapper,
@@ -864,6 +864,11 @@ select[multiple].form-control {
     .panel-heading .nav-tabs {
         display: block;
     }
+}
+@media(max-width: 767px) {
+  #content-wrapper {
+      padding: 0;
+  }
 }
 @media(max-width: 480px) {
   #content-wrapper {

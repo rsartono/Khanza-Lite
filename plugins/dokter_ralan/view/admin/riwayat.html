@@ -1,13 +1,13 @@
-<div class="panel panel-default panel-post">
+<div class="panel-default panel-post">
 {if: !empty($dokter_ralan.riwayat)}
   {loop: $dokter_ralan.riwayat}
       <div class="panel-heading">
           <div class="media">
               <div class="media-body">
                   <h4 class="media-heading">
-                      <a href="#">{$value.tgl_registrasi} / {$value.nm_poli} / {$value.kd_poli}</a>
+                      {$value.tgl_registrasi} / {$value.nm_poli}<span class="hidden-xs"> / {$value.kd_poli}</span>
                   </h4>
-                  {$value.nm_dokter} / {$value.kd_dokter}
+                  {$value.nm_dokter}<span class="hidden-xs">  / {$value.kd_dokter}</span>
               </div>
           </div>
       </div>
