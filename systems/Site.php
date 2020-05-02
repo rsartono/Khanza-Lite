@@ -33,7 +33,7 @@ class Site extends Main
         $assign['powered']  = 'Powered by <a href="https://khanza.basoro.id/">Khanza LITE</a>';
         $assign['path']     = url();
         $assign['theme']    = url(THEMES.'/site');
-        $assign['version']  = VERSION;
+        $assign['version']  = $this->options->get('settings.version');
 
         $assign['header']   = isset_or($this->appends['header'], ['']);
         $assign['footer']   = isset_or($this->appends['footer'], ['']);
