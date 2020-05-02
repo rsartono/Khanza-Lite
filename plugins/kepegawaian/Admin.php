@@ -25,19 +25,14 @@ class Admin extends AdminModule
           $phrase = $_GET['s'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?)");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
-
+        $totalRecords = $this->db('pegawai')->like('nik', '%'.$phrase.'%')->like('nama', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'kepegawaian', 'manage', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM pegawai WHERE (nik LIKE ? OR nama LIKE ?) LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('pegawai')->like('nik', '%'.$phrase.'%')->like('nama', '%'.$phrase.'%')->offset($offset)->limit($perpage)->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -100,9 +95,9 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Pegawai';
-        $this->assign['jk'] = $this->_addEnum('pegawai', 'jk');
-        $this->assign['ms_kerja'] = $this->_addEnum('pegawai', 'ms_kerja');
-        $this->assign['stts_aktif'] = $this->_addEnum('pegawai', 'stts_aktif');
+        $this->assign['jk'] = $this->core->getEnum('pegawai', 'jk');
+        $this->assign['ms_kerja'] = $this->core->getEnum('pegawai', 'ms_kerja');
+        $this->assign['stts_aktif'] = $this->core->getEnum('pegawai', 'stts_aktif');
         $this->assign['jnj_jabatan'] = $this->db('jnj_jabatan')->toArray();
         $this->assign['kelompok_jabatan'] = $this->db('kelompok_jabatan')->toArray();
         $this->assign['resiko_kerja'] = $this->db('resiko_kerja')->toArray();
@@ -127,9 +122,9 @@ class Admin extends AdminModule
             $this->assign['form'] = $user;
             $this->assign['title'] = 'Edit Pegawai';
 
-            $this->assign['jk'] = $this->_addEnum('pegawai', 'jk');
-            $this->assign['ms_kerja'] = $this->_addEnum('pegawai', 'ms_kerja');
-            $this->assign['stts_aktif'] = $this->_addEnum('pegawai', 'stts_aktif');
+            $this->assign['jk'] = $this->core->getEnum('pegawai', 'jk');
+            $this->assign['ms_kerja'] = $this->core->getEnum('pegawai', 'ms_kerja');
+            $this->assign['stts_aktif'] = $this->core->getEnum('pegawai', 'stts_aktif');
             $this->assign['jnj_jabatan'] = $this->db('jnj_jabatan')->toArray();
             $this->assign['kelompok_jabatan'] = $this->db('kelompok_jabatan')->toArray();
             $this->assign['resiko_kerja'] = $this->db('resiko_kerja')->toArray();
@@ -245,14 +240,6 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'kepegawaian', 'css']));
         $this->core->addJS(url([ADMIN, 'kepegawaian', 'javascript']), 'footer');
-    }
-
-    private function _addEnum($table_name, $column_name) {
-      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
-      $result->execute();
-      $result = $result->fetch();
-      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
-      return $result;
     }
 
 }

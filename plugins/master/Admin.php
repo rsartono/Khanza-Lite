@@ -34,18 +34,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM dokter WHERE (kd_dokter LIKE ? OR nm_dokter LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
+        $totalRecords = $this->db('dokter')
+          ->like('kd_dokter', '%'.$phrase.'%')
+          ->like('nm_dokter', '%'.$phrase.'%')
+          ->where('status', $status)
+          ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'dokter', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM dokter WHERE (kd_dokter LIKE ? OR nm_dokter LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('dokter')
+          ->like('kd_dokter', '%'.$phrase.'%')
+          ->like('nm_dokter', '%'.$phrase.'%')
+          ->where('status', $status)
+          ->offset($offset)
+          ->limit($perpage)
+          ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -93,10 +99,10 @@ class Admin extends AdminModule
 
         $this->assign['title'] = 'Tambah Dokter';
         $this->assign['kd_dokter'] = $this->db('pegawai')->toArray();
-        $this->assign['jk'] = $this->_addEnum('dokter', 'jk');
-        $this->assign['gol_drh'] = $this->_addEnum('dokter', 'gol_drh');
+        $this->assign['jk'] = $this->core->getEnum('dokter', 'jk');
+        $this->assign['gol_drh'] = $this->core->getEnum('dokter', 'gol_drh');
         $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
-        $this->assign['stts_nikah'] = $this->_addEnum('dokter', 'stts_nikah');
+        $this->assign['stts_nikah'] = $this->core->getEnum('dokter', 'stts_nikah');
         $this->assign['kd_sps'] = $this->db('spesialis')->toArray();
 
         return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
@@ -188,19 +194,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM petugas WHERE (nip LIKE ? OR nama LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
-
+        $totalRecords = $this->db('petugas')
+            ->where('status', $status)
+            ->like('nip', '%'.$phrase.'%')
+            ->like('nama', '%'.$phrase.'%')
+            ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'petugas', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM petugas WHERE (nip LIKE ? OR nama LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('petugas')
+            ->where('status', $status)
+            ->like('nip', '%'.$phrase.'%')
+            ->like('nama', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -246,10 +257,10 @@ class Admin extends AdminModule
 
         $this->assign['title'] = 'Tambah Petugas';
         $this->assign['nip'] = $this->db('pegawai')->toArray();
-        $this->assign['jk'] = $this->_addEnum('petugas', 'jk');
-        $this->assign['gol_darah'] = $this->_addEnum('petugas', 'gol_darah');
+        $this->assign['jk'] = $this->core->getEnum('petugas', 'jk');
+        $this->assign['gol_darah'] = $this->core->getEnum('petugas', 'gol_darah');
         $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
-        $this->assign['stts_nikah'] = $this->_addEnum('petugas', 'stts_nikah');
+        $this->assign['stts_nikah'] = $this->core->getEnum('petugas', 'stts_nikah');
         $this->assign['kd_jbtn'] = $this->db('jabatan')->toArray();
 
         return $this->draw('petugas.form.html', ['petugas' => $this->assign]);
@@ -342,18 +353,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
+        $totalRecords = $this->db('poliklinik')
+            ->where('status', $status)
+            ->like('kd_poli', '%'.$phrase.'%')
+            ->like('nm_poli', '%'.$phrase.'%')
+            ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'poliklinik', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM poliklinik WHERE (kd_poli LIKE ? OR nm_poli LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('poliklinik')
+            ->where('status', $status)
+            ->like('kd_poli', '%'.$phrase.'%')
+            ->like('nm_poli', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -517,18 +534,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM databarang WHERE (kode_brng LIKE ? OR nama_brng LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
+        $totalRecords = $this->db('databarang')
+            ->where('status', $status)
+            ->like('kode_brng', '%'.$phrase.'%')
+            ->like('nama_brng', '%'.$phrase.'%')
+            ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'databarang', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM databarang WHERE (kode_brng LIKE ? OR nama_brng LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('databarang')
+            ->where('status', $status)
+            ->like('kode_brng', '%'.$phrase.'%')
+            ->like('nama_brng', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -588,7 +611,7 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Databarang';
-        $this->assign['status'] = $this->_addEnum('databarang', 'status');
+        $this->assign['status'] = $this->core->getEnum('databarang', 'status');
         $this->assign['kdjns'] = $this->db('jenis')->toArray();
         $this->assign['kode_sat'] = $this->db('kodesatuan')->toArray();
         $this->assign['kode_industri'] = $this->db('industrifarmasi')->toArray();
@@ -605,7 +628,7 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Databarang';
-            $this->assign['status'] = $this->_addEnum('databarang', 'status');
+            $this->assign['status'] = $this->core->getEnum('databarang', 'status');
             $this->assign['kdjns'] = $this->db('jenis')->toArray();
             $this->assign['kode_sat'] = $this->db('kodesatuan')->toArray();
             $this->assign['kode_industri'] = $this->db('industrifarmasi')->toArray();
@@ -744,19 +767,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
-        $totalRecords = $this->core->db('jns_perawatan')->like('kd_jenis_prw', '%'.$phrase.'%')->orLike('nm_perawatan', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db('jns_perawatan')
+            ->where('status', $status)
+            ->like('kd_jenis_prw', '%'.$phrase.'%')
+            ->like('nm_perawatan', '%'.$phrase.'%')
+            ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'jnsperawatan', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('jns_perawatan')
+            ->where('status', $status)
+            ->like('kd_jenis_prw', '%'.$phrase.'%')
+            ->like('nm_perawatan', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -805,7 +833,7 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Jenis Perawatan';
-        $this->assign['status'] = $this->_addEnum('jns_perawatan', 'status');
+        $this->assign['status'] = $this->core->getEnum('jns_perawatan', 'status');
         $this->assign['kd_kategori'] = $this->db('kategori_perawatan')->toArray();
         $this->assign['kd_pj'] = $this->db('penjab')->toArray();
         $this->assign['kd_poli'] = $this->db('poliklinik')->toArray();
@@ -820,7 +848,7 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Jenis Perawatan';
-            $this->assign['status'] = $this->_addEnum('jns_perawatan', 'status');
+            $this->assign['status'] = $this->core->getEnum('jns_perawatan', 'status');
             $this->assign['kd_kategori'] = $this->db('kategori_perawatan')->toArray();
             $this->assign['kd_pj'] = $this->db('penjab')->toArray();
             $this->assign['kd_poli'] = $this->db('poliklinik')->toArray();
@@ -941,19 +969,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_lab WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
-        $totalRecords = $this->core->db('jns_perawatan_lab')->like('kd_jenis_prw', '%'.$phrase.'%')->orLike('nm_perawatan', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db('jns_perawatan_lab')
+            ->where('status', $status)
+            ->like('kd_jenis_prw', '%'.$phrase.'%')
+            ->like('nm_perawatan', '%'.$phrase.'%')
+            ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'jnsperawatanlab', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_lab WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('jns_perawatan_lab')
+            ->where('status', $status)
+            ->like('kd_jenis_prw', '%'.$phrase.'%')
+            ->like('nm_perawatan', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -1000,8 +1033,8 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Jenis Perawatan Laboratorium';
-        $this->assign['status'] = $this->_addEnum('jns_perawatan_lab', 'status');
-        $this->assign['kelas'] = $this->_addEnum('jns_perawatan_lab', 'kelas');
+        $this->assign['status'] = $this->core->getEnum('jns_perawatan_lab', 'status');
+        $this->assign['kelas'] = $this->core->getEnum('jns_perawatan_lab', 'kelas');
         $this->assign['kd_pj'] = $this->db('penjab')->toArray();
 
         return $this->draw('jnsperawatanlab.form.html', ['jnsperawatanlab' => $this->assign]);
@@ -1014,8 +1047,8 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Jenis Perawatan Laboratorium';
-            $this->assign['status'] = $this->_addEnum('jns_perawatan_lab', 'status');
-            $this->assign['kelas'] = $this->_addEnum('jns_perawatan_lab', 'kelas');
+            $this->assign['status'] = $this->core->getEnum('jns_perawatan_lab', 'status');
+            $this->assign['kelas'] = $this->core->getEnum('jns_perawatan_lab', 'kelas');
             $this->assign['kd_pj'] = $this->db('penjab')->toArray();
 
             return $this->draw('jnsperawatanlab.form.html', ['jnsperawatanlab' => $this->assign]);
@@ -1134,19 +1167,24 @@ class Admin extends AdminModule
           $status = $_GET['status'];
 
         // pagination
-        $totalRecords = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_radiologi WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status'");
-        $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $totalRecords = $totalRecords->fetchAll();
-        $totalRecords = $this->core->db('jns_perawatan_radiologi')->like('kd_jenis_prw', '%'.$phrase.'%')->orLike('nm_perawatan', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db('jns_perawatan_radiologi')
+            ->where('status', $status)
+            ->like('kd_jenis_prw', '%'.$phrase.'%')
+            ->like('nm_perawatan', '%'.$phrase.'%')
+            ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'jns_perawatan_radiologi', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM jns_perawatan_radiologi WHERE (kd_jenis_prw LIKE ? OR nm_perawatan LIKE ?) AND status = '$status' LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('jns_perawatan_radiologi')
+            ->where('status', $status)
+            ->like('kd_jenis_prw', '%'.$phrase.'%')
+            ->like('nm_perawatan', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -1193,8 +1231,8 @@ class Admin extends AdminModule
         }
 
         $this->assign['title'] = 'Tambah Jenis Perawatan Laboratorium';
-        $this->assign['status'] = $this->_addEnum('jns_perawatan_radiologi', 'status');
-        $this->assign['kelas'] = $this->_addEnum('jns_perawatan_radiologi', 'kelas');
+        $this->assign['status'] = $this->core->getEnum('jns_perawatan_radiologi', 'status');
+        $this->assign['kelas'] = $this->core->getEnum('jns_perawatan_radiologi', 'kelas');
         $this->assign['kd_pj'] = $this->db('penjab')->toArray();
 
         return $this->draw('jnsperawatanrad.form.html', ['jnsperawatanrad' => $this->assign]);
@@ -1207,8 +1245,8 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Jenis Perawatan Laboratorium';
-            $this->assign['status'] = $this->_addEnum('jns_perawatan_radiologi', 'status');
-            $this->assign['kelas'] = $this->_addEnum('jns_perawatan_radiologi', 'kelas');
+            $this->assign['status'] = $this->core->getEnum('jns_perawatan_radiologi', 'status');
+            $this->assign['kelas'] = $this->core->getEnum('jns_perawatan_radiologi', 'kelas');
             $this->assign['kd_pj'] = $this->db('penjab')->toArray();
 
             return $this->draw('jnsperawatanrad.form.html', ['jnsperawatanrad' => $this->assign]);
@@ -1338,14 +1376,6 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'master', 'css']));
         $this->core->addJS(url([ADMIN, 'master', 'javascript']), 'footer');
-    }
-
-    private function _addEnum($table_name, $column_name) {
-      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
-      $result->execute();
-      $result = $result->fetch();
-      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
-      return $result;
     }
 
 }

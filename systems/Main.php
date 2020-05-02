@@ -146,19 +146,22 @@ abstract class Main
         return false;
     }
 
+    public function getEnum($table_name, $column_name) {
+      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
+      $result->execute();
+      $result = $result->fetch();
+      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
+      return $result;
+    }
+
     public function getUserInfo($field, $id = null, $refresh = false)
     {
         if (!$id) {
             $id = isset_or($_SESSION['opensimrs_user'], 0);
         }
 
-
         if (empty(self::$userCache) || $refresh) {
-            //if($id == 1) {
-                self::$userCache = $this->db('lite_roles')->where('id', $id)->oneArray();
-            //} else {
-            //    self::$userCache = $this->db('pegawai')->join('lite_roles', 'lite_roles.username = pegawai.nik', 'lite_roles.id = $id')->oneArray();
-            //}
+            self::$userCache = $this->db('lite_roles')->where('id', $id)->oneArray();
         }
 
         return self::$userCache[$field];

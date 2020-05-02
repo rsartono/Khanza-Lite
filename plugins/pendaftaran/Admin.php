@@ -99,8 +99,8 @@ class Admin extends AdminModule
         $this->assign['form']['jam_reg'] = date('H:i:s');
         $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
         $this->assign['dokter'] = $this->core->db('dokter')->toArray();
-        $this->assign['status_lanjut'] = $this->_addEnum('reg_periksa', 'status_lanjut');
-        $this->assign['status_bayar'] = $this->_addEnum('reg_periksa', 'status_bayar');
+        $this->assign['status_lanjut'] = $this->core->getEnum('reg_periksa', 'status_lanjut');
+        $this->assign['status_bayar'] = $this->core->getEnum('reg_periksa', 'status_bayar');
         $this->assign['penjab'] = $this->core->db('penjab')->toArray();
 
         $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
@@ -117,8 +117,8 @@ class Admin extends AdminModule
         $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
         $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
         $this->assign['dokter'] = $this->core->db('dokter')->toArray();
-        $this->assign['status_lanjut'] = $this->_addEnum('reg_periksa', 'status_lanjut');
-        $this->assign['status_bayar'] = $this->_addEnum('reg_periksa', 'status_bayar');
+        $this->assign['status_lanjut'] = $this->core->getEnum('reg_periksa', 'status_lanjut');
+        $this->assign['status_bayar'] = $this->core->getEnum('reg_periksa', 'status_bayar');
         $this->assign['penjab'] = $this->core->db('penjab')->toArray();
 
         if (!empty($pasien)) {
@@ -246,8 +246,8 @@ class Admin extends AdminModule
         $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
         $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
         $this->assign['dokter'] = $this->core->db('dokter')->toArray();
-        $this->assign['status_lanjut'] = $this->_addEnum('reg_periksa', 'status_lanjut');
-        $this->assign['status_bayar'] = $this->_addEnum('reg_periksa', 'status_bayar');
+        $this->assign['status_lanjut'] = $this->core->getEnum('reg_periksa', 'status_lanjut');
+        $this->assign['status_bayar'] = $this->core->getEnum('reg_periksa', 'status_bayar');
         $this->assign['penjab'] = $this->core->db('penjab')->toArray();
 
         if (!empty($pasien)) {
@@ -281,7 +281,7 @@ class Admin extends AdminModule
         $this->assign['title'] = 'Tambah Jadwal Dokter';
         $this->assign['dokter'] = $this->db('dokter')->toArray();
         $this->assign['poliklinik'] = $this->db('poliklinik')->toArray();
-        $this->assign['hari_kerja'] = $this->_addEnum('jadwal', 'hari_kerja');
+        $this->assign['hari_kerja'] = $this->core->getEnum('jadwal', 'hari_kerja');
         $this->assign['postUrl'] = url([ADMIN, 'pendaftaran', 'jadwalsave', $this->assign['form']['kd_dokter'], $this->assign['form']['hari_kerja']]);
         return $this->draw('jadwal.form.html', ['pendaftaran' => $this->assign]);
     }
@@ -293,7 +293,7 @@ class Admin extends AdminModule
         if (!empty($user)) {
             $this->assign['form'] = $user;
             $this->assign['title'] = 'Edit Jadwal';
-            $this->assign['hari_kerja'] = $this->_addEnum('jadwal', 'hari_kerja');
+            $this->assign['hari_kerja'] = $this->core->getEnum('jadwal', 'hari_kerja');
             $this->assign['dokter'] = $this->db('dokter')->toArray();
             $this->assign['poliklinik'] = $this->db('poliklinik')->toArray();
 
@@ -563,14 +563,6 @@ class Admin extends AdminModule
         list($Y, $m, $d) = explode('-', date('Y-m-d', strtotime($tanggal)));
         $umur = $cY - $Y;
         return $umur;
-    }
-
-    private function _addEnum($table_name, $column_name) {
-      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
-      $result->execute();
-      $result = $result->fetch();
-      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
-      return $result;
     }
 
 }

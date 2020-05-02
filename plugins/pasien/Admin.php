@@ -29,16 +29,26 @@ class Admin extends AdminModule
           $phrase = $_GET['s'];
 
         // pagination
-        $totalRecords = $this->core->db('pasien')->like('no_rkm_medis', '%'.$phrase.'%')->orLike('nm_pasien', '%'.$phrase.'%')->orLike('no_ktp', '%'.$phrase.'%')->orLike('no_peserta', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db('pasien')
+          ->like('no_rkm_medis', '%'.$phrase.'%')
+          ->orLike('nm_pasien', '%'.$phrase.'%')
+          ->orLike('no_ktp', '%'.$phrase.'%')
+          ->orLike('no_peserta', '%'.$phrase.'%')
+          ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'pasien', 'manage', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $query = $this->db()->pdo()->prepare("SELECT * FROM pasien WHERE (no_rkm_medis LIKE ? OR nm_pasien LIKE ? OR no_ktp LIKE ? OR no_peserta LIKE ?) LIMIT $perpage OFFSET $offset");
-        $query->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
-        $rows = $query->fetchAll();
+        $rows = $this->db('pasien')
+          ->like('no_rkm_medis', '%'.$phrase.'%')
+          ->orLike('nm_pasien', '%'.$phrase.'%')
+          ->orLike('no_ktp', '%'.$phrase.'%')
+          ->orLike('no_peserta', '%'.$phrase.'%')
+          ->offset($offset)
+          ->limit($perpage)
+          ->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
@@ -101,11 +111,11 @@ class Admin extends AdminModule
             ];
         }
 
-        $this->assign['jk'] = $this->_addEnum('pasien', 'jk');
-        $this->assign['gol_darah'] = $this->_addEnum('pasien', 'gol_darah');
-        $this->assign['stts_nikah'] = $this->_addEnum('pasien', 'stts_nikah');
-        $this->assign['pnd'] = $this->_addEnum('pasien', 'pnd');
-        $this->assign['keluarga'] = $this->_addEnum('pasien', 'keluarga');
+        $this->assign['jk'] = $this->core->getEnum('pasien', 'jk');
+        $this->assign['gol_darah'] = $this->core->getEnum('pasien', 'gol_darah');
+        $this->assign['stts_nikah'] = $this->core->getEnum('pasien', 'stts_nikah');
+        $this->assign['pnd'] = $this->core->getEnum('pasien', 'pnd');
+        $this->assign['keluarga'] = $this->core->getEnum('pasien', 'keluarga');
         $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
         $this->assign['penjab'] = $this->db('penjab')->toArray();
         $this->assign['suku_bangsa'] = $this->db('suku_bangsa')->toArray();
@@ -127,11 +137,11 @@ class Admin extends AdminModule
     {
         $this->_addHeaderFiles();
         $pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
-        $this->assign['jk'] = $this->_addEnum('pasien', 'jk');
-        $this->assign['gol_darah'] = $this->_addEnum('pasien', 'gol_darah');
-        $this->assign['stts_nikah'] = $this->_addEnum('pasien', 'stts_nikah');
-        $this->assign['pnd'] = $this->_addEnum('pasien', 'pnd');
-        $this->assign['keluarga'] = $this->_addEnum('pasien', 'keluarga');
+        $this->assign['jk'] = $this->core->getEnum('pasien', 'jk');
+        $this->assign['gol_darah'] = $this->core->getEnum('pasien', 'gol_darah');
+        $this->assign['stts_nikah'] = $this->core->getEnum('pasien', 'stts_nikah');
+        $this->assign['pnd'] = $this->core->getEnum('pasien', 'pnd');
+        $this->assign['keluarga'] = $this->core->getEnum('pasien', 'keluarga');
         $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'HINDU', 'BUDHA');
         $this->assign['penjab'] = $this->db('penjab')->toArray();
         $this->assign['suku_bangsa'] = $this->db('suku_bangsa')->toArray();
@@ -172,9 +182,12 @@ class Admin extends AdminModule
             $this->assign['view']['count_ranap'] = $count_ranap;
             $this->assign['fotoURL'] = url('/plugins/pasien/img/'.$pasien['jk'].'.png');
 
-            $rows = $this->db()->pdo()->prepare("SELECT b.*, a.nm_poli, c.nm_dokter FROM poliklinik a, reg_periksa b, dokter c WHERE b.no_rkm_medis = '$no_rkm_medis' AND a.kd_poli = b.kd_poli AND b.kd_dokter = c.kd_dokter ORDER BY b.tgl_registrasi DESC");
-            $rows->execute();
-            $rows = $rows->fetchAll();
+            $rows = $this->db('reg_periksa')
+                ->where('no_rkm_medis', $no_rkm_medis)
+                ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
+                ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
+                ->desc('tgl_registrasi')
+                ->toArray();
 
             foreach ($rows as &$row) {
                 $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
@@ -885,14 +898,6 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'pasien', 'css']));
         $this->core->addJS(url([ADMIN, 'pasien', 'javascript']), 'footer');
-    }
-
-    private function _addEnum($table_name, $column_name) {
-      $result = $this->db()->pdo()->prepare("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
-      $result->execute();
-      $result = $result->fetch();
-      $result = explode("','",preg_replace("/(enum|set)\('(.+?)'\)/","\\2", $result[1]));
-      return $result;
     }
 
     private function _setNoRM()

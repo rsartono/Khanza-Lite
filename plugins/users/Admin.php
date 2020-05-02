@@ -250,9 +250,6 @@ class Admin extends AdminModule
 
     private function _addInfoUser() {
         // get users
-        //$user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(user.id_user,'nur') as username, pegawai.nama as nama FROM user, pegawai WHERE pegawai.nik = AES_DECRYPT(user.id_user,'nur')");
-        //$user->execute();
-        //$user = $user->fetchAll();
         $user = $this->db('pegawai')->toArray();
 
         if (count($user)) {
