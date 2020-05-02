@@ -701,19 +701,29 @@ class Admin extends AdminModule
       $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();
       $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
 
-      $pdf = new FPDF();
+      $pdf = new PDF_MC_Table();
       $pdf->AddPage();
       $pdf->SetAutoPageBreak(true, 10);
-      $pdf->SetTopMargin(5);
-      $pdf->SetLeftMargin(5);
-      $pdf->SetRightMargin(5);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
 
-      $pdf->Image($logo, 5, 8, '18', '18', 'png');
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
       $pdf->SetFont('Arial', '', 24);
       $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
-      $pdf->SetFont('Arial', '', 12);
-      $pdf->Text(30, 22, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
-      $pdf->Text(30, 26, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 200, 30);
+      $pdf->Line(10, 31, 200, 31);
+      $pdf->Text(10, 40, 'DATA REKAM MEDIK');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(20,35,35,35,35,30));
+      $pdf->Row(array('Tanggal','Anamnesa','Pemeriksaan', 'Diagnosa', 'Terapi', 'Keterangan'));
+      //foreach ($pasien as $hasil) {
+      //  $pdf->Row(array($hasil['no_rkm_medis'],$hasil['nm_pasien'],$hasil['no_ktp'],$hasil['alamat']));
+      //}
 
       $pdf->Output('rekam_medik_pasien_'.$pasien['no_rkm_medis'].'.pdf','I');
 
