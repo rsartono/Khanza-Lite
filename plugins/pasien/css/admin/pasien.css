@@ -1,6 +1,40 @@
 th, td {
   white-space: nowrap;
 }
+.nav-tabs {
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: -webkit-box;
+  display: -moz-box;
+}
+.nav-tabs>li {
+  float: none;
+}
+.card {
+  background: #fff;
+  min-height: 50px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  margin-bottom: 30px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px; }
+  .card .body {
+    font-size: 14px;
+    color: #555;
+    padding: 20px; }
+    .card .header {
+      color: #555;
+      padding: 20px;
+      position: relative;
+      border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
+      .card .header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: normal;
+        color: #111; }
+
 
 /* Profile Page ================================ */
 .profile-card .profile-header {
@@ -104,6 +138,13 @@ th, td {
         margin-bottom: 0; }
     .panel-post .panel-body .post .post-content {
       padding: 12px 15px; }
+      .panel-post .panel-body .post .post-content .assessment-title {
+      font-size: 14px;}
+      .panel-post .panel-body .post .post-content ul {
+      padding-left: 10px;
+      margin-left: 15px;}
+      .panel-post .panel-body .post .post-content ul li {
+      list-style: bullet;}
       .panel-post .panel-body .post .post-content p {
         margin-bottom: 0; }
 
@@ -113,6 +154,8 @@ th, td {
     .panel-post .panel-footer ul {
       margin: 0;
       padding: 0;
+      padding-bottom: 5px;
+      border-bottom: #eee solid 1px;
       list-style: none; }
       .panel-post .panel-footer ul li {
         display: inline-block;
@@ -130,6 +173,7 @@ th, td {
             margin-right: 2px; }
           .panel-post .panel-footer ul li a span {
             font-size: 13px; }
+
     .panel-post .panel-footer .form-group {
       margin-bottom: 5px;
       margin-top: 20px; }
