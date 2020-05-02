@@ -242,7 +242,7 @@ class Admin extends AdminModule
 
     private function checkCompatibility($version)
     {
-        $systemVersion = VERSION;
+        $systemVersion = $this->options->get('settings.version');
         $version = str_replace(['.', '*'], ['\\.', '[0-9]+'], $version);
         return preg_match('/^'.$version.'[a-z]*$/', $systemVersion);
     }

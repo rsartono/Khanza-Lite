@@ -24,6 +24,7 @@ class Admin extends AdminModule
     {
         $settings = $this->db('setting')->toArray();
         $settings['system'] = [
+            'version'       => $this->options->get('settings.version'), 
             'php'           => PHP_VERSION,
             'sqlite'        => $this->db()->pdo()->query('SELECT VERSION() as version')->fetch()[0],
             'sqlite_size'        => $this->roundSize($this->db()->pdo()->query("SELECT ROUND(SUM(data_length + index_length), 1) FROM information_schema.tables WHERE table_schema = '".DBNAME."' GROUP BY table_schema")->fetch()[0]),
@@ -33,6 +34,7 @@ class Admin extends AdminModule
         if (!empty($redirectData = getRedirectData())) {
             $settings = array_merge($settings, $redirectData);
         }
+
 
         $this->tpl->set('settings', $this->tpl->noParse_array(htmlspecialchars_array($settings)));
 
