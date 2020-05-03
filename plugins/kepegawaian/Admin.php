@@ -213,6 +213,744 @@ class Admin extends AdminModule
 
     public function getMaster()
     {
+        $rows = $this->db('jnj_jabatan')->toArray();
+        $this->assign['jnj_jabatan'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'jnjjabatanedit', $row['kode']]);
+            $this->assign['jnj_jabatan'][] = $row;
+        }
+
+        $rows = $this->db('kelompok_jabatan')->toArray();
+        $this->assign['kelompok_jabatan'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'kelompokjabatanedit', $row['kode_kelompok']]);
+            $this->assign['kelompok_jabatan'][] = $row;
+        }
+
+        $rows = $this->db('resiko_kerja')->toArray();
+        $this->assign['resiko_kerja'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'resikokerjaedit', $row['kode_resiko']]);
+            $this->assign['resiko_kerja'][] = $row;
+        }
+
+        $rows = $this->db('departemen')->toArray();
+        $this->assign['departemen'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'departemenedit', $row['dep_id']]);
+            $this->assign['departemen'][] = $row;
+        }
+
+        $rows = $this->db('bidang')->toArray();
+        $this->assign['bidang'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'bidangedit', $row['nama']]);
+            $this->assign['bidang'][] = $row;
+        }
+
+        $rows = $this->db('stts_kerja')->toArray();
+        $this->assign['stts_kerja'] = [];
+        foreach ($rows as $row) {
+          $row['editURL'] = url([ADMIN, 'kepegawaian', 'sttskerjaedit', $row['stts']]);
+            $this->assign['stts_kerja'][] = $row;
+        }
+
+        $rows = $this->db('stts_wp')->toArray();
+        $this->assign['stts_wp'] = [];
+        foreach ($rows as $row) {
+          $row['editURL'] = url([ADMIN, 'kepegawaian', 'sttswpedit', $row['stts']]);
+            $this->assign['stts_wp'][] = $row;
+        }
+
+        $rows = $this->db('pendidikan')->toArray();
+        $this->assign['pendidikan'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'pendidikanedit', $row['tingkat']]);
+            $this->assign['pendidikan'][] = $row;
+        }
+
+        $rows = $this->db('bank')->toArray();
+        $this->assign['bank'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'bankedit', $row['namabank']]);
+            $this->assign['bank'][] = $row;
+        }
+
+        $rows = $this->db('emergency_index')->toArray();
+        $this->assign['emergency_index'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'kepegawaian', 'emergencyindexedit', $row['kode_emergency']]);
+            $this->assign['emergency_index'][] = $row;
+        }
+
+        return $this->draw('master.html', ['master' => $this->assign]);
+    }
+
+    public function getJnjJabatanAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode' => '',
+              'nama' => '',
+              'tnj' => '',
+              'indek' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Jenjang Jabatan';
+
+        return $this->draw('jnj_jabatan.form.html', ['master' => $this->assign]);
+    }
+
+    public function getJnjJabatanEdit($id)
+    {
+        $user = $this->db('jnj_jabatan')->where('kode', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Jenjang Jabatan';
+
+            return $this->draw('jnj_jabatan.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postJnjJabatanSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('jnj_jabatan')->where('kode', $_POST['kode'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'jnjjabatanedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('jnj_jabatan')->save($_POST);
+            } else {        // edit
+                $query = $this->db('jnj_jabatan')->where('kode', $_POST['kode'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getKelompokJabatanAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode_kelompok' => '',
+              'nama_kelompok' => '',
+              'indek' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Kelompok Jabatan';
+
+        return $this->draw('kelompok_jabatan.form.html', ['master' => $this->assign]);
+    }
+
+    public function getKelompokJabatanEdit($id)
+    {
+        $user = $this->db('kelompok_jabatan')->where('kode_kelompok', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Kelompok Jabatan';
+
+            return $this->draw('kelompok_jabatan.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postKelompokJabatanSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('kelompok_jabatan')->where('kode_kelompok', $_POST['kode_kelompok'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'kelompokjabatanedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode_kelompok', 'nama_kelompok'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('kelompok_jabatan')->save($_POST);
+            } else {        // edit
+                $query = $this->db('kelompok_jabatan')->where('kode_kelompok', $_POST['kode_kelompok'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getResikoKerjaAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode_resiko' => '',
+              'nama_resiko' => '',
+              'indek' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Resiko Kerja';
+
+        return $this->draw('resiko_kerja.form.html', ['master' => $this->assign]);
+    }
+
+    public function getResikoKerjaEdit($id)
+    {
+        $user = $this->db('resiko_kerja')->where('kode_resiko', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Resiko Kerja';
+
+            return $this->draw('resiko_kerja.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postResikoKerjaSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('resiko_kerja')->where('kode_resiko', $_POST['kode_resiko'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'resikokerjaedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode_resiko', 'nama_resiko'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('resiko_kerja')->save($_POST);
+            } else {        // edit
+                $query = $this->db('resiko_kerja')->where('kode_resiko', $_POST['kode_resiko'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getDepartemenAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'dep_id' => '',
+              'nama' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Departemen';
+
+        return $this->draw('departemen.form.html', ['master' => $this->assign]);
+    }
+
+    public function getDepartemenEdit($id)
+    {
+        $user = $this->db('departemen')->where('dep_id', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Departemen';
+
+            return $this->draw('departemen.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postDepartemenSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('departemen')->where('dep_id', $_POST['dep_id'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'departemenedit', $id]);
+        }
+
+        if (checkEmptyFields(['dep_id', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('departemen')->save($_POST);
+            } else {        // edit
+                $query = $this->db('departemen')->where('dep_id', $_POST['dep_id'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getBidangAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'nama' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Bidang';
+
+        return $this->draw('bidang.form.html', ['master' => $this->assign]);
+    }
+
+    public function getBidangEdit($id)
+    {
+        $user = $this->db('bidang')->where('nama', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Departemen';
+
+            return $this->draw('bidang.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postBidangSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('bidang')->where('nama', $_POST['nama'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'bidangedit', $id]);
+        }
+
+        if (checkEmptyFields(['nama'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('bidang')->save($_POST);
+            } else {        // edit
+                $query = $this->db('bidang')->where('nama', $_POST['nama'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getSttsWPAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'stts' => '',
+              'ktg' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Status WP';
+
+        return $this->draw('stts_wp.form.html', ['master' => $this->assign]);
+    }
+
+    public function getSttsWPEdit($id)
+    {
+        $user = $this->db('stts_wp')->where('stts', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Status WP';
+
+            return $this->draw('stts_wp.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postSttsWPSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('stts_wp')->where('stts', $_POST['stts'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'sttswpedit', $id]);
+        }
+
+        if (checkEmptyFields(['stts', 'ktg'], $_POST)) {
+          $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('stts_wp')->save($_POST);
+            } else {        // edit
+                $query = $this->db('stts_wp')->where('stts', $_POST['stts'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getSttsKerjaAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'stts' => '',
+              'ktg' => '',
+              'indek' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Status Kerja';
+
+        return $this->draw('stts_kerja.form.html', ['master' => $this->assign]);
+    }
+
+    public function getSttsKerjaEdit($id)
+    {
+        $user = $this->db('stts_kerja')->where('stts', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Status Kerja';
+
+            return $this->draw('stts_kerja.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postSttsKerjaSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('stts_kerja')->where('stts', $_POST['stts'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'sttskerjaedit', $id]);
+        }
+
+        if (checkEmptyFields(['stts', 'ktg'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('stts_kerja')->save($_POST);
+            } else {        // edit
+                $query = $this->db('stts_kerja')->where('stts', $_POST['stts'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getPendidikanAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'tingkat' => '',
+              'indek' => '',
+              'gapok1' => '',
+              'kenaikan' => '',
+              'maksimal' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Pendidikan';
+
+        return $this->draw('pendidikan.form.html', ['master' => $this->assign]);
+    }
+
+    public function getPendidikanEdit($id)
+    {
+        $user = $this->db('pendidikan')->where('tingkat', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Pendidikan';
+
+            return $this->draw('pendidikan.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postPendidikanSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('pendidikan')->where('tingkat', $_POST['tingkat'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'pendidikanedit', $id]);
+        }
+
+        if (checkEmptyFields(['tingkat'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('pendidikan')->save($_POST);
+            } else {        // edit
+                $query = $this->db('pendidikan')->where('tingkat', $_POST['tingkat'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getBankAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'namabank' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Bank';
+
+        return $this->draw('bank.form.html', ['master' => $this->assign]);
+    }
+
+    public function getBankEdit($id)
+    {
+        $user = $this->db('bank')->where('namabank', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Bank';
+
+            return $this->draw('bank.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postBankSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('bank')->where('namabank', $_POST['namabank'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'bankedit', $id]);
+        }
+
+        if (checkEmptyFields(['namabank'], $_POST)) {
+          $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('bank')->save($_POST);
+            } else {        // edit
+                $query = $this->db('bank')->where('namabank', $_POST['namabank'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getEmergencyIndexAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode_emergency' => '',
+              'nama_emergency' => '',
+              'indek' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Emergency Index';
+
+        return $this->draw('emergency_index.form.html', ['master' => $this->assign]);
+    }
+
+    public function getEmergencyIndexEdit($id)
+    {
+        $user = $this->db('emergency_index')->where('kode_emergency', $id)->oneArray();
+        if (!empty($user)) {
+            $this->assign['form'] = $user;
+            $this->assign['title'] = 'Edit Master Emergency Index';
+
+            return $this->draw('emergency_index.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'master']));
+        }
+    }
+
+    public function postEmergencyIndexSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('emergency_index')->where('kode_emergency', $_POST['kode_emergency'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'kepegawaian', 'master']);
+        } else {
+            $location = url([ADMIN, 'kepegawaian', 'emergencyindexedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode_emergency', 'nama_emergency'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('emergency_index')->save($_POST);
+            } else {        // edit
+                $query = $this->db('emergency_index')->where('kode_emergency', $_POST['kode_emergency'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
     }
 
     public function getCSS()
