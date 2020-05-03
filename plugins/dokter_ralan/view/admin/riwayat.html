@@ -14,47 +14,45 @@
       <div class="panel-body">
           <div class="post">
               <div class="post-content">
-                  <p>
-                      <dl class="dl-horizontal no-margin">
-                          <dt>Subjective</dt>
-                          <dd>{$value.keluhan}</dd>
-                          <dt>Objective</dt>
-                          <dd>
-                            {if: !empty($value.pemeriksaan)}Pemeriksaan: {$value.pemeriksaan}<br>{/if}
-                            {if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh}<br>{/if}
-                            {if: !empty($value.tensi)}Tekanan darah: {$value.tensi}<br>{/if}
-                            {if: !empty($value.nadi)}Nadi: {$value.nadi}<br>{/if}
-                            {if: !empty($value.respirasi)}RR: {$value.respirasi}<br>{/if}
-                            {if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi}<br>{/if}
-                            {if: !empty($value.berat)}Berat badan: {$value.berat}<br>{/if}
-                            {if: !empty($value.gcs)}GCS: {$value.gcs}{/if}
-                          </dd>
-                          <dt>Assessment</dt>
-                          <dd>
-                            {if: !empty($value.diagnosa_pasien)}
-                              <div class="assessment-title">Diagnosa:</div>
-                              <ul class="fa-ul">
-                              {loop: $value.diagnosa_pasien as $data}
-                                <li><i class="fa-li fa fa-check-square"></i>{$data.nm_penyakit}</li>
-                              {/loop}
-                              </ul>
-                            {/if}
-                            {if: !empty($value.rawat_jl_dr)}
-                              <div class="assessment-title">Perawatan:</div>
-                              <ul class="fa-ul">
-                              {loop: $value.rawat_jl_dr as $data}
-                                <li><i class="fa-li fa fa-check-square"></i>{$data.nm_perawatan}</li>
-                              {/loop}
-                              </ul>
-                            {/if}
-                          </dd>
-                          <dt>Plan</dt>
-                          <dd>
-                            {if: !empty($value.rtl)}Tindak lanjut: {$value.rtl}<br>{/if}
-                            {if: !empty($value.catatan_perawatan)}Catatan Perawatan: {$value.catatan_perawatan}<br>{/if}
-                          </dd>
-                      </dl>
-                  </p>
+                  <dl class="dl-horizontal no-margin">
+                      <dt>Subjective</dt>
+                      <dd>{$value.keluhan}</dd>
+                      <dt>Objective</dt>
+                      <dd>
+                        {if: !empty($value.pemeriksaan)}Pemeriksaan: {$value.pemeriksaan}<br>{/if}
+                        {if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh}<br>{/if}
+                        {if: !empty($value.tensi)}Tekanan darah: {$value.tensi}<br>{/if}
+                        {if: !empty($value.nadi)}Nadi: {$value.nadi}<br>{/if}
+                        {if: !empty($value.respirasi)}RR: {$value.respirasi}<br>{/if}
+                        {if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi}<br>{/if}
+                        {if: !empty($value.berat)}Berat badan: {$value.berat}<br>{/if}
+                        {if: !empty($value.gcs)}GCS: {$value.gcs}{/if}
+                      </dd>
+                      <dt>Assessment</dt>
+                      <dd>
+                        {if: !empty($value.diagnosa_pasien)}
+                          <div class="assessment-title">Diagnosa:</div>
+                          <ul class="fa-ul">
+                          {loop: $value.diagnosa_pasien as $data}
+                            <li><i class="fa-li fa fa-check-square"></i>{$data.nm_penyakit}</li>
+                          {/loop}
+                          </ul>
+                        {/if}
+                        {if: !empty($value.rawat_jl_dr)}
+                          <div class="assessment-title">Perawatan:</div>
+                          <ul class="fa-ul">
+                          {loop: $value.rawat_jl_dr as $data}
+                            <li><i class="fa-li fa fa-check-square"></i>{$data.nm_perawatan}</li>
+                          {/loop}
+                          </ul>
+                        {/if}
+                      </dd>
+                      <dt>Plan</dt>
+                      <dd>
+                        {if: !empty($value.rtl)}Tindak lanjut: {$value.rtl}<br>{/if}
+                        {if: !empty($value.catatan_perawatan)}Catatan Perawatan: {$value.catatan_perawatan}<br>{/if}
+                      </dd>
+                  </dl>
               </div>
           </div>
       </div>

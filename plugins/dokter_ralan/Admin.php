@@ -143,7 +143,7 @@ class Admin extends AdminModule
 
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'dokter_ralan', 'css']));
-        //$this->core->addJS(url([ADMIN, 'dokter_ralan', 'javascript']), 'footer');
+        $this->core->addJS(url([ADMIN, 'dokter_ralan', 'javascript']), 'footer');
     }
 
 }
