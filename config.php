@@ -19,7 +19,8 @@
 	define('SecretKey', '');
 
   // URL Webapps
-  define('WEBAPPS_URL', 'https://simrs.rshdbarabai.com/webapps');
+  define('WEBAPPS_URL', '');
+	define('WEBAPPS_PATH', BASE_DIR . '/webapps');
 
 	// Admin url path
 	define('ADMIN', 'admin');

@@ -109,7 +109,7 @@ class Admin extends AdminModule
         $this->assign['bank'] = $this->db('bank')->toArray();
         $this->assign['emergency_index'] = $this->db('emergency_index')->toArray();
 
-        $this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
+        $this->assign['fotoURL'] = url(MODULES.'/kepegawaian/img/default.png');
 
         return $this->draw('form.html', ['pegawai' => $this->assign]);
     }
@@ -136,7 +136,7 @@ class Admin extends AdminModule
             $this->assign['bank'] = $this->db('bank')->toArray();
             $this->assign['emergency_index'] = $this->db('emergency_index')->toArray();
 
-            $this->assign['fotoURL'] = url(MODULES.'/users/img/default.png');
+            $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/penggajian/pages/pegawai/photo/'.$user['photo']);
             return $this->draw('form.html', ['pegawai' => $this->assign]);
         } else {
             redirect(url([ADMIN, 'kepegawaian', 'manage']));
@@ -161,6 +161,31 @@ class Admin extends AdminModule
         if (!$errors) {
             unset($_POST['save']);
 
+            if (($photo = isset_or($_FILES['photo']['tmp_name'], false)) || !$id) {
+                $img = new \Systems\Lib\Image;
+
+                if (empty($photo) && !$id) {
+                    $photo = MODULES.'/kepegawaian/img/default.png';
+                }
+                if ($img->load($photo)) {
+                    if ($img->getInfos('width') < $img->getInfos('height')) {
+                        $img->crop(0, 0, $img->getInfos('width'), $img->getInfos('width'));
+                    } else {
+                        $img->crop(0, 0, $img->getInfos('height'), $img->getInfos('height'));
+                    }
+
+                    if ($img->getInfos('width') > 512) {
+                        $img->resize(512, 512);
+                    }
+
+                    if ($id) {
+                        $pegawai = $this->db('pegawai')->oneArray($id);
+                    }
+
+                    $_POST['photo'] = uniqid('photo').".".$img->getInfos('type');
+                }
+            }
+
             if (!$id) {    // new
                 $query = $this->db('pegawai')->save($_POST);
             } else {        // edit
@@ -168,6 +193,14 @@ class Admin extends AdminModule
             }
 
             if ($query) {
+                if (isset($img) && $img->getInfos('width')) {
+                    if (isset($pegawai)) {
+                        unlink(WEBAPPS_PATH."/penggajian/pages/pegawai/photo/".$pegawai['photo']);
+                    }
+
+                    $img->save(WEBAPPS_PATH."/penggajian/pages/pegawai/photo/".$_POST['photo']);
+                }
+
                 $this->notify('success', 'Simpan sukes');
             } else {
                 $this->notify('failure', 'Simpan gagal');

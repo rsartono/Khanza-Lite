@@ -1,5 +1,5 @@
 <article class="row">
-  <form name="pegawai" action="{?=url(ADMIN.'/kepegawaian/save/'.@$pegawai.form.id)?}" method="POST">
+  <form name="pegawai" action="{?=url(ADMIN.'/kepegawaian/save/'.@$pegawai.form.id)?}" method="POST" enctype="multipart/form-data">
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -76,7 +76,7 @@
        											<label>Jenjang Jabatan</label>
        											<select name="jnj_jabatan" class="form-control">
        												{loop: $pegawai.jnj_jabatan}
-       													<option value="{$value.kode}"{if: $value.kode == $pegawai.form.jbtn} selected{/if}>{$value.nama}</option>
+       													<option value="{$value.kode}"{if: $value.kode == $pegawai.form.jnj_jabatan} selected{/if}>{$value.nama}</option>
        												{/loop}
        											</select>
        									 </div>
