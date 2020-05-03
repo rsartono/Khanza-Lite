@@ -117,9 +117,9 @@ class Admin extends AdminModule
     public function getEdit($id)
     {
         $this->_addHeaderFiles();
-        $user = $this->db('pegawai')->oneArray($id);
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('pegawai')->oneArray($id);
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Pegawai';
 
             $this->assign['jk'] = $this->core->getEnum('pegawai', 'jk');
@@ -136,7 +136,7 @@ class Admin extends AdminModule
             $this->assign['bank'] = $this->db('bank')->toArray();
             $this->assign['emergency_index'] = $this->db('emergency_index')->toArray();
 
-            $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/penggajian/pages/pegawai/photo/'.$user['photo']);
+            $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/penggajian/pages/pegawai/photo/'.$row['photo']);
             return $this->draw('form.html', ['pegawai' => $this->assign]);
         } else {
             redirect(url([ADMIN, 'kepegawaian', 'manage']));
@@ -338,9 +338,9 @@ class Admin extends AdminModule
 
     public function getJnjJabatanEdit($id)
     {
-        $user = $this->db('jnj_jabatan')->where('kode', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('jnj_jabatan')->where('kode', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Jenjang Jabatan';
 
             return $this->draw('jnj_jabatan.form.html', ['master' => $this->assign]);
@@ -405,9 +405,9 @@ class Admin extends AdminModule
 
     public function getKelompokJabatanEdit($id)
     {
-        $user = $this->db('kelompok_jabatan')->where('kode_kelompok', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('kelompok_jabatan')->where('kode_kelompok', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Kelompok Jabatan';
 
             return $this->draw('kelompok_jabatan.form.html', ['master' => $this->assign]);
@@ -472,9 +472,9 @@ class Admin extends AdminModule
 
     public function getResikoKerjaEdit($id)
     {
-        $user = $this->db('resiko_kerja')->where('kode_resiko', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('resiko_kerja')->where('kode_resiko', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Resiko Kerja';
 
             return $this->draw('resiko_kerja.form.html', ['master' => $this->assign]);
@@ -538,9 +538,9 @@ class Admin extends AdminModule
 
     public function getDepartemenEdit($id)
     {
-        $user = $this->db('departemen')->where('dep_id', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('departemen')->where('dep_id', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Departemen';
 
             return $this->draw('departemen.form.html', ['master' => $this->assign]);
@@ -603,9 +603,9 @@ class Admin extends AdminModule
 
     public function getBidangEdit($id)
     {
-        $user = $this->db('bidang')->where('nama', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('bidang')->where('nama', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Departemen';
 
             return $this->draw('bidang.form.html', ['master' => $this->assign]);
@@ -669,9 +669,9 @@ class Admin extends AdminModule
 
     public function getSttsWPEdit($id)
     {
-        $user = $this->db('stts_wp')->where('stts', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('stts_wp')->where('stts', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Status WP';
 
             return $this->draw('stts_wp.form.html', ['master' => $this->assign]);
@@ -736,9 +736,9 @@ class Admin extends AdminModule
 
     public function getSttsKerjaEdit($id)
     {
-        $user = $this->db('stts_kerja')->where('stts', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('stts_kerja')->where('stts', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Status Kerja';
 
             return $this->draw('stts_kerja.form.html', ['master' => $this->assign]);
@@ -805,9 +805,9 @@ class Admin extends AdminModule
 
     public function getPendidikanEdit($id)
     {
-        $user = $this->db('pendidikan')->where('tingkat', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('pendidikan')->where('tingkat', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Pendidikan';
 
             return $this->draw('pendidikan.form.html', ['master' => $this->assign]);
@@ -870,9 +870,9 @@ class Admin extends AdminModule
 
     public function getBankEdit($id)
     {
-        $user = $this->db('bank')->where('namabank', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('bank')->where('namabank', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Bank';
 
             return $this->draw('bank.form.html', ['master' => $this->assign]);
@@ -937,9 +937,9 @@ class Admin extends AdminModule
 
     public function getEmergencyIndexEdit($id)
     {
-        $user = $this->db('emergency_index')->where('kode_emergency', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('emergency_index')->where('kode_emergency', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Master Emergency Index';
 
             return $this->draw('emergency_index.form.html', ['master' => $this->assign]);

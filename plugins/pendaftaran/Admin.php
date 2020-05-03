@@ -289,9 +289,9 @@ class Admin extends AdminModule
     public function getJadwalEdit($id, $hari_kerja)
     {
         $this->_addHeaderFiles();
-        $user = $this->db('jadwal')->where('kd_dokter', $id)->where('hari_kerja', $hari_kerja)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('jadwal')->where('kd_dokter', $id)->where('hari_kerja', $hari_kerja)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Jadwal';
             $this->assign['hari_kerja'] = $this->core->getEnum('jadwal', 'hari_kerja');
             $this->assign['dokter'] = $this->db('dokter')->toArray();

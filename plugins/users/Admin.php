@@ -65,17 +65,17 @@ class Admin extends AdminModule
     */
     public function getEdit($id)
     {
-        $user = $this->db('lite_roles')->oneArray($id);
+        $row = $this->db('lite_roles')->oneArray($id);
 
         $this->_addHeaderFiles();
         $this->_addInfoUser();
         $this->_addInfoRole();
         $this->_addInfoCap();
 
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit pengguna';
-            $this->assign['modules'] = $this->_getModules($user['access']);
+            $this->assign['modules'] = $this->_getModules($row['access']);
 
             return $this->draw('form.html', ['users' => $this->assign]);
         } else {
@@ -162,7 +162,7 @@ class Admin extends AdminModule
     */
     public function getDelete($id)
     {
-        if ($id != 1 && $this->core->getUserInfo('id') != $id && ($user = $this->db('lite_roles')->oneArray($id))) {
+        if ($id != 1 && $this->core->getUserInfo('id') != $id && ($row = $this->db('lite_roles')->oneArray($id))) {
             if ($this->db('lite_roles')->delete($id)) {
                 $this->notify('success', 'Hapus sukses');
             } else {
@@ -250,11 +250,11 @@ class Admin extends AdminModule
 
     private function _addInfoUser() {
         // get users
-        $user = $this->db('pegawai')->toArray();
+        $rows = $this->db('pegawai')->toArray();
 
-        if (count($user)) {
+        if (count($rows)) {
           $this->assign['user'] = [];
-          foreach($user as $row) {
+          foreach($rows as $row) {
               $this->assign['user'][] = $row;
           }
         }

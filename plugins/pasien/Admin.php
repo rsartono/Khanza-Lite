@@ -280,9 +280,9 @@ class Admin extends AdminModule
 
     public function getCarabayarEdit($id)
     {
-        $user = $this->db('penjab')->where('kd_pj', $id)->oneArray();
-        if (!empty($user)) {
-            $this->assign['form'] = $user;
+        $row = $this->db('penjab')->where('kd_pj', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Cara Bayar';
 
             return $this->draw('carabayar.form.html', ['pasien' => $this->assign]);
