@@ -447,11 +447,9 @@ class Admin extends AdminModule
       	$pdf->Text(3, 75, 'Bayar');
       	$pdf->Text(16, 75, ': '.$penjab['png_jawab']);
       	$pdf->SetFont('Arial', '', 7);
-      	$pdf->Text(9, 83, 'Terima Kasih Atas kepercayaan Anda');
-      	$pdf->Text(12, 86, 'Bawalah kartu Berobat anda dan');
-      	$pdf->Text(14, 89, 'datang 30 menit sebelumnya');
-      	$pdf->Text(6, 92, 'Bawalah surat rujukan atau surat kontrol asli');
-      	$pdf->Text(3, 95, 'dan tunjukkan pada petugas di Lobby resepsionis');
+      	$pdf->Text(9, 89, 'Terima Kasih Atas kepercayaan Anda');
+      	$pdf->Text(18, 92, 'Bawalah kartu Berobat');
+      	$pdf->Text(11, 95, 'setiap berkunjung ke Rumah Sakit');
 
         $pdf->Output('bukti_register_'.convertNorawat($pendaftaran['no_rawat']).'.pdf','I');
 
