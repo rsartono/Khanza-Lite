@@ -8,79 +8,81 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="resep_umum">
                 <div class="row clearfix" id="item_resep">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Nama Obat</label>
-                            <select name="" class="form-control">
-                                {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}
-                            </select>
+                    <div class="clearfix" style="border-bottom: #ddd 1px solid;">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nama Obat</label>
+                                <select name="" class="form-control">
+                                    {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Jumlah</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Aturan Pakai</label>
+                                <select name="kd_poli" class="form-control">
+                                    {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label>Jumlah</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
+                    <div class="pull-right" style="padding-top:20px;">
+                        <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+                        <button class="btn btn-default btn-success add">Tambah</button>
+                        <a href="" class="btn btn-default">Batal</a>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Aturan Pakai</label>
-                            <select name="kd_poli" class="form-control">
-                                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                    </div>
-                </div>
-                <div class="pull-right" style="padding-top:20px;">
-                    <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
-                    <button class="btn btn-default btn-success add">Tambah</button>
-                    <a href="" class="btn btn-default">Batal</a>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
                 <div class="row clearfix" id="item_racikan">
                     <div class="clearfix" style="border-bottom: #ddd 1px solid;">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Nama Racikan</label>
-                            <input type="text" name="" class="form-control" value="" />
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Nama Racikan</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Metode Racik</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Jumlah Racikan</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Aturan Pakai</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Item Obat</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Keterangan</label>
+                                <input type="text" name="" class="form-control" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-1">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Metode Racik</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Jumlah Racikan</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Aturan Pakai</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Item Obat</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Keterangan</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                    </div>
-                </div>
                 </div>
                 <div class="pull-right" style="padding-top:20px;">
                     <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
@@ -96,7 +98,7 @@
   $(document).ready(function() {
       $(document).on('click', '.add', function(){
           var html = '';
-          html += '<div class="clearfix row_resep">';
+          html += '<div class="clearfix row_resep" style="border-bottom: #ddd 1px solid;margin-top: 20px;">';
           html += '   <div class="col-md-6">';
           html += '       <div class="form-group">';
           html += '            <label class="visible-xs">Nama Obat</label>';
