@@ -213,3 +213,8 @@ th, td {
   margin-bottom: 5px;
   margin-top: 20px;
 }
+
+.resep ul.nav-tabs > li {
+  width: 50%;
+  text-align: center;
+}
