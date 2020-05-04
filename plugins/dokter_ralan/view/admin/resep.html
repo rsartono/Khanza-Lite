@@ -7,6 +7,8 @@
     <div class="panel-body">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="resep_umum">
+                <form method="post" id="insert_form">
+                <span id="error"></span>
                 <div class="row clearfix" id="item_resep">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -19,7 +21,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label>Jumlah</label>
-                            <input type="text" name="" class="form-control" value="" />
+                            <input type="text" name="" class="form-control item_quantity" value="" />
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -34,10 +36,11 @@
                     </div>
                 </div>
                 <div class="pull-right" style="padding-top:20px;">
+                    <span class="btn btn-default btn-success add">Tambah</span>
                     <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
-                    <button class="btn btn-default btn-success add">Tambah</button>
                     <a href="" class="btn btn-default">Batal</a>
                 </div>
+                </form>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
                 <div class="row clearfix" id="item_racikan">
@@ -83,8 +86,8 @@
                 </div>
                 </div>
                 <div class="pull-right" style="padding-top:20px;">
-                    <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
                     <button class="btn btn-default btn-success add_racikan">Tambah</button>
+                    <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
                     <a href="" class="btn btn-default">Batal</a>
                 </div>
             </div>
@@ -108,7 +111,7 @@
           html += '    <div class="col-md-2">';
           html += '        <div class="form-group">';
           html += '            <label class="visible-xs">Jumlah</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '            <input type="text" name="" class="form-control item_quantity" value="" />';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-3">';
@@ -144,6 +147,53 @@
 
       $(document).on('click', '.remove', function(){
           $(this).closest('.row_resep').remove();
+      });
+
+      $('#insert_form').on('submit', function(event){
+          event.preventDefault();
+          var error = '';
+          $('.item_name').each(function(){
+              var count = 1;
+              if($(this).val() == ''){
+                  error += "<p>Enter Item Name at "+count+" Row</p>";
+                  return false;
+              }
+              count = count + 1;
+          });
+
+          $('.item_quantity').each(function(){
+              var count = 1;
+              if($(this).val() == ''){
+                  error += "<p>Enter Item Quantity at "+count+" Row</p>";
+                  return false;
+              }
+              count = count + 1;
+          });
+
+          $('.item_unit').each(function(){
+              var count = 1;
+              if($(this).val() == ''){
+                  error += "<p>Select Unit at "+count+" Row</p>";
+                  return false;
+              }
+              count = count + 1;
+          });
+          var form_data = $(this).serialize();
+          if(error == ''){
+              $.ajax({
+                  /*url:"insert.php",
+                  method:"POST",
+                  data:form_data,
+                  success:function(data){
+                      if(data == 'ok'){
+                          $('#item_resep').find("tr:gt(0)").remove();
+                          $('#error').html('<div class="alert alert-success">Item Details Saved</div>');
+                      }
+                  }*/
+              });
+          } else {
+              $('#error').html('<div class="alert alert-danger">'+error+'</div>');
+          }
       });
 
       $(document).on('click', '.add_racikan', function(){
