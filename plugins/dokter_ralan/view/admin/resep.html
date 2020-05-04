@@ -1,5 +1,95 @@
 <div class="panel-default">
     <div class="panel-body">
-      Ini resep
+        <div class="row clearfix" id="item_resep">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nama Obat</label>
+                    <select name="" class="form-control">
+                        {loop: $dokter_ralan.databarang}<option>{$value.kode_brng}</option>{/loop}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Jumlah</label>
+                    <input type="text" name="" class="form-control" value="" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Aturan Pakai</label>
+                    <select name="kd_poli" class="form-control">
+                        {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-default btn-success add">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="pull-right" style="padding-top:20px;">
+            <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+            <a href="" class="btn btn-default">Batal</a>
+        </div>
     </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+      $(document).on('click', '.add', function(){
+          var html = '';
+          html += '<div class="clearfix row_resep">';
+          html += '   <div class="col-md-6">';
+          html += '       <div class="form-group">';
+          html += '            <label class="visible-xs">Nama Obat</label>';
+          html += '            <select name="" class="form-control">';
+          html += '                {loop: $dokter_ralan.databarang}<option>{$value.kode_brng}</option>{/loop}';
+          html += '            </select>';
+          html += '        </div>';
+          html += '    </div>';
+          html += '    <div class="col-md-2">';
+          html += '        <div class="form-group">';
+          html += '            <label class="visible-xs">Jumlah</label>';
+          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '        </div>';
+          html += '    </div>';
+          html += '    <div class="col-md-3">';
+          html += '        <div class="form-group">';
+          html += '            <label class="visible-xs">Aturan Pakai</label>';
+          html += '            <select name="kd_poli" class="form-control">';
+          html += '                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}';
+          html += '            </select>';
+          html += '        </div>';
+          html += '    </div>';
+          html += '    <div class="col-md-1">';
+          html += '      <div class="form-group">';
+          html += '            <label class="visible-xs">Aksi</label>';
+          html += '            <button class="btn btn-danger remove">-</button>';
+          html += '        </div>';
+          html += '    </div>';
+          html += '</div>';
+          $('#item_resep').append(html);
+          $('select').each(function () {
+              var options = {
+                  useDimmer: true,
+                  useSearch: true,
+                  labels: {
+                      search: '...'
+                  }
+              };
+              $.each($(this).data(), function (key, value) {
+                  options[key] = value;
+              });
+              $(this).selectator(options);
+          });
+      });
+
+      $(document).on('click', '.remove', function(){
+          $(this).closest('.row_resep').remove();
+      });
+
+  });
+</script>

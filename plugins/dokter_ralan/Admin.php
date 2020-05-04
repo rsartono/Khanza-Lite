@@ -90,6 +90,8 @@ class Admin extends AdminModule
                 ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
                 ->desc('tgl_registrasi')
                 ->toArray();
+            $this->assign['databarang'] = $this->db('databarang')->toArray();
+            $this->assign['master_aturan_pakai'] = $this->db('master_aturan_pakai')->toArray();
 
             foreach ($rows as &$row) {
                 $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
@@ -117,6 +119,10 @@ class Admin extends AdminModule
         } else {
             redirect(url([ADMIN, 'dokter_ralan', 'manage']));
         }
+    }
+
+    public function getObat() {
+
     }
 
     public function getJavascript()
