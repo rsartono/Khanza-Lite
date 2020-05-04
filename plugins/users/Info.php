@@ -48,6 +48,13 @@ return [
         $core->db()->pdo()->exec("INSERT INTO `lite_roles` (`username`, `role`, `access`)
             VALUES ('$row[username]', 'admin', 'all')");
 
+        $row = $this->db()->pdo()->prepare("SELECT AES_DECRYPT(id_user,'nur') as username FROM user LIMIT 1");
+        $row->execute();
+        $row = $row->fetch();
+
+        $core->db()->pdo()->exec("INSERT INTO `lite_roles` (`username`, `role`, `access`)
+            VALUES ('$row[username]', 'admin', 'all')");
+
     }
 
 ];

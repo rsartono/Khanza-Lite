@@ -21,9 +21,5 @@ return [
         $core->db()->pdo()->exec('ALTER TABLE `lite_modules`
             MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;');
 
-    },
-    'uninstall'     =>  function () use ($core) {
-        //$core->db()->pdo()->exec("DROP TABLE `lite_modules`");
     }
-
 ];

@@ -28,7 +28,7 @@ abstract class Main
         $check_db = $check_db->fetch();
 
         if(empty($check_db)) {
-            $this->freshInstall();
+          $this->freshInstall();
         }
 
         $this->options = new Options($this);
