@@ -43,57 +43,54 @@
                 </form>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
-                <div class="row clearfix" id="item_racikan">
-                    <div class="clearfix" style="border-bottom: #ddd 1px solid;">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Nama Racikan</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Metode Racik</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Jumlah Racikan</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Aturan Pakai</label>
-                            <select name="kd_poli" class="form-control">
-                                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Item Obat</label>
-                            <select name="nama_brng[]" class="form-control" multiple class="form-control" data-keep-open="true" data-use-dimmer="false" data-use-search="false" data-options-height="126px">
-                                {loop: $dokter_ralan.databarang}<option value="{$value.kode_brng}">{$value.nama_brng}</option>{/loop}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Keterangan</label>
-                            <input type="text" name="" class="form-control" value="" />
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                    </div>
-                </div>
-                </div>
-                <div class="pull-right" style="padding-top:20px;">
-                    <button class="btn btn-default btn-success add_racikan">Tambah</button>
-                    <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
-                    <a href="" class="btn btn-default">Batal</a>
-                </div>
+              <form method="post" id="insert_form_racikan">
+              <span id="error"></span>
+              <div class="row clearfix" id="item_racikan">
+                  <div class="clearfix" style="border-bottom: #ddd 1px solid;">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label>Nama Racikan</label>
+                          <input type="text" name="" class="form-control" value="" />
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label>Metode Racik</label>
+                          <input type="text" name="" class="form-control" value="" />
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label>Jumlah</label>
+                          <input type="text" name="" class="form-control item_quantity" value="" />
+                      </div>
+                  </div>
+                  <div class="col-md-8">
+                      <div class="form-group">
+                          <label>Nama Obat</label>
+                          <select name="" class="form-control" multiple>
+                              {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label>Aturan Pakai</label>
+                          <select name="kd_poli" class="form-control">
+                              {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-1">
+                  </div>
+              </div>
+              </div>
+              <div class="pull-right" style="padding-top:20px;">
+                  <span class="btn btn-default btn-success add_racikan">Tambah</span>
+                  <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+                  <a href="" class="btn btn-default">Batal</a>
+              </div>
+              </form>
             </div>
         </div>
     </div>
@@ -153,72 +150,33 @@
           $(this).closest('.row_resep').remove();
       });
 
-      $('#insert_form').on('submit', function(event){
-          event.preventDefault();
-          var error = '';
-          $('.item_name').each(function(){
-              var count = 1;
-              if($(this).val() == ''){
-                  error += "<p>Enter Item Name at "+count+" Row</p>";
-                  return false;
-              }
-              count = count + 1;
-          });
-
-          $('.item_quantity').each(function(){
-              var count = 1;
-              if($(this).val() == ''){
-                  error += "<p>Enter Item Quantity at "+count+" Row</p>";
-                  return false;
-              }
-              count = count + 1;
-          });
-
-          $('.item_unit').each(function(){
-              var count = 1;
-              if($(this).val() == ''){
-                  error += "<p>Select Unit at "+count+" Row</p>";
-                  return false;
-              }
-              count = count + 1;
-          });
-          var form_data = $(this).serialize();
-          if(error == ''){
-              $.ajax({
-                  /*url:"insert.php",
-                  method:"POST",
-                  data:form_data,
-                  success:function(data){
-                      if(data == 'ok'){
-                          $('#item_resep').find("tr:gt(0)").remove();
-                          $('#error').html('<div class="alert alert-success">Item Details Saved</div>');
-                      }
-                  }*/
-              });
-          } else {
-              $('#error').html('<div class="alert alert-danger">'+error+'</div>');
-          }
-      });
-
       $(document).on('click', '.add_racikan', function(){
           var html = '';
           html += '<div class="clearfix row_racikan" style="border-bottom: #ddd 1px solid;margin-top: 20px;">';
-          html += '   <div class="col-md-3">';
+          html += '   <div class="col-md-4">';
           html += '       <div class="form-group">';
           html += '            <label>Nama Racikan</label>';
           html += '            <input type="text" name="" class="form-control" value="" />';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-3">';
+          html += '    <div class="col-md-4">';
           html += '        <div class="form-group">';
           html += '            <label>Metode Racikan</label>';
           html += '            <input type="text" name="" class="form-control" value="" />';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-3">';
+          html += '    <div class="col-md-4">';
           html += '        <div class="form-group">';
-          html += '            <label>Jumlah Racikan</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '            <label>Jumlah</label>';
+          html += '            <input type="text" name="" class="form-control item_quantity" value="" />';
+          html += '        </div>';
+          html += '    </div>';
+          html += '    <div class="col-md-8">';
+          html += '        <div class="form-group">';
+          html += '            <label>Nama Obat</label>';
+          html += '            <select name="" class="form-control" multiple>';
+          html += '                {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}';
+          html += '            </select>';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-3">';
@@ -229,23 +187,9 @@
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-8">';
-          html += '        <div class="form-group">';
-          html += '            <label>Item Obat</label>';
-          html += '            <select name="nama_brng[]" class="form-control" multiple class="form-control" data-keep-open="true" data-use-dimmer="false" data-options-height="126px">';
-          html += '                {loop: $dokter_ralan.databarang}<option value="{$value.kode_brng}">{$value.nama_brng}</option>{/loop}';
-          html += '            </select>';
-          html += '        </div>';
-          html += '    </div>';
-          html += '    <div class="col-md-3">';
-          html += '        <div class="form-group">';
-          html += '            <label>Keterangan</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
-          html += '        </div>';
-          html += '    </div>';
           html += '    <div class="col-md-1">';
           html += '      <div class="form-group">';
-          html += '            <label>Aksi</label>';
+          html += '            <label>&nbsp;</label>';
           html += '            <button class="btn btn-danger remove_racikan">-</button>';
           html += '        </div>';
           html += '    </div>';
@@ -253,8 +197,8 @@
           $('#item_racikan').append(html);
           $('select').each(function () {
               var options = {
-                  useDimmer: false,
-                  useSearch: false,
+                  useDimmer: true,
+                  useSearch: true,
                   labels: {
                       search: '...'
                   }
