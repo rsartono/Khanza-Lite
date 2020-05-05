@@ -1,4 +1,32 @@
-!(function($) {
+/*
+ Selectator jQuery Plugin
+ A plugin for select elements
+ version 3.0, Apr 10th, 2020
+ by Ingi P. Jacobsen
+
+ The MIT License (MIT)
+
+ Copyright (c) 2013 Qodio
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+(function($) {
 	'use strict';
 	$.selectator = function (_element, _options) {
 		var defaults = {
@@ -21,7 +49,7 @@
 				selected_item: function (_item, escape) {
 					var html = '';
 					if (typeof _item.left !== 'undefined')
-						html += '<div class="' + self.options.prefix + 'selected_item_left"><img src="' + escape(_item.left) + '" alt=""></div>';
+						html += '<div class="' + self.options.prefix + 'selected_item_left">' + _item.left + '</div>';
 					if (typeof _item.right !== 'undefined')
 						html += '<div class="' + self.options.prefix + 'selected_item_right">' + escape(_item.right) + '</div>';
 					html += '<div class="' + self.options.prefix + 'selected_item_title">' + ((typeof _item.text !== 'undefined') ? escape(_item.text) : '') + '</div>';
@@ -33,7 +61,7 @@
 				option: function (_item, escape) {
 					var html = '';
 					if (typeof _item.left !== 'undefined')
-						html += '<div class="' + self.options.prefix + 'option_left"><img src="' + escape(_item.left) + '" alt=""></div>';
+						html += '<div class="' + self.options.prefix + 'option_left">' + _item.left + '</div>';
 					if (typeof _item.right !== 'undefined')
 						html += '<div class="' + self.options.prefix + 'option_right">' + escape(_item.right) + '</div>';
 					html += '<div class="' + self.options.prefix + 'option_title">' + ((typeof _item.text !== 'undefined') ? escape(_item.text) : '') + '</div>';
@@ -101,6 +129,8 @@
 			//// ================== CREATE ELEMENTS ================== ////
 			// mask
 			self.$mask_element = $('#' + self.options.prefix + 'mask');
+			// console.log(self.$mask_element.length);
+			// alert(self.$mask_element.length);
 			if (self.$mask_element.length === 0) {
 				self.$mask_element = $(document.createElement('div'));
 				self.$mask_element.attr('id', self.options.prefix + 'mask');
@@ -778,18 +808,3 @@
 		});
 	};
 }(jQuery));
-
-// Markup initializer
-$(function () {
-	'use strict';
-	$('.selectator').each(function () {
-		var $this = $(this);
-		var options = {};
-		$.each($this.data(), function (_key, _value) {
-			if (_key.substring(0, 10) === 'selectator') {
-				options[_key.substring(10, 11).toLowerCase() + _key.substring(11)] = _value;
-			}
-		});
-		$this.selectator(options);
-	});
-});

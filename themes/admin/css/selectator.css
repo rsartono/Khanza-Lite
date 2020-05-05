@@ -1,8 +1,8 @@
 /**
  * Selectator jQuery Plugin
  * A plugin for select elements
- * version 3.2, Apr 9th, 2020
- * by Ingi Ã¡ SteinamÃ¸rk
+ * version 3.0, Apr 8th, 2016
+ * by Ingi á Steinamørk
  */
 /* mask */
 #selectator_mask {
@@ -144,7 +144,6 @@
 .single .selectator_selected_items .selectator_selected_item .selectator_selected_item_right {
   float: right;
   background-color: #ac6;
-  color: #fff;
   font-weight: bold;
   font-size: 80%;
   text-align: center;
@@ -298,7 +297,6 @@
 .selectator_options .selectator_option .selectator_option_right {
   float: right;
   background-color: #ac6;
-  color: #fff;
   font-weight: bold;
   font-size: 80%;
   text-align: center;
@@ -309,7 +307,6 @@
 }
 .selectator_options .selectator_option.active {
   background-color: #39f;
-  color: #fff;
 }
 .selectator_options .selectator_option.active .selectator_option_subtitle {
   color: rgba(255,255,255,0.6);
