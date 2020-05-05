@@ -66,13 +66,17 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Aturan Pakai</label>
-                            <input type="text" name="" class="form-control" value="" />
+                            <select name="kd_poli" class="form-control">
+                                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
                             <label>Item Obat</label>
-                            <input type="text" name="" class="form-control" value="" />
+                            <select name="nama_brng[]" class="form-control" multiple class="form-control" data-keep-open="true" data-use-dimmer="false" data-use-search="false" data-options-height="126px">
+                                {loop: $dokter_ralan.databarang}<option value="{$value.kode_brng}">{$value.nama_brng}</option>{/loop}
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -220,13 +224,17 @@
           html += '    <div class="col-md-3">';
           html += '        <div class="form-group">';
           html += '            <label>Aturan Pakai</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '            <select name="kd_poli" class="form-control">';
+          html += '                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}';
+          html += '            </select>';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-8">';
           html += '        <div class="form-group">';
           html += '            <label>Item Obat</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '            <select name="nama_brng[]" class="form-control" multiple class="form-control" data-keep-open="true" data-use-dimmer="false" data-options-height="126px">';
+          html += '                {loop: $dokter_ralan.databarang}<option value="{$value.kode_brng}">{$value.nama_brng}</option>{/loop}';
+          html += '            </select>';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-3">';
@@ -245,8 +253,8 @@
           $('#item_racikan').append(html);
           $('select').each(function () {
               var options = {
-                  useDimmer: true,
-                  useSearch: true,
+                  useDimmer: false,
+                  useSearch: false,
                   labels: {
                       search: '...'
                   }
