@@ -90,10 +90,7 @@ class Admin extends AdminModule
                 ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
                 ->desc('tgl_registrasi')
                 ->toArray();
-            $this->assign['databarang'] = $this->db('databarang')->toArray();
             $this->assign['master_aturan_pakai'] = $this->db('master_aturan_pakai')->toArray();
-            $this->assign['jns_perawatan_lab'] = $this->db('jns_perawatan_lab')->toArray();
-            $this->assign['jns_perawatan_radiologi'] = $this->db('jns_perawatan_radiologi')->toArray();
 
             foreach ($rows as &$row) {
                 $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
@@ -134,12 +131,42 @@ class Admin extends AdminModule
         	case "databarang":
           $rows = $this->db('databarang')->like('nama_brng', '%'.$_GET['nama_brng'].'%')->toArray();
           foreach ($rows as $row) {
-            $databarang[] = array(
+            $array[] = array(
                 'kode_brng' => $row['kode_brng'],
                 'nama_brng'  => $row['nama_brng']
             );
           }
-          echo json_encode($databarang, true);
+          echo json_encode($array, true);
+          break;
+          case "jns_perawatan":
+          $rows = $this->db('jns_perawatan')->like('nm_perawatan', '%'.$_GET['nm_perawatan'].'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'kd_jenis_prw' => $row['kd_jenis_prw'],
+                'nm_perawatan'  => $row['nm_perawatan']
+            );
+          }
+          echo json_encode($array, true);
+          break;
+          case "jns_perawatan_lab":
+          $rows = $this->db('jns_perawatan_lab')->like('nm_perawatan', '%'.$_GET['nm_perawatan'].'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'kd_jenis_prw' => $row['kd_jenis_prw'],
+                'nm_perawatan'  => $row['nm_perawatan']
+            );
+          }
+          echo json_encode($array, true);
+          break;
+          case "jns_perawatan_radiologi":
+          $rows = $this->db('jns_perawatan_radiologi')->like('nm_perawatan', '%'.$_GET['nm_perawatan'].'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'kd_jenis_prw' => $row['kd_jenis_prw'],
+                'nm_perawatan'  => $row['nm_perawatan']
+            );
+          }
+          echo json_encode($array, true);
           break;
         }
         exit();
