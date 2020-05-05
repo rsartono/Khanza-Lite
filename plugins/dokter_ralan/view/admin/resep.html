@@ -10,21 +10,20 @@
                 <form method="post" id="insert_form">
                 <span id="error"></span>
                 <div class="row clearfix" id="item_resep">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label>Nama Obat</label>
-                            <select name="" class="form-control">
-                                {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}
+                            <select name="" class="form-control databarang_ajax">
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <div class="form-group">
                             <label>Jumlah</label>
                             <input type="text" name="" class="form-control item_quantity" value="" />
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label>Aturan Pakai</label>
                             <select name="kd_poli" class="form-control">
@@ -63,18 +62,17 @@
                           <input type="text" name="" class="form-control item_quantity" value="" />
                       </div>
                   </div>
-                  <div class="col-md-8">
+                  <div class="col-md-6">
                       <div class="form-group">
                           <label>Nama Obat</label>
-                          <select name="" class="form-control" multiple>
-                              {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}
+                          <select name="" class="form-control databarang_ajax" multiple>
                           </select>
                       </div>
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-5">
                       <div class="form-group">
                           <label>Aturan Pakai</label>
-                          <select name="kd_poli" class="form-control">
+                          <select name="" class="form-control">
                               {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
                           </select>
                       </div>
@@ -97,21 +95,20 @@
       $(document).on('click', '.add', function(){
           var html = '';
           html += '<div class="clearfix row_resep">';
-          html += '   <div class="col-md-6">';
+          html += '   <div class="col-md-5">';
           html += '       <div class="form-group">';
           html += '            <label class="visible-xs">Nama Obat</label>';
-          html += '            <select name="" class="form-control">';
-          html += '                {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}';
+          html += '            <select name="" class="form-control databarang_ajax">';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-2">';
+          html += '    <div class="col-md-1">';
           html += '        <div class="form-group">';
           html += '            <label class="visible-xs">Jumlah</label>';
           html += '            <input type="text" name="" class="form-control item_quantity" value="" />';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-3">';
+          html += '    <div class="col-md-5">';
           html += '        <div class="form-group">';
           html += '            <label class="visible-xs">Aturan Pakai</label>';
           html += '            <select name="kd_poli" class="form-control">';
@@ -127,6 +124,40 @@
           html += '    </div>';
           html += '</div>';
           $('#item_resep').append(html);
+          var strip_tags = function(str) {
+            return (str + '').replace(/<\/?[^>]+(>|$)/g, '')
+          };
+          var truncate_string = function(str, chars) {
+            if ($.trim(str).length <= chars) {
+              return str;
+            } else {
+              return $.trim(str.substr(0, chars)) + '…';
+            }
+          };
+          $('.databarang_ajax').selectator({
+            labels: {
+              search: 'Cari obat...'
+            },
+            load: function (search, callback) {
+              if (search.length < this.minSearchLength) return callback();
+              $.ajax({
+                url: '{?=url()?}/admin/dokter_ralan/ajax?show=databarang&nama_brng=' + encodeURIComponent(search) + '&t={?=$_SESSION['token']?}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                  callback(data.slice(0, 100));
+                  console.log(data);
+                },
+                error: function() {
+                  callback();
+                }
+              });
+            },
+            delay: 300,
+            minSearchLength: 1,
+            valueField: 'kode_brng',
+            textField: 'nama_brng'
+          });
           $('select').each(function () {
               var options = {
                   useDimmer: true,
@@ -167,18 +198,17 @@
           html += '            <input type="text" name="" class="form-control item_quantity" value="" />';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-8">';
+          html += '    <div class="col-md-6">';
           html += '        <div class="form-group">';
           html += '            <label>Nama Obat</label>';
-          html += '            <select name="" class="form-control" multiple>';
-          html += '                {loop: $dokter_ralan.databarang}<option>{$value.nama_brng}</option>{/loop}';
+          html += '            <select name="" class="form-control databarang_ajax" multiple>';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-3">';
+          html += '    <div class="col-md-5">';
           html += '        <div class="form-group">';
           html += '            <label>Aturan Pakai</label>';
-          html += '            <select name="kd_poli" class="form-control">';
+          html += '            <select name="" class="form-control">';
           html += '                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}';
           html += '            </select>';
           html += '        </div>';
@@ -191,6 +221,40 @@
           html += '    </div>';
           html += '</div>';
           $('#item_racikan').append(html);
+          var strip_tags = function(str) {
+            return (str + '').replace(/<\/?[^>]+(>|$)/g, '')
+          };
+          var truncate_string = function(str, chars) {
+            if ($.trim(str).length <= chars) {
+              return str;
+            } else {
+              return $.trim(str.substr(0, chars)) + '…';
+            }
+          };
+          $('.databarang_ajax').selectator({
+            labels: {
+              search: 'Cari obat...'
+            },
+            load: function (search, callback) {
+              if (search.length < this.minSearchLength) return callback();
+              $.ajax({
+                url: '{?=url()?}/admin/dokter_ralan/ajax?show=databarang&nama_brng=' + encodeURIComponent(search) + '&t={?=$_SESSION['token']?}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                  callback(data.slice(0, 100));
+                  console.log(data);
+                },
+                error: function() {
+                  callback();
+                }
+              });
+            },
+            delay: 300,
+            minSearchLength: 1,
+            valueField: 'kode_brng',
+            textField: 'nama_brng'
+          });
           $('select').each(function () {
               var options = {
                   useDimmer: true,
@@ -204,6 +268,7 @@
               });
               $(this).selectator(options);
           });
+
       });
 
       $(document).on('click', '.remove_racikan', function(){

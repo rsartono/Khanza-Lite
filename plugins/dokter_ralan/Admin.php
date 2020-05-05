@@ -114,6 +114,7 @@ class Admin extends AdminModule
                 $row['catatan_perawatan'] = $catatan_perawatan['catatan'];
                 $row['diagnosa_pasien'] = $diagnosa_pasien;
                 $row['rawat_jl_dr'] = $rawat_jl_dr;
+                $row['detail_pemberian_obat'] = $detail_pemberian_obat;
                 $this->assign['riwayat'][] = $row;
             }
 
@@ -121,6 +122,27 @@ class Admin extends AdminModule
         } else {
             redirect(url([ADMIN, 'dokter_ralan', 'manage']));
         }
+    }
+
+    public function getAjax()
+    {
+        header('Content-type: text/html');
+        $show = isset($_GET['show']) ? $_GET['show'] : "";
+        switch($show){
+        	default:
+          break;
+        	case "databarang":
+          $rows = $this->db('databarang')->like('nama_brng', '%'.$_GET['nama_brng'].'%')->toArray();
+          foreach ($rows as $row) {
+            $databarang[] = array(
+                'kode_brng' => $row['kode_brng'],
+                'nama_brng'  => $row['nama_brng']
+            );
+          }
+          echo json_encode($databarang, true);
+          break;
+        }
+        exit();
     }
 
     public function getJavascript()
