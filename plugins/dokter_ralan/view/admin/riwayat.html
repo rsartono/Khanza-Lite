@@ -55,6 +55,28 @@
                   </dl>
               </div>
           </div>
+          {if: !empty($value.detail_pemberian_obat)}
+          <div class="table-responsive no-margin">
+            <table class="table table-striped no-margin">
+              <thead>
+                <tr>
+                  <th>Nama Obat</th>
+                  <th>Jumlah</th>
+                  <th>Aturan Pakai</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {loop: $value.detail_pemberian_obat as $data}
+                  <tr>
+                    <td>{$data.nama_brng}</td>
+                    <td>{$data.jml}</td>
+                    <td>{$data.aturan_pakai}</td>
+                  </tr>
+                  {/loop}
+              </tbody>
+            </table>
+          </div>
+          {/if}
       </div>
       <div class="panel-footer">
           <ul>

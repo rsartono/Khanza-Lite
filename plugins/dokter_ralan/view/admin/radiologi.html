@@ -1,5 +1,22 @@
 <div class="panel-default">
     <div class="panel-body">
-      Ini radiologi
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Klinis</label>
+                    <input type="text" name="" class="form-control item_quantity" value="" />
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Nama Perawatan</label>
+                    <select name="" class="form-control" multiple>
+                        {loop: $dokter_ralan.jns_perawatan_radiologi}<option>{$value.nm_perawatan}</option>{/loop}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+        <a href="" class="btn btn-default">Batal</a>
     </div>
 </div>

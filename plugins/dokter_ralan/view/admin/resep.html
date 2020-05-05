@@ -35,18 +35,16 @@
                     <div class="col-md-1">
                     </div>
                 </div>
-                <div class="pull-right" style="padding-top:20px;">
-                    <span class="btn btn-default btn-success add">Tambah</span>
-                    <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
-                    <a href="" class="btn btn-default">Batal</a>
-                </div>
+                <span class="btn btn-default btn-success add">Tambah</span>
+                <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+                <a href="" class="btn btn-default">Batal</a>
                 </form>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
               <form method="post" id="insert_form_racikan">
               <span id="error"></span>
               <div class="row clearfix" id="item_racikan">
-                  <div class="clearfix" style="border-bottom: #ddd 1px solid;">
+                  <div class="clearfix" style="border-bottom: #ddd 1px solid;margin-bottom:20px;">
                   <div class="col-md-4">
                       <div class="form-group">
                           <label>Nama Racikan</label>
@@ -85,11 +83,9 @@
                   </div>
               </div>
               </div>
-              <div class="pull-right" style="padding-top:20px;">
-                  <span class="btn btn-default btn-success add_racikan">Tambah</span>
-                  <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
-                  <a href="" class="btn btn-default">Batal</a>
-              </div>
+              <span class="btn btn-default btn-success add_racikan">Tambah</span>
+              <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+              <a href="" class="btn btn-default">Batal</a>
               </form>
             </div>
         </div>
@@ -152,7 +148,7 @@
 
       $(document).on('click', '.add_racikan', function(){
           var html = '';
-          html += '<div class="clearfix row_racikan" style="border-bottom: #ddd 1px solid;margin-top: 20px;">';
+          html += '<div class="clearfix row_racikan" style="border-bottom: #ddd 1px solid;margin-top: 20px;margin-bottom:20px;">';
           html += '   <div class="col-md-4">';
           html += '       <div class="form-group">';
           html += '            <label>Nama Racikan</label>';
@@ -189,7 +185,7 @@
           html += '    </div>';
           html += '    <div class="col-md-1">';
           html += '      <div class="form-group">';
-          html += '            <label>&nbsp;</label>';
+          html += '            <label>Aksi</label>';
           html += '            <button class="btn btn-danger remove_racikan">-</button>';
           html += '        </div>';
           html += '    </div>';
