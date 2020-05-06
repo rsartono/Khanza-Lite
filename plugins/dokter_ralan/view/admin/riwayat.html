@@ -76,6 +76,33 @@
             </table>
           </div>
           {/if}
+          {if: !empty($value.detail_periksa_lab)}
+          <h4 style="background-color: #ddd;border-bottom: 2px #ccc solid;padding:5px;">Pemeriksaan Laboratorium</h4>
+          <div class="table-responsive no-margin">
+            <table class="table table-striped no-margin">
+              <thead>
+                <tr>
+                  <th>Pemeriksaan</th>
+                  <th>Nilai</th>
+                  <th>Satuan</th>
+                  <th>Nilai Rujukan</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {loop: $value.detail_periksa_lab as $data}
+                  <tr>
+                    <td>{$data.Pemeriksaan}</td>
+                    <td>{$data.nilai}</td>
+                    <td>{$data.satuan}</td>
+                    <td>{$data.nilai_rujukan}</td>
+                    <td>{$data.keterangan}</td>
+                  </tr>
+                  {/loop}
+              </tbody>
+            </table>
+          </div>
+          {/if}
       </div>
       <div class="panel-footer">
           <ul>
