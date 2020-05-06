@@ -103,9 +103,6 @@ class Admin extends AdminModule
                 ->desc('tgl_registrasi')
                 ->toArray();
 
-            $this->assign['master_aturan_pakai'] = $this->db('master_aturan_pakai')->toArray();
-
-
             foreach ($rows as &$row) {
                 $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
                 $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
