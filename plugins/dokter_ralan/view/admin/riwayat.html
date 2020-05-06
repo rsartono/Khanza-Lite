@@ -20,12 +20,12 @@
                       <dt>Objective</dt>
                       <dd>
                         {if: !empty($value.pemeriksaan)}Pemeriksaan: {$value.pemeriksaan}<br>{/if}
-                        {if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh}<br>{/if}
-                        {if: !empty($value.tensi)}Tekanan darah: {$value.tensi}<br>{/if}
-                        {if: !empty($value.nadi)}Nadi: {$value.nadi}<br>{/if}
-                        {if: !empty($value.respirasi)}RR: {$value.respirasi}<br>{/if}
-                        {if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi}<br>{/if}
-                        {if: !empty($value.berat)}Berat badan: {$value.berat}<br>{/if}
+                        {if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh} &#8451;<br>{/if}
+                        {if: !empty($value.tensi)}Tekanan darah: {$value.tensi} mmHg<br>{/if}
+                        {if: !empty($value.nadi)}Nadi: {$value.nadi} x/menit<br>{/if}
+                        {if: !empty($value.respirasi)}RR: {$value.respirasi} x/menit<br>{/if}
+                        {if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi} cm<br>{/if}
+                        {if: !empty($value.berat)}Berat badan: {$value.berat} kg<br>{/if}
                         {if: !empty($value.gcs)}GCS: {$value.gcs}{/if}
                       </dd>
                       <dt>Assessment</dt>
