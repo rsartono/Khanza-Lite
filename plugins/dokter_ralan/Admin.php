@@ -125,6 +125,7 @@ class Admin extends AdminModule
                 $row['diagnosa_pasien'] = $diagnosa_pasien;
                 $row['rawat_jl_dr'] = $rawat_jl_dr;
                 $row['detail_pemberian_obat'] = $detail_pemberian_obat;
+                $row['detail_periksa_lab'] = $detail_periksa_lab;
                 $this->assign['riwayat'][] = $row;
             }
 
