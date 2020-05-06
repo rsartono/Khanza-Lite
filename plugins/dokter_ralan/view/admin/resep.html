@@ -26,8 +26,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Aturan Pakai</label>
-                            <select name="kd_poli" class="form-control">
-                                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
+                            <select name="kd_poli" class="form-control master_aturan_pakai">
                             </select>
                         </div>
                     </div>
@@ -72,8 +71,7 @@
                   <div class="col-md-5">
                       <div class="form-group">
                           <label>Aturan Pakai</label>
-                          <select name="" class="form-control">
-                              {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}
+                          <select name="" class="form-control master_aturan_pakai">
                           </select>
                       </div>
                   </div>
@@ -111,8 +109,7 @@
           html += '    <div class="col-md-4">';
           html += '        <div class="form-group">';
           html += '            <label class="visible-xs">Aturan Pakai</label>';
-          html += '            <select name="kd_poli" class="form-control">';
-          html += '                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}';
+          html += '            <select name="kd_poli" class="form-control master_aturan_pakai">';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
@@ -157,6 +154,30 @@
             minSearchLength: 1,
             valueField: 'kode_brng',
             textField: 'nama_brng'
+          });
+          $('.master_aturan_pakai').selectator({
+            labels: {
+              search: 'Cari aturan pakai...'
+            },
+            load: function (search, callback) {
+              if (search.length < this.minSearchLength) return callback();
+              $.ajax({
+                url: '{?=url()?}/admin/dokter_ralan/ajax?show=aturan_pakai&aturan=' + encodeURIComponent(search) + '&t={?=$_SESSION['token']?}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                  callback(data.slice(0, 100));
+                  console.log(data);
+                },
+                error: function() {
+                  callback();
+                }
+              });
+            },
+            delay: 300,
+            minSearchLength: 1,
+            valueField: 'aturan',
+            textField: 'aturan'
           });
           $('select').each(function () {
               var options = {
@@ -208,8 +229,7 @@
           html += '    <div class="col-md-5">';
           html += '        <div class="form-group">';
           html += '            <label>Aturan Pakai</label>';
-          html += '            <select name="" class="form-control">';
-          html += '                {loop: $dokter_ralan.master_aturan_pakai}<option>{$value.aturan}</option>{/loop}';
+          html += '            <select name="" class="form-control master_aturan_pakai">';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
@@ -254,6 +274,30 @@
             minSearchLength: 1,
             valueField: 'kode_brng',
             textField: 'nama_brng'
+          });
+          $('.master_aturan_pakai').selectator({
+            labels: {
+              search: 'Cari aturan pakai...'
+            },
+            load: function (search, callback) {
+              if (search.length < this.minSearchLength) return callback();
+              $.ajax({
+                url: '{?=url()?}/admin/dokter_ralan/ajax?show=aturan_pakai&aturan=' + encodeURIComponent(search) + '&t={?=$_SESSION['token']?}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                  callback(data.slice(0, 100));
+                  console.log(data);
+                },
+                error: function() {
+                  callback();
+                }
+              });
+            },
+            delay: 300,
+            minSearchLength: 1,
+            valueField: 'aturan',
+            textField: 'aturan'
           });
           $('select').each(function () {
               var options = {

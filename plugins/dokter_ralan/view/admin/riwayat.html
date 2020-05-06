@@ -56,6 +56,7 @@
               </div>
           </div>
           {if: !empty($value.detail_pemberian_obat)}
+          <h4 style="background-color: #ddd;border-bottom: 2px #ccc solid;padding:5px;">Pemberian Obat</h4>
           <div class="table-responsive no-margin">
             <table class="table table-striped no-margin">
               <thead>
@@ -89,8 +90,10 @@
               </li>
           </ul>
       </div>
+	  <div class="separator"> ##### </div>
   {/loop}
   {else}
   <div class="text-center">Tidak ditemukan riwayat perawatan</div>
 {/if}
+{$dokter_ralan.pagination}
 </div>

@@ -67,7 +67,7 @@ class Admin extends AdminModule
 
     }
 
-    public function getView($id)
+    public function getView($id, $page = 1)
     {
         $id = revertNorawat($id);
         $this->_addHeaderFiles();
@@ -78,19 +78,33 @@ class Admin extends AdminModule
         $this->assign['print_rm'] = url([ADMIN, 'dokter_ralan', 'print_rm', $reg_periksa['no_rkm_medis']]);
 
         if (!empty($reg_periksa)) {
+	        $perpage = '5';
             $this->assign['view'] = $reg_periksa;
             $this->assign['view']['pasien'] = $pasien;
             $this->assign['view']['count_ralan'] = $count_ralan;
             $this->assign['view']['count_ranap'] = $count_ranap;
             $this->assign['fotoURL'] = url(MODULES.'/dokter_ralan/img/'.$pasien['jk'].'.png');
             $this->assign['manageURL'] = url([ADMIN, 'dokter_ralan', 'manage']);
-            $rows = $this->db('reg_periksa')
+            $totalRecords = $this->db('reg_periksa')
                 ->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])
                 ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
                 ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
                 ->desc('tgl_registrasi')
                 ->toArray();
+	        $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'dokter_ralan', 'view', convertNorawat($id), '%d']));
+	        $this->assign['pagination'] = $pagination->nav('pagination','5');
+	        $offset = $pagination->offset();
+            $rows = $this->db('reg_periksa')
+                ->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])
+                ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
+                ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
+                ->offset($offset)
+                ->limit($perpage)
+                ->desc('tgl_registrasi')
+                ->toArray();
+
             $this->assign['master_aturan_pakai'] = $this->db('master_aturan_pakai')->toArray();
+
 
             foreach ($rows as &$row) {
                 $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
@@ -128,12 +142,21 @@ class Admin extends AdminModule
         switch($show){
         	default:
           break;
-        	case "databarang":
+          case "databarang":
           $rows = $this->db('databarang')->like('nama_brng', '%'.$_GET['nama_brng'].'%')->toArray();
           foreach ($rows as $row) {
             $array[] = array(
                 'kode_brng' => $row['kode_brng'],
                 'nama_brng'  => $row['nama_brng']
+            );
+          }
+          echo json_encode($array, true);
+          break;
+          case "aturan_pakai":
+          $rows = $this->db('master_aturan_pakai')->like('aturan', '%'.$_GET['aturan'].'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'aturan'  => $row['aturan']
             );
           }
           echo json_encode($array, true);
@@ -168,6 +191,32 @@ class Admin extends AdminModule
           }
           echo json_encode($array, true);
           break;
+          case "icd10":
+          $phrase = '';
+          if(isset($_GET['s']))
+            $phrase = $_GET['s'];
+
+          $rows = $this->db('penyakit')->like('kd_penyakit', '%'.$phrase.'%')->orLike('nm_penyakit', '%'.$phrase.'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'kd_penyakit' => $row['kd_penyakit'],
+                'nm_penyakit'  => $row['nm_penyakit']
+            );
+          }
+          echo json_encode($array, true);
+          case "icd9":
+          $phrase = '';
+          if(isset($_GET['s']))
+            $phrase = $_GET['s'];
+
+          $rows = $this->db('icd9')->like('kode', '%'.$phrase.'%')->orLike('deskripsi_panjang', '%'.$phrase.'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'kode' => $row['kode'],
+                'deskripsi_panjang'  => $row['deskripsi_panjang']
+            );
+          }
+          echo json_encode($array, true);
         }
         exit();
     }
