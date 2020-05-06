@@ -183,6 +183,7 @@ th, td {
 }
 .panel-post .panel-footer ul {
   margin: 0;
+  margin-top: 20px;
   padding: 0;
   padding-bottom: 5px;
   border-bottom: #eee solid 1px;
