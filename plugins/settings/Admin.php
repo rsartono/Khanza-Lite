@@ -24,7 +24,7 @@ class Admin extends AdminModule
     {
         $settings = $this->db('setting')->toArray();
         $settings['system'] = [
-            'version'       => $this->options->get('settings.version'), 
+            'version'       => $this->options->get('settings.version'),
             'php'           => PHP_VERSION,
             'sqlite'        => $this->db()->pdo()->query('SELECT VERSION() as version')->fetch()[0],
             'sqlite_size'        => $this->roundSize($this->db()->pdo()->query("SELECT ROUND(SUM(data_length + index_length), 1) FROM information_schema.tables WHERE table_schema = '".DBNAME."' GROUP BY table_schema")->fetch()[0]),
@@ -44,8 +44,6 @@ class Admin extends AdminModule
     public function postSaveGeneral()
     {
         unset($_POST['save']);
-        $_POST['logo'] = $this->db('setting')->select('logo')->oneArray();
-        $_POST['wallpaper'] = $this->db('setting')->select('wallpaper')->oneArray();
 
         if (checkEmptyFields(['nama_instansi', 'alamat_instansi'], $_POST)) {
             $this->notify('failure', 'Isian kosong');
@@ -53,8 +51,22 @@ class Admin extends AdminModule
         } else {
             $errors = 0;
 
-            $this->core->db()->pdo()->exec("TRUNCATE TABLE `setting`");
-            $this->db('setting')->save($_POST);
+            $this->db('setting')
+            ->where('aktifkan', 'Yes')
+            ->orWhere('aktifkan', 'No')
+            ->update([
+              'nama_instansi' => $_POST['nama_instansi'],
+              'alamat_instansi' => $_POST['alamat_instansi'],
+              'kabupaten' => $_POST['kabupaten'],
+              'propinsi' => $_POST['propinsi'],
+              'kontak' => $_POST['kontak'],
+              'email' => $_POST['email'],
+              'kode_ppk' => $_POST['kode_ppk'],
+              'kode_ppkinhealth' => $_POST['kode_ppkinhealth'],
+              'kode_ppkkemenkes' => $_POST['kode_ppkkemenkes'],
+              'wallpaper' => $this->core->getSettings('wallpaper'),
+              'logo' => $this->core->getSettings('logo')
+            ]);
 
             if (!$errors) {
                 $this->notify('success', 'Pengaturan sukses');

@@ -72,7 +72,7 @@ class Admin extends AdminModule
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
             $this->assign['form'] = [
-              'no_rkm_medis' => $this->_setNoRM(),
+              'no_rkm_medis' => $this->core->setNoRM(),
               'nm_pasien' => '',
               'no_ktp' => '',
               'jk' => '',
@@ -759,7 +759,7 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if ($cek_no_rkm_medis == 0) {    // new
-                $_POST['no_rkm_medis'] = $this->_setNoRM();
+                $_POST['no_rkm_medis'] = $this->core->setNoRM();
                 $_POST['umur'] = $this->_setUmur($_POST['tgl_lahir']);
                 $query = $this->db('pasien')->save($_POST);
                 $this->core->db()->pdo()->exec("UPDATE set_no_rkm_medis SET no_rkm_medis='$_POST[no_rkm_medis]'");
@@ -908,15 +908,6 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'pasien', 'css']));
         $this->core->addJS(url([ADMIN, 'pasien', 'javascript']), 'footer');
-    }
-
-    private function _setNoRM()
-    {
-        // Get last no_rm
-        $last_no_rm = $this->db('set_no_rkm_medis')->oneArray();
-        $last_no_rm = substr($last_no_rm['no_rkm_medis'], 0, 6);
-        $next_no_rm = sprintf('%06s', ($last_no_rm + 1));
-        return $next_no_rm;
     }
 
     private function _setUmur($tanggal)

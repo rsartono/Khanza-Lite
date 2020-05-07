@@ -104,7 +104,7 @@ class Admin extends AdminModule
         $this->assign['penjab'] = $this->core->db('penjab')->toArray();
 
         $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
-        $this->assign['form']['no_rawat'] = $this->_setNoRawat();
+        $this->assign['form']['no_rawat'] = $this->core->setNoRawat();
         $this->assign['pasien']['nm_pasien'] = '';
 
         return $this->draw('form.html', ['pendaftaran' => $this->assign]);
@@ -167,7 +167,7 @@ class Admin extends AdminModule
         }
 
         // set umur
-        $tanggal = new \DateTime($_POST['tgl_lahir']);
+        $tanggal = new \DateTime($this->core->getPasienInfo('tgl_lahir', $_POST['no_rkm_medis']));
         $today = new \DateTime($date);
         $y = $today->diff($tanggal)->y;
         $m = $today->diff($tanggal)->m;
@@ -192,7 +192,7 @@ class Admin extends AdminModule
 
         // location to redirect
         if ($cek_no_rawat == 0) {
-            $_POST['no_reg'] = $this->_setNoReg($_POST['kd_dokter']);
+            $_POST['no_reg'] = $this->core->setNoReg($_POST['kd_dokter']);
             $location = url([ADMIN, 'pendaftaran', 'manage']);
         } else {
             $location = url([ADMIN, 'pendaftaran', 'edit', $id]);
@@ -216,12 +216,12 @@ class Admin extends AdminModule
             unset($_POST['save']);
 
             if ($cek_no_rawat == 0) {    // new
-                $_POST['no_rawat'] = $this->_setNoRawat();
+                $_POST['no_rawat'] = $this->core->setNoRawat();
                 $query = $this->db('reg_periksa')->save($_POST);
             } else {        // edit
                 $dokter = $this->db('reg_periksa')->where('no_rkm_medis', $_POST['no_rkm_medis'])->where('tgl_registrasi', $_POST['tgl_registrasi'])->where('kd_dokter', '<>', $_POST['kd_dokter'])->count();
                 if($dokter) {
-                  $_POST['no_reg'] = $this->_setNoReg($_POST['kd_dokter']);
+                  $_POST['no_reg'] = $this->core->setNoReg($_POST['kd_dokter']);
                 }
                 $query = $this->db('reg_periksa')->where('no_rawat', $_POST['no_rawat'])->save($_POST);
             }
@@ -520,39 +520,6 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'pendaftaran', 'css']));
         $this->core->addJS(url([ADMIN, 'pendaftaran', 'javascript']), 'footer');
-    }
-
-    private function _setNoRawat()
-    {
-        $date = date('Y-m-d');
-        // Get last no_rawat
-        $last_no_rawat = $this->db()->pdo()->prepare("SELECT ifnull(MAX(CONVERT(RIGHT(no_rawat,6),signed)),0) FROM reg_periksa WHERE tgl_registrasi = '$date'");
-        $last_no_rawat->execute();
-        $last_no_rawat = $last_no_rawat->fetch();
-        // Next no_rm
-        if(empty($last_no_rawat[0])) {
-          $last_no_rawat[0] = '000000';
-        }
-        $next_no_rawat = sprintf('%06s', ($last_no_rawat[0] + 1));
-        $next_no_rawat = date('Y/m/d').'/'.$next_no_rawat;
-
-        return $next_no_rawat;
-    }
-
-    private function _setNoReg($kd_dokter)
-    {
-        $date = date('Y-m-d');
-        // Get last no_rawat
-        $last_no_reg = $this->db()->pdo()->prepare("SELECT MAX(no_reg) FROM reg_periksa WHERE tgl_registrasi = '$date' AND kd_dokter = '$kd_dokter'");
-        $last_no_reg->execute();
-        $last_no_reg = $last_no_reg->fetch();
-        // Next no_rm
-        if(empty($last_no_reg[0])) {
-          $last_no_reg[0] = '000';
-        }
-        $next_no_reg = sprintf('%03s', ($last_no_reg[0] + 1));
-
-        return $next_no_reg;
     }
 
     private function _setUmur($tanggal)

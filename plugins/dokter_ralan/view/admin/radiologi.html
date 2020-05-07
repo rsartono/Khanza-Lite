@@ -1,16 +1,17 @@
+<form name="dokter_ralan" action="{?=url(ADMIN.'/dokter_ralan/radiologisave/'.@$dokter_ralan.no_rawat)?}" method="POST">
 <div class="panel-default">
     <div class="panel-body">
         <div class="row clearfix">
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Klinis</label>
-                    <input type="text" name="" class="form-control item_quantity" value="" />
+                    <input type="text" name="diagnosa_klinis" class="form-control" />
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Nama Perawatan</label>
-                    <select name="" class="form-control jns_perawatan_rad_ajax" multiple>
+                    <select name="kd_jenis_prw[]" class="form-control jns_perawatan_rad_ajax" multiple>
                     </select>
                 </div>
             </div>
@@ -19,3 +20,4 @@
         <a href="" class="btn btn-default">Batal</a>
     </div>
 </div>
+</form>

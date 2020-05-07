@@ -1,3 +1,4 @@
+<form name="dokter_ralan" action="{?=url(ADMIN.'/dokter_ralan/soapsave/'.@$dokter_ralan.no_rawat)?}" method="POST">
 <div class="panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Subjective</h3>
@@ -7,7 +8,7 @@
             <div class="post-content">
                 <div class="form-group">
                     <label>Keluhan</label>
-                    <textarea name="name" class="form-control" rows="2"></textarea>
+                    <textarea name="keluhan" class="form-control" rows="2"></textarea>
                 </div>
             </div>
         </div>
@@ -22,13 +23,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Pemeriksaan</label>
-                            <textarea name="name" class="form-control" rows="2"></textarea>
+                            <textarea name="pemeriksaan" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>GCS</label>
-                            <textarea name="name" class="form-control" rows="2"></textarea>
+                            <textarea name="gcs" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -37,7 +38,7 @@
                         <div class="form-group">
                             <label>Tensi</label>
                             <div class="input-group">
-                                <input type="text" name="" class="form-control" value="" />
+                                <input type="text" name="tensi" class="form-control" value="" />
                                 <span class="input-group-addon">mmHg</span>
                             </div>
                         </div>
@@ -46,7 +47,7 @@
                         <div class="form-group">
                             <label>Nadi</label>
                             <div class="input-group">
-                                <input type="text" name="" class="form-control" value="" />
+                                <input type="text" name="nadi" class="form-control" value="" />
                                 <span class="input-group-addon">x/menit</span>
                             </div>
                         </div>
@@ -55,7 +56,7 @@
                         <div class="form-group">
                             <label>RR</label>
                             <div class="input-group">
-                                <input type="text" name="" class="form-control" value="" />
+                                <input type="text" name="respirasi" class="form-control" value="" />
                                 <span class="input-group-addon">x/menit</span>
                             </div>
                         </div>
@@ -66,7 +67,7 @@
                         <div class="form-group">
                             <label>Suhu</label>
                             <div class="input-group">
-                                <input type="text" name="" class="form-control" value="" />
+                                <input type="text" name="suhu_tubuh" class="form-control" value="" />
                                 <span class="input-group-addon">&#8451;</span>
                             </div>
                         </div>
@@ -75,7 +76,7 @@
                         <div class="form-group">
                             <label>Tinggi</label>
                             <div class="input-group">
-                                <input type="text" name="" class="form-control" value="" />
+                                <input type="text" name="tinggi" class="form-control" value="" />
                                 <span class="input-group-addon">cm</span>
                             </div>
                         </div>
@@ -84,7 +85,7 @@
                         <div class="form-group">
                             <label>Berat</label>
                             <div class="input-group">
-                                <input type="text" name="" class="form-control" value="" />
+                                <input type="text" name="berat" class="form-control" value="" />
                                 <span class="input-group-addon">kg</span>
                             </div>
                         </div>
@@ -103,21 +104,21 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Diagnosa (ICD-10)</label>
-                            <select name="" class="form-control icd10" multiple>
+                            <select name="kd_penyakit[]" class="form-control icd10" multiple>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Tindakan (ICD-9)</label>
-                            <select name="" class="form-control icd9" multiple>
+                            <select name="kode[]" class="form-control icd9" multiple>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Perawatan</label>
-                            <select name="" class="form-control jns_perawatan" multiple>
+                            <select name="kd_jenis_prw[]" class="form-control jns_perawatan" multiple>
                             </select>
                         </div>
                     </div>
@@ -135,13 +136,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Rencana Tindak Lanjut</label>
-                            <textarea name="name" class="form-control" rows="2"></textarea>
+                            <textarea name="rtl" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Catatan Perawatan</label>
-                            <textarea name="name" class="form-control" rows="2"></textarea>
+                            <textarea name="catatan" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -157,3 +158,4 @@
         </div>
     </div>
 </div>
+</form>

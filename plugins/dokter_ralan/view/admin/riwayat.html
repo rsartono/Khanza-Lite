@@ -38,6 +38,14 @@
                           {/loop}
                           </ul>
                         {/if}
+                        {if: !empty($value.prosedur_pasien)}
+                          <div class="assessment-title">Prosedur:</div>
+                          <ul class="fa-ul">
+                          {loop: $value.prosedur_pasien as $data}
+                            <li><i class="fa-li fa fa-check-square"></i>{$data.deskripsi_pendek}</li>
+                          {/loop}
+                          </ul>
+                        {/if}
                         {if: !empty($value.rawat_jl_dr)}
                           <div class="assessment-title">Perawatan:</div>
                           <ul class="fa-ul">

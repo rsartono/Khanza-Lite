@@ -7,26 +7,25 @@
     <div class="panel-body">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="resep_umum">
-                <form method="post" id="insert_form">
-                <span id="error"></span>
+                <form name="dokter_ralan" action="{?=url(ADMIN.'/dokter_ralan/resepsave/'.@$dokter_ralan.no_rawat)?}" method="POST">
                 <div class="row clearfix" id="item_resep">
                     <div class="col-md-5">
                         <div class="form-group">
                             <label>Nama Obat</label>
-                            <select name="" class="form-control databarang_ajax">
+                            <select name="kode_brng" class="form-control databarang_ajax">
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label>Jumlah</label>
-                            <input type="text" name="" class="form-control item_quantity" value="" />
+                            <input type="text" name="jml" class="form-control item_quantity" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Aturan Pakai</label>
-                            <select name="kd_poli" class="form-control master_aturan_pakai">
+                            <select name="aturan_pakai" class="form-control master_aturan_pakai">
                             </select>
                         </div>
                     </div>
@@ -39,8 +38,7 @@
                 </form>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
-              <form method="post" id="insert_form_racikan">
-              <span id="error"></span>
+              <form method="post" action="{?=url(ADMIN.'/dokter_ralan/racikansave/'.@$dokter_ralan.no_rawat)?}">
               <div class="row clearfix" id="item_racikan">
                   <div class="clearfix" style="border-bottom: #ddd 1px solid;margin-bottom:20px;">
                   <div class="col-md-4">
