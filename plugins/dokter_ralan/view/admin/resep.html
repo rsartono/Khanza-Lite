@@ -12,20 +12,20 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label>Nama Obat</label>
-                            <select name="kode_brng" class="form-control databarang_ajax">
+                            <select name="kode_brng[]" class="form-control databarang_ajax">
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label>Jumlah</label>
-                            <input type="text" name="jml" class="form-control item_quantity" />
+                            <input type="text" name="jml[]" class="form-control" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Aturan Pakai</label>
-                            <select name="aturan_pakai" class="form-control master_aturan_pakai">
+                            <select name="aturan_pakai[]" class="form-control master_aturan_pakai">
                             </select>
                         </div>
                     </div>
@@ -38,38 +38,44 @@
                 </form>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
-              <form method="post" action="{?=url(ADMIN.'/dokter_ralan/racikansave/'.@$dokter_ralan.no_rawat)?}">
+              <form method="post" action="{?=url(ADMIN.'/dokter_ralan/resepracikansave/'.@$dokter_ralan.no_rawat)?}">
               <div class="row clearfix" id="item_racikan">
                   <div class="clearfix" style="border-bottom: #ddd 1px solid;margin-bottom:20px;">
                   <div class="col-md-4">
                       <div class="form-group">
                           <label>Nama Racikan</label>
-                          <input type="text" name="" class="form-control" value="" />
+                          <input type="text" name="nama_racik[]" class="form-control" />
                       </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
                           <label>Metode Racik</label>
-                          <input type="text" name="" class="form-control" value="" />
+                          <input type="text" name="kd_racik[]" class="form-control" />
                       </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-2">
+                      <div class="form-group">
+                          <label>Kandungan</label>
+                          <input type="text" name="kandungan_1[]" class="form-control" />
+                      </div>
+                  </div>
+                  <div class="col-md-2">
                       <div class="form-group">
                           <label>Jumlah</label>
-                          <input type="text" name="" class="form-control item_quantity" value="" />
-                      </div>
-                  </div>
-                  <div class="col-md-6">
-                      <div class="form-group">
-                          <label>Nama Obat</label>
-                          <select name="" class="form-control databarang_ajax" multiple>
-                          </select>
+                          <input type="text" name="jml_dr[]" class="form-control" />
                       </div>
                   </div>
                   <div class="col-md-5">
                       <div class="form-group">
                           <label>Aturan Pakai</label>
-                          <select name="" class="form-control master_aturan_pakai">
+                          <select name="aturan_pakai[]" class="form-control master_aturan_pakai">
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>Nama Obat</label>
+                          <select name="kode_brng_1[]" class="form-control databarang_ajax" multiple>
                           </select>
                       </div>
                   </div>
@@ -94,20 +100,20 @@
           html += '   <div class="col-md-5">';
           html += '       <div class="form-group">';
           html += '            <label class="visible-xs">Nama Obat</label>';
-          html += '            <select name="" class="form-control databarang_ajax">';
+          html += '            <select name="kode_brng[]" class="form-control databarang_ajax">';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-2">';
           html += '        <div class="form-group">';
           html += '            <label class="visible-xs">Jumlah</label>';
-          html += '            <input type="text" name="" class="form-control item_quantity" value="" />';
+          html += '            <input type="text" name="jml[]" class="form-control" />';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-4">';
           html += '        <div class="form-group">';
           html += '            <label class="visible-xs">Aturan Pakai</label>';
-          html += '            <select name="kd_poli" class="form-control master_aturan_pakai">';
+          html += '            <select name="aturan_pakai[]" class="form-control master_aturan_pakai">';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
@@ -196,38 +202,46 @@
           $(this).closest('.row_resep').remove();
       });
 
+      var count=2;
       $(document).on('click', '.add_racikan', function(){
           var html = '';
           html += '<div class="clearfix row_racikan" style="border-bottom: #ddd 1px solid;margin-top: 20px;margin-bottom:20px;">';
           html += '   <div class="col-md-4">';
           html += '       <div class="form-group">';
           html += '            <label>Nama Racikan</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '            <input type="text" name="nama_racik[]" class="form-control" />';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-4">';
           html += '        <div class="form-group">';
           html += '            <label>Metode Racikan</label>';
-          html += '            <input type="text" name="" class="form-control" value="" />';
+          html += '            <input type="text" name="kd_racik[]" class="form-control" />';
           html += '        </div>';
           html += '    </div>';
-          html += '    <div class="col-md-4">';
+          html += '    <div class="col-md-2">';
+          html += '        <div class="form-group">';
+          html += '            <label>Kandungan</label>';
+          html += '            <select name="kandungan_'+count+'[]" class="form-control"';
+          html += '            </select>';
+          html += '        </div>';
+          html += '    </div>';
+          html += '    <div class="col-md-2">';
           html += '        <div class="form-group">';
           html += '            <label>Jumlah</label>';
-          html += '            <input type="text" name="" class="form-control item_quantity" value="" />';
-          html += '        </div>';
-          html += '    </div>';
-          html += '    <div class="col-md-6">';
-          html += '        <div class="form-group">';
-          html += '            <label>Nama Obat</label>';
-          html += '            <select name="" class="form-control databarang_ajax" multiple>';
-          html += '            </select>';
+          html += '            <input type="text" name="jml_dr[]" class="form-control" />';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-5">';
           html += '        <div class="form-group">';
           html += '            <label>Aturan Pakai</label>';
-          html += '            <select name="" class="form-control master_aturan_pakai">';
+          html += '            <select name="aturan_pakai[]" class="form-control master_aturan_pakai">';
+          html += '            </select>';
+          html += '        </div>';
+          html += '    </div>';
+          html += '    <div class="col-md-6">';
+          html += '        <div class="form-group">';
+          html += '            <label>Nama Obat</label>';
+          html += '            <select name="kode_brng_'+count+'[]" class="form-control databarang_ajax" multiple>';
           html += '            </select>';
           html += '        </div>';
           html += '    </div>';
@@ -239,6 +253,8 @@
           html += '    </div>';
           html += '</div>';
           $('#item_racikan').append(html);
+          count++;
+          console.log(html);
           var strip_tags = function(str) {
             return (str + '').replace(/<\/?[^>]+(>|$)/g, '')
           };

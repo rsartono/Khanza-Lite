@@ -194,6 +194,7 @@ class Admin extends AdminModule
             $get_kd_jenis_prw = $_POST['kd_jenis_prw'];
             for ($i = 0; $i < count($get_kd_jenis_prw); $i++) {
                 $kd_jenis_prw = $get_kd_jenis_prw[$i];
+                $row = $this->db('rawat_jl_dr')->where('kd_jenis_prw', $kd_jenis_prw)->oneArray();
                 $query = $this->db('rawat_jl_dr')
                   ->save([
                     'no_rawat' => revertNorawat($id),
@@ -201,12 +202,12 @@ class Admin extends AdminModule
                     'kd_dokter' => $_SESSION['opensimrs_username'],
                     'tgl_perawatan' => date('Y-m-d'),
                     'jam_rawat' => date('H:i:s'),
-                    'material' => '0',
-                    'bhp' => '0',
-                    'tarif_tindakandr' => '0',
-                    'kso' => '0',
-                    'menejemen' => '0',
-                    'biaya_rawat' => '0',
+                    'material' => $row['material'],
+                    'bhp' => $row['bhp'],
+                    'tarif_tindakandr' => $row['tarif_tindakandr'],
+                    'kso' => $row['kso'],
+                    'menejemen' => $row['menejemenje'],
+                    'biaya_rawat' => $row['biaya_rawat'],
                     'stts_bayar' => 'Belum'
                   ]);
             }
@@ -257,13 +258,11 @@ class Admin extends AdminModule
               ]);
 
             if ($query) {
-                $get_kd_jenis_prw = $_POST['kd_jenis_prw'];
-                for ($i = 0; $i < count($get_kd_jenis_prw); $i++) {
-                  $kd_jenis_prw = $get_kd_jenis_prw[$i];
+                for ($i = 0; $i < count($_POST['kd_jenis_prw']); $i++) {
                   $query = $this->db('permintaan_pemeriksaan_radiologi')
                     ->save([
                       'noorder' => $no_order,
-                      'kd_jenis_prw' => $kd_jenis_prw,
+                      'kd_jenis_prw' => $_POST['kd_jenis_prw'][$i],
                       'stts_bayar' => 'Belum'
                     ]);
                 }
@@ -303,13 +302,11 @@ class Admin extends AdminModule
               ]);
 
             if ($query) {
-                $get_kd_jenis_prw = $_POST['kd_jenis_prw'];
-                for ($i = 0; $i < count($get_kd_jenis_prw); $i++) {
-                  $kd_jenis_prw = $get_kd_jenis_prw[$i];
+                for ($i = 0; $i < count($_POST['kd_jenis_prw']); $i++) {
                   $query = $this->db('permintaan_pemeriksaan_lab')
                     ->save([
                       'noorder' => $no_order,
-                      'kd_jenis_prw' => $kd_jenis_prw,
+                      'kd_jenis_prw' => $_POST['kd_jenis_prw'][$i],
                       'stts_bayar' => 'Belum'
                     ]);
                 }
@@ -345,16 +342,74 @@ class Admin extends AdminModule
               ]);
 
             if ($query) {
-                $get_kode_brng = $_POST['kode_brng'];
-                for ($i = 0; $i < count($get_kode_brng); $i++) {
-                  $kode_brng = $get_kode_brng[$i];
-                  $query = $this->db('resep_dokter')
+                for ($i = 0; $i < count($_POST['kode_brng']); $i++) {
+                  $this->db('resep_dokter')
                     ->save([
                       'no_resep' => $no_resep,
-                      'kode_brng' => $kd_jenis_prw,
-                      'jml' => $_POST['jml'],
-                      'aturan_pakai' => $_POST['aturan_pakai']
+                      'kode_brng' => $_POST['kode_brng'][$i],
+                      'jml' => $_POST['jml'][$i],
+                      'aturan_pakai' => $_POST['aturan_pakai'][$i]
                     ]);
+                }
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function postResepRacikanSave($id = null)
+    {
+        $errors = 0;
+        $location = url([ADMIN, 'dokter_ralan', 'view', $id]);
+
+        if (!$errors) {
+            unset($_POST['save']);
+            $no_resep = $this->core->setNoResep();
+            $query = $this->db('resep_obat')
+              ->save([
+                'no_resep' => $no_resep,
+                'tgl_perawatan' => date('Y-m-d'),
+                'jam' => date('H:i:s'),
+                'no_rawat' => revertNorawat($id),
+                'kd_dokter' => $_SESSION['opensimrs_username'],
+                'tgl_peresepan' => date('Y-m-d'),
+                'jam_peresepan' => date('H:i:s'),
+                'status' => 'ralan'
+              ]);
+
+            if ($query) {
+                for ($i = 0; $i < count($_POST['nama_racik']); $i++) {
+                  $no_racik = $i+1;
+                  $jml_dr = $_POST['jml_dr'][$i];
+                  $this->db('resep_dokter_racikan')
+                    ->save([
+                      'no_resep' => $no_resep,
+                      'no_racik' => $no_racik,
+                      'nama_racik' => $_POST['nama_racik'][$i],
+                      'kd_racik' => $_POST['kd_racik'][$i],
+                      'jml_dr' => $jml_dr,
+                      'aturan_pakai' => $_POST['aturan_pakai'][$i],
+                      'keterangan' => '-'
+                    ]);
+
+                    for ($j = 0; $j < count($_POST['kode_brng_'.$no_racik]); $j++) {
+                      $jml = $jml_dr * $_POST['kandungan_'.$no_racik][$j];
+                      $this->db('resep_dokter_racikan_detail')
+                        ->save([
+                          'no_resep' => $no_resep,
+                          'no_racik' => $no_racik,
+                          'kode_brng' => $_POST['kode_brng_'.$no_racik][$j],
+                          'p1' => '1',
+                          'p2' => '1',
+                          'kandungan' => $_POST['kandungan_'.$no_racik][$j],
+                          'jml' => $jml
+                        ]);
+                    }
                 }
                 $this->notify('success', 'Simpan sukes');
             } else {
