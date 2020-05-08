@@ -383,33 +383,33 @@ class Admin extends AdminModule
               ]);
 
             if ($query) {
-                for ($i = 0; $i < count($_POST['nama_racik']); $i++) {
-                  $no_racik = $i+1;
-                  $jml_dr = $_POST['jml_dr'][$i];
-                  $this->db('resep_dokter_racikan')
+              $no_racik = $this->db('resep_dokter_racikan')->where('no_resep', $no_resep)->count();
+              $no_racik = $no_racik+1;
+              $this->db('resep_dokter_racikan')
+                ->save([
+                  'no_resep' => $no_resep,
+                  'no_racik' => $no_racik,
+                  'nama_racik' => $_POST['nama_racik'],
+                  'kd_racik' => $_POST['kd_racik'],
+                  'jml_dr' => $_POST['jml_dr'],
+                  'aturan_pakai' => $_POST['aturan_pakai'],
+                  'keterangan' => $_POST['keterangan']
+                ]);
+
+                for ($i = 0; $i < count($_POST['kode_brng']); $i++) {
+                  $kapasitas = $this->db('databarang')->where('kode_brng', $_POST['kode_brng'][$i])->oneArray();
+                  $jml = $_POST['jml_dr']*$_POST['kandungan'][$i];
+                  $jml = $jml/$kapasitas['kapasitas'];
+                  $this->db('resep_dokter_racikan_detail')
                     ->save([
                       'no_resep' => $no_resep,
                       'no_racik' => $no_racik,
-                      'nama_racik' => $_POST['nama_racik'][$i],
-                      'kd_racik' => $_POST['kd_racik'][$i],
-                      'jml_dr' => $jml_dr,
-                      'aturan_pakai' => $_POST['aturan_pakai'][$i],
-                      'keterangan' => '-'
+                      'kode_brng' => $_POST['kode_brng'][$i],
+                      'p1' => '1',
+                      'p2' => '1',
+                      'kandungan' => $_POST['kandungan'][$i],
+                      'jml' => $jml
                     ]);
-
-                    for ($j = 0; $j < count($_POST['kode_brng_'.$no_racik]); $j++) {
-                      $jml = $jml_dr * $_POST['kandungan_'.$no_racik][$j];
-                      $this->db('resep_dokter_racikan_detail')
-                        ->save([
-                          'no_resep' => $no_resep,
-                          'no_racik' => $no_racik,
-                          'kode_brng' => $_POST['kode_brng_'.$no_racik][$j],
-                          'p1' => '1',
-                          'p2' => '1',
-                          'kandungan' => $_POST['kandungan_'.$no_racik][$j],
-                          'jml' => $jml
-                        ]);
-                    }
                 }
                 $this->notify('success', 'Simpan sukes');
             } else {

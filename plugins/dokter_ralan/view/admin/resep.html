@@ -39,49 +39,53 @@
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
               <form method="post" action="{?=url(ADMIN.'/dokter_ralan/resepracikansave/'.@$dokter_ralan.no_rawat)?}">
-              <div class="row clearfix" id="item_racikan">
-                  <div class="clearfix" style="border-bottom: #ddd 1px solid;margin-bottom:20px;">
-                  <div class="col-md-4">
+              <div class="row clearfix">
+                  <div class="col-md-3">
                       <div class="form-group">
                           <label>Nama Racikan</label>
-                          <input type="text" name="nama_racik[]" class="form-control" />
-                      </div>
-                  </div>
-                  <div class="col-md-4">
-                      <div class="form-group">
-                          <label>Metode Racik</label>
-                          <input type="text" name="kd_racik[]" class="form-control" />
+                          <input type="text" name="nama_racik" class="form-control" />
                       </div>
                   </div>
                   <div class="col-md-2">
                       <div class="form-group">
-                          <label>Kandungan</label>
-                          <input type="text" name="kandungan_1[]" class="form-control" />
+                          <label>Metode Racik</label>
+                          <input type="text" name="kd_racik" class="form-control" />
                       </div>
                   </div>
                   <div class="col-md-2">
                       <div class="form-group">
                           <label>Jumlah</label>
-                          <input type="text" name="jml_dr[]" class="form-control" />
+                          <input type="text" name="jml_dr" class="form-control" />
                       </div>
                   </div>
                   <div class="col-md-5">
                       <div class="form-group">
                           <label>Aturan Pakai</label>
-                          <select name="aturan_pakai[]" class="form-control master_aturan_pakai">
+                          <select name="aturan_pakai" class="form-control master_aturan_pakai">
                           </select>
                       </div>
                   </div>
-                  <div class="col-md-6">
+              </div>
+              <div class="form-group">
+                  <label>Keterangan</label>
+                  <textarea name="keterangan" class="form-control"></textarea>
+              </div>
+              <div class="row clearfix" id="item_racikan">
+                  <div class="col-md-9">
                       <div class="form-group">
                           <label>Nama Obat</label>
-                          <select name="kode_brng_1[]" class="form-control databarang_ajax" multiple>
+                          <select name="kode_brng[]" class="form-control databarang_ajax">
                           </select>
+                      </div>
+                  </div>
+                  <div class="col-md-2">
+                      <div class="form-group">
+                          <label>Kandungan</label>
+                          <input type="text" name="kandungan[]" class="form-control" />
                       </div>
                   </div>
                   <div class="col-md-1">
                   </div>
-              </div>
               </div>
               <span class="btn btn-default btn-success add_racikan">Tambah</span>
               <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
@@ -205,44 +209,18 @@
       var count=2;
       $(document).on('click', '.add_racikan', function(){
           var html = '';
-          html += '<div class="clearfix row_racikan" style="border-bottom: #ddd 1px solid;margin-top: 20px;margin-bottom:20px;">';
-          html += '   <div class="col-md-4">';
-          html += '       <div class="form-group">';
-          html += '            <label>Nama Racikan</label>';
-          html += '            <input type="text" name="nama_racik[]" class="form-control" />';
-          html += '        </div>';
-          html += '    </div>';
-          html += '    <div class="col-md-4">';
+          html += '<div class="clearfix row_racikan">';
+          html += '    <div class="col-md-9">';
           html += '        <div class="form-group">';
-          html += '            <label>Metode Racikan</label>';
-          html += '            <input type="text" name="kd_racik[]" class="form-control" />';
+          html += '            <label>Nama Obat</label>';
+          html += '            <select name="kode_brng[]" class="form-control databarang_ajax">';
+          html += '            </select>';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-2">';
           html += '        <div class="form-group">';
           html += '            <label>Kandungan</label>';
-          html += '            <select name="kandungan_'+count+'[]" class="form-control"';
-          html += '            </select>';
-          html += '        </div>';
-          html += '    </div>';
-          html += '    <div class="col-md-2">';
-          html += '        <div class="form-group">';
-          html += '            <label>Jumlah</label>';
-          html += '            <input type="text" name="jml_dr[]" class="form-control" />';
-          html += '        </div>';
-          html += '    </div>';
-          html += '    <div class="col-md-5">';
-          html += '        <div class="form-group">';
-          html += '            <label>Aturan Pakai</label>';
-          html += '            <select name="aturan_pakai[]" class="form-control master_aturan_pakai">';
-          html += '            </select>';
-          html += '        </div>';
-          html += '    </div>';
-          html += '    <div class="col-md-6">';
-          html += '        <div class="form-group">';
-          html += '            <label>Nama Obat</label>';
-          html += '            <select name="kode_brng_'+count+'[]" class="form-control databarang_ajax" multiple>';
-          html += '            </select>';
+          html += '            <input type="text" name="kandungan[]" class="form-control" />';
           html += '        </div>';
           html += '    </div>';
           html += '    <div class="col-md-1">';
