@@ -112,7 +112,7 @@
 												<label>Status Bayar</label>
 												<select name="status_bayar" class="form-control">
 													{loop: $pendaftaran.status_bayar}
-														<option value="{$value}"{if: $value == $pendaftaran.form.status_bayar} selected{/if}>{$value}</option>
+														<option value="{$value}"{if: $value == $pendaftaran.form.status_bayar} selected {elseif: $value == 'Belum Bayar'} selected {/if}>{$value}</option>
 													{/loop}
 												</select>
 										</div>
