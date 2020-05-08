@@ -88,7 +88,7 @@ class Admin extends AdminModule
             $this->assign['diagnosa_pasien'] = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $id)->toArray();
             $this->assign['prosedur_pasien'] = $this->db('prosedur_pasien')->join('icd9', 'icd9.kode = prosedur_pasien.kode')->where('no_rawat', $id)->toArray();
             $this->assign['rawat_jl_dr'] = $this->db('rawat_jl_dr')->join('jns_perawatan', 'jns_perawatan.kd_jenis_prw = rawat_jl_dr.kd_jenis_prw')->where('no_rawat', $id)->toArray();
-            $this->assign['catatan'] = $this->db('catatan_perawatan')->where('no_rawat', $id)->oneArray();
+            $this->assign['soap']['catatan'] = $this->db('catatan_perawatan')->where('no_rawat', $id)->oneArray();
             $this->assign['permintaan_resep'] = $this->db('resep_obat')->join('resep_dokter', 'resep_dokter.no_resep = resep_obat.no_resep')->join('databarang', 'databarang.kode_brng = resep_dokter.kode_brng')->where('no_rawat', $id)->toArray();
             $this->assign['permintaan_resep_racikan'] = $this->db('resep_obat')
                 ->join('resep_dokter_racikan', 'resep_dokter_racikan.no_resep = resep_obat.no_resep')
