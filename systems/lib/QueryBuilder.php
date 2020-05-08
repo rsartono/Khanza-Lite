@@ -104,9 +104,6 @@ class QueryBuilder
             ], $options);
         static::$db = new \PDO($dsn, $user, $pass);
         static::$db->setAttribute(\PDO::ATTR_ERRMODE, static::$options['error_mode']);
-        if (strpos($dsn, 'sqlite') !== false) {
-            static::$db->exec("pragma synchronous = off;");
-        }
     }
 
     /**
@@ -877,7 +874,6 @@ class QueryBuilder
      */
     protected function _getColumns()
     {
-        //$q = $this->pdo()->query("PRAGMA table_info(".$this->table.")")->fetchAll();
         $q = $this->pdo()->query("DESCRIBE $this->table;")->fetchAll();
         return array_column($q, 'Field');
     }

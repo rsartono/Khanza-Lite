@@ -84,6 +84,24 @@ class Admin extends AdminModule
             $this->assign['view']['pasien'] = $pasien;
             $this->assign['view']['count_ralan'] = $count_ralan;
             $this->assign['view']['count_ranap'] = $count_ranap;
+            $this->assign['permintaan_resep'] = $this->db('resep_obat')->join('resep_dokter', 'resep_dokter.no_resep = resep_obat.no_resep')->join('databarang', 'databarang.kode_brng = resep_dokter.kode_brng')->where('no_rawat', $id)->toArray();
+            $this->assign['permintaan_resep_racikan'] = $this->db('resep_obat')
+                ->join('resep_dokter_racikan', 'resep_dokter_racikan.no_resep = resep_obat.no_resep')
+                ->join('resep_dokter_racikan_detail', 'resep_dokter_racikan_detail.no_racik = resep_dokter_racikan.no_racik')
+                ->join('databarang', 'databarang.kode_brng = resep_dokter_racikan_detail.kode_brng')
+                ->where('no_rawat', $id)
+                ->group('resep_dokter_racikan.no_racik')
+                ->toArray();
+            $this->assign['permintaan_lab'] = $this->db('permintaan_lab')
+              ->join('permintaan_pemeriksaan_lab', 'permintaan_pemeriksaan_lab.noorder = permintaan_lab.noorder')
+              ->join('jns_perawatan_lab', 'jns_perawatan_lab.kd_jenis_prw = permintaan_pemeriksaan_lab.kd_jenis_prw')
+              ->where('no_rawat', $id)
+              ->toArray();
+            $this->assign['permintaan_rad'] = $this->db('permintaan_radiologi')
+              ->join('permintaan_pemeriksaan_radiologi', 'permintaan_pemeriksaan_radiologi.noorder = permintaan_radiologi.noorder')
+              ->join('jns_perawatan_radiologi', 'jns_perawatan_radiologi.kd_jenis_prw = permintaan_pemeriksaan_radiologi.kd_jenis_prw')
+              ->where('no_rawat', $id)
+              ->toArray();
             $this->assign['fotoURL'] = url(MODULES.'/dokter_ralan/img/'.$pasien['jk'].'.png');
             $this->assign['manageURL'] = url([ADMIN, 'dokter_ralan', 'manage']);
             $totalRecords = $this->db('reg_periksa')
