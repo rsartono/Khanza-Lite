@@ -277,7 +277,7 @@ class Admin extends AdminModule
                 'jam_hasil' => '00:00:00',
                 'dokter_perujuk' => $_SESSION['opensimrs_username'],
                 'status' => 'ralan',
-                'informasi_tambahan' => '-',
+                'informasi_tambahan' => $_POST['informasi_tambahan'],
                 'diagnosa_klinis' => $_POST['diagnosa_klinis']
               ]);
 
@@ -321,7 +321,7 @@ class Admin extends AdminModule
                 'jam_hasil' => '00:00:00',
                 'dokter_perujuk' => $_SESSION['opensimrs_username'],
                 'status' => 'ralan',
-                'informasi_tambahan' => '-',
+                'informasi_tambahan' => $_POST['informasi_tambahan'],
                 'diagnosa_klinis' => $_POST['diagnosa_klinis']
               ]);
 
