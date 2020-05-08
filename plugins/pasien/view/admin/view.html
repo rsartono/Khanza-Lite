@@ -67,103 +67,129 @@
 	  </div>
 		<div class="col-xs-12 col-sm-9">
 				<div class="card">
-						<div class="body" style="padding: 5px !important;">
-								<div>
-										<ul class="nav nav-tabs" role="tablist">
-												<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Riwayat Medis</a></li>
-												<li role="presentation"><a href="#berkas_digital" aria-controls="berkas_digital" role="tab" data-toggle="tab">Berkas Digital</a></li>
-										</ul>
-
-										<div class="tab-content">
-												<div role="tabpanel" class="tab-pane fade in active" id="home">
-														<div class="panel-default panel-post">
-														{if: !empty($pasien.riwayat)}
-															{loop: $pasien.riwayat}
-																	<div class="panel-heading">
-																			<div class="media">
-																					<div class="media-body">
-																							<h4 class="media-heading">
-																									<a href="#">{$value.tgl_registrasi} / {$value.nm_poli} / {$value.kd_poli}</a>
-																							</h4>
-																							{$value.nm_dokter} / {$value.kd_dokter}
-																					</div>
-																			</div>
-																	</div>
-																	<div class="panel-body">
-																			<div class="post">
-																					<div class="post-content">
-																							<p>
-																									<dl class="dl-horizontal no-margin">
-																											<dt>Subjective</dt>
-																											<dd>{$value.keluhan}</dd>
-																											<dt>Objective</dt>
-																											<dd>
-																												{if: !empty($value.pemeriksaan)}Pemeriksaan: {$value.pemeriksaan}<br>{/if}
-																												{if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh}<br>{/if}
-																												{if: !empty($value.tensi)}Tekanan darah: {$value.tensi}<br>{/if}
-																												{if: !empty($value.nadi)}Nadi: {$value.nadi}<br>{/if}
-																												{if: !empty($value.respirasi)}RR: {$value.respirasi}<br>{/if}
-																												{if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi}<br>{/if}
-																												{if: !empty($value.berat)}Berat badan: {$value.berat}<br>{/if}
-																												{if: !empty($value.gcs)}GCS: {$value.gcs}{/if}
-																											</dd>
-																											<dt>Assessment</dt>
-																											<dd>
-																												{if: !empty($value.diagnosa_pasien)}
-																													<div class="assessment-title">Diagnosa:</div>
-																													<ul class="fa-ul">
-																													{loop: $value.diagnosa_pasien as $data}
-																														<li><i class="fa-li fa fa-check-square"></i>{$data.nm_penyakit}</li>
-																													{/loop}
-																													</ul>
-																												{/if}
-																												{if: !empty($value.rawat_jl_dr)}
-																													<div class="assessment-title">Perawatan:</div>
-																													<ul class="fa-ul">
-																													{loop: $value.rawat_jl_dr as $data}
-																														<li><i class="fa-li fa fa-check-square"></i>{$data.nm_perawatan}</li>
-																													{/loop}
-																													</ul>
-																												{/if}
-																											</dd>
-																											<dt>Plan</dt>
-																											<dd>
-																												{if: !empty($value.rtl)}Tindak lanjut: {$value.rtl}<br>{/if}
-																												{if: !empty($value.catatan_perawatan)}Catatan Perawatan: {$value.catatan_perawatan}<br>{/if}
-																											</dd>
-																									</dl>
-																							</p>
-																					</div>
-																			</div>
-																	</div>
-																	<div class="panel-footer">
-																			<ul>
-																					<li class="hidden-xs">
-																							{$value.status_lanjut}
-																					</li>
-																					<li>
-																							{$value.status_bayar}
-																					</li>
-																					<li>
-																							{$value.no_rawat}
-																					</li>
+						<div class="panel-default panel-post">
+						{if: !empty($pasien.riwayat)}
+							{loop: $pasien.riwayat}
+									<div class="panel-heading">
+											<div class="media">
+													<div class="media-body">
+															<h4 class="media-heading">
+																	<a href="#">{$value.tgl_registrasi} / {$value.nm_poli} / {$value.kd_poli}</a>
+															</h4>
+															{$value.nm_dokter} / {$value.kd_dokter}
+													</div>
+											</div>
+									</div>
+									<div class="panel-body">
+											<div class="post">
+													<div class="post-content">
+															<dl class="dl-horizontal no-margin">
+																	<dt>Subjective</dt>
+																	<dd>{$value.keluhan}</dd>
+																	<dt>Objective</dt>
+																	<dd>
+																		{if: !empty($value.pemeriksaan)}Pemeriksaan: {$value.pemeriksaan}<br>{/if}
+																		{if: !empty($value.suhu_tubuh)}Suhu: {$value.suhu_tubuh}<br>{/if}
+																		{if: !empty($value.tensi)}Tekanan darah: {$value.tensi}<br>{/if}
+																		{if: !empty($value.nadi)}Nadi: {$value.nadi}<br>{/if}
+																		{if: !empty($value.respirasi)}RR: {$value.respirasi}<br>{/if}
+																		{if: !empty($value.tinggi)}Tinggi badan: {$value.tinggi}<br>{/if}
+																		{if: !empty($value.berat)}Berat badan: {$value.berat}<br>{/if}
+																		{if: !empty($value.gcs)}GCS: {$value.gcs}{/if}
+																	</dd>
+																	<dt>Assessment</dt>
+																	<dd>
+																		{if: !empty($value.diagnosa_pasien)}
+																			<div class="assessment-title">Diagnosa:</div>
+																			<ul class="fa-ul">
+																			{loop: $value.diagnosa_pasien as $data}
+																				<li><i class="fa-li fa fa-check-square"></i>{$data.nm_penyakit}</li>
+																			{/loop}
 																			</ul>
-																	</div>
-															{/loop}
-															{else}
-															<div class="text-center">Tidak ditemukan riwayat perawatan</div>
-														{/if}
-														</div>
-												</div>
-												<div role="tabpanel" class="tab-pane fade in" id="berkas_digital">
-										        <div class="panel-default">
-										            <div class="panel-body">
-										              Ini berkas digital
-										            </div>
-										        </div>
-												</div>
-										</div>
-								</div>
+																		{/if}
+																		{if: !empty($value.rawat_jl_dr)}
+																			<div class="assessment-title">Perawatan:</div>
+																			<ul class="fa-ul">
+																			{loop: $value.rawat_jl_dr as $data}
+																				<li><i class="fa-li fa fa-check-square"></i>{$data.nm_perawatan}</li>
+																			{/loop}
+																			</ul>
+																		{/if}
+																	</dd>
+																	<dt>Plan</dt>
+																	<dd>
+																		{if: !empty($value.rtl)}Tindak lanjut: {$value.rtl}<br>{/if}
+																		{if: !empty($value.catatan_perawatan)}Catatan Perawatan: {$value.catatan_perawatan}<br>{/if}
+																	</dd>
+															</dl>
+													</div>
+											</div>
+											{if: !empty($value.detail_pemberian_obat)}
+						          <h4 style="background-color: #ddd;border-bottom: 2px #ccc solid;padding:5px;">Pemberian Obat</h4>
+						          <div class="table-responsive no-margin">
+						            <table class="table table-striped no-margin">
+						              <thead>
+						                <tr>
+						                  <th>Nama Obat</th>
+						                  <th>Jumlah</th>
+						                </tr>
+						              </thead>
+						              <tbody>
+						                  {loop: $value.detail_pemberian_obat as $data}
+						                  <tr>
+						                    <td>{$data.nama_brng}</td>
+						                    <td>{$data.jml}</td>
+						                  </tr>
+						                  {/loop}
+						              </tbody>
+						            </table>
+						          </div>
+						          {/if}
+						          {if: !empty($value.detail_periksa_lab)}
+						          <h4 style="background-color: #ddd;border-bottom: 2px #ccc solid;padding:5px;">Pemeriksaan Laboratorium</h4>
+						          <div class="table-responsive no-margin">
+						            <table class="table table-striped no-margin">
+						              <thead>
+						                <tr>
+						                  <th>Pemeriksaan</th>
+						                  <th>Nilai</th>
+						                  <th>Satuan</th>
+						                  <th>Nilai Rujukan</th>
+						                  <th>Keterangan</th>
+						                </tr>
+						              </thead>
+						              <tbody>
+						                  {loop: $value.detail_periksa_lab as $data}
+						                  <tr>
+						                    <td>{$data.Pemeriksaan}</td>
+						                    <td>{$data.nilai}</td>
+						                    <td>{$data.satuan}</td>
+						                    <td>{$data.nilai_rujukan}</td>
+						                    <td>{$data.keterangan}</td>
+						                  </tr>
+						                  {/loop}
+						              </tbody>
+						            </table>
+						          </div>
+						          {/if}
+									</div>
+									<div class="panel-footer">
+											<ul>
+													<li class="hidden-xs">
+															{$value.status_lanjut}
+													</li>
+													<li>
+															{$value.status_bayar}
+													</li>
+													<li>
+															{$value.no_rawat}
+													</li>
+											</ul>
+									</div>
+							{/loop}
+							{else}
+							<div class="text-center">Tidak ditemukan riwayat perawatan</div>
+						{/if}
 						</div>
 				</div>
 	  </div>
