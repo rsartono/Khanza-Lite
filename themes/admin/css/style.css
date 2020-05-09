@@ -821,7 +821,7 @@ select[multiple].form-control {
     display: none
 }
 
-@media(min-width: 1280px) {
+@media(min-width: 1200px) {
     #wrapper {
         padding-left: 250px;
     }
@@ -874,20 +874,6 @@ select[multiple].form-control {
       margin: 0;
   }
 }
-/*@media(max-width: 767px) {
-  #content-wrapper {
-      padding: 0;
-  }
-}
-@media(max-width: 480px) {
-  #content-wrapper {
-      padding: 0;
-  }
-  .profile-card {
-      padding: 0;
-      margin: 0;
-  }
-}*/
 
 /*Margin and Padding helpers*/
 /*xs*/
