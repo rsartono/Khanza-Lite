@@ -24,7 +24,8 @@ class Admin extends AdminModule
     {
       $this->_addHeaderFiles();
       $date = date('Y-m-d');
-      //$date = '2020-01-12';
+      if(isset($_GET['date']))
+        $date = $_GET['date'];
       $perpage = '10';
       $phrase = '';
       if(isset($_GET['s']))
