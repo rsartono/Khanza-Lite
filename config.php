@@ -5,12 +5,13 @@
 	}
 
 	ini_set('memory_limit', '-1');
+	date_default_timezone_set('Asia/Jakarta');
 
-  define('DBHOST', 'localhost');
+  define('DBHOST', '');
   define('DBPORT', '3306');
-  define('DBUSER', 'root');
+  define('DBUSER', '');
   define('DBPASS', '');
-	define('DBNAME', 'sik');
+	define('DBNAME', '');
 	define('HOMEPAGE', 'dashboard');
 	define('CEKSTATUSBAYAR', false);
 
@@ -39,6 +40,7 @@
 
 	// Basic modules
 	define('BASIC_MODULES', serialize([
+		9999 => 'settings',
 		0 => 'dashboard',
 		1 => 'pasien',
 		2 => 'pendaftaran',
@@ -46,9 +48,8 @@
 		//4 => 'apotek_ralan',
 		//5 => 'kasir_ralan',
 		9996 => 'master',
-		9997 => 'modules',
 		9998 => 'users',
-		9999 => 'settings',
+		9997 => 'modules',
 	]));
 
 	// Developer mode
