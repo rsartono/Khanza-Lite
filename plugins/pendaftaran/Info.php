@@ -7,4 +7,8 @@ return [
     'version'       =>  '1.0',
     'compatibility' =>  '3.*',
     'icon'          =>  'user-plus',
+
+    'install'       =>  function () use ($core) {
+        $core->db()->pdo()->exec("INSERT INTO `lite_options` (`module`, `field`, `value`) VALUES ('pendaftaran', 'cekstatusbayar', '0')");
+    }
 ];

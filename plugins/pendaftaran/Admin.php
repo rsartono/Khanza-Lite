@@ -15,7 +15,8 @@ class Admin extends AdminModule
         return [
             'Kelola'    => 'manage',
             'Tambah Baru'                => 'add',
-            'Jadwal Dokter'          => 'jadwal'
+            'Jadwal Dokter'          => 'jadwal',
+            'Pengaturan'          => 'settings'
         ];
     }
 
@@ -201,10 +202,10 @@ class Admin extends AdminModule
         // check if pasien already exists
         if ($this->_pasienAlreadyExists($id)) {
             $errors++;
-            $this->notify('failure', 'Pasiens sudah terdaftar ditanggal yang sama.');
+            $this->notify('failure', 'Pasien sudah terdaftar ditanggal yang sama.');
         }
 
-        if(CEKSTATUSBAYAR) {
+        if($this->options->get('pendaftaran.cekstatusbayar') == 1) {
           if ($this->_cekStatusBayar($id)) {
               $errors++;
               $this->notify('failure', 'Ada tagihan belum dibayar. Silahkan hubungi kasir.');
@@ -237,6 +238,21 @@ class Admin extends AdminModule
         }
 
         redirect($location, $_POST);
+    }
+
+    public function getSettings()
+    {
+        $assign = htmlspecialchars_array($this->options('pendaftaran'));
+        return $this->draw('settings.html', ['settings' => $assign]);
+    }
+
+    public function postSaveSettings()
+    {
+        foreach ($_POST['pendaftaran'] as $key => $val) {
+            $this->options('pendaftaran', $key, $val);
+        }
+        $this->notify('success', 'Pengaturan pendaftaran telah disimpan');
+        redirect(url([ADMIN, 'pendaftaran', 'settings']));
     }
 
     public function getBridgingBPJS($id)
