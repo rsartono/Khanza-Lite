@@ -821,7 +821,7 @@ select[multiple].form-control {
     display: none
 }
 
-@media(min-width: 1024px) {
+@media(min-width: 1280px) {
     #wrapper {
         padding-left: 250px;
     }
@@ -865,7 +865,7 @@ select[multiple].form-control {
         display: block;
     }
 }
-@media(max-width: 1023px) {
+@media(max-width: 1279px) {
   #content-wrapper {
       padding: 0;
   }
