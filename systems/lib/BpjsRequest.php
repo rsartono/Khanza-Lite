@@ -5,14 +5,14 @@ class BpjsRequest
 {
     protected static $lastStatus = null;
 
-    public static function get($url, $datafields = [], $headers = [])
+    public static function get($url, $datafields = [], $headers = [], $consid, $secretkey)
     {
-        return self::request('GET', $url, $datafields, $headers);
+        return self::request('GET', $url, $datafields, $headers, $consid, $secretkey);
     }
 
-    public static function post($url, $datafields = [], $headers = [])
+    public static function post($url, $datafields = [], $headers = [], $consid, $secretkey)
     {
-        return self::request('POST', $url, $datafields, $headers);
+        return self::request('POST', $url, $datafields, $headers, $consid, $secretkey);
     }
 
     public static function getStatus()
@@ -20,15 +20,15 @@ class BpjsRequest
         return self::$lastStatus;
     }
 
-    protected static function request($type, $url, $datafields, $headers)
+    protected static function request($type, $url, $datafields, $headers, $consid, $secretkey)
     {
         date_default_timezone_set('UTC');
         $tStamp = strval(time()-strtotime('1970-01-01 00:00:00'));
-        $signature = hash_hmac('sha256', ConsID."&".$tStamp, SecretKey, true);
+        $signature = hash_hmac('sha256', $consid."&".$tStamp, $secretkey, true);
         $encodedSignature = base64_encode($signature);
         $ch = curl_init();
         $headers = array(
-         'X-cons-id: '.ConsID.'',
+         'X-cons-id: '.$consid.'',
          'X-timestamp: '.$tStamp.'' ,
          'X-signature: '.$encodedSignature.'',
          'Content-Type:application/json',

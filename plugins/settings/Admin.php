@@ -16,7 +16,8 @@ class Admin extends AdminModule
     public function navigation()
     {
         return [
-            'Aplikasi'          => 'general'
+            'Instansi'          => 'general',
+            'Aplikasi'          => 'aplikasi'
         ];
     }
 
@@ -77,6 +78,49 @@ class Admin extends AdminModule
             redirect(url([ADMIN, 'settings', 'general']));
         }
     }
+
+    public function getAplikasi()
+    {
+        $settings = $this->options('settings');
+
+        if (!empty($redirectData = getRedirectData())) {
+            $settings = array_merge($settings, $redirectData);
+        }
+
+        foreach ($this->core->getRegisteredPages() as $page) {
+            $settings['pages'][] = $page;
+        }
+
+        $this->tpl->set('settings', $this->tpl->noParse_array(htmlspecialchars_array($settings)));
+
+        return $this->draw('aplikasi.html');
+    }
+
+    public function postSaveAplikasi()
+    {
+        unset($_POST['save']);
+        if (checkEmptyFields(array_keys($_POST), $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect(url([ADMIN, 'settings', 'aplikasi']), $_POST);
+        } else {
+            $errors = 0;
+
+            foreach ($_POST as $field => $value) {
+                if (!$this->db('lite_options')->where('module', 'settings')->where('field', $field)->save(['value' => $value])) {
+                    $errors++;
+                }
+            }
+
+            if (!$errors) {
+                $this->notify('success', 'Pengaturan sukses');
+            } else {
+                $this->notify('failure', 'Pengaturan gagal');
+            }
+
+            redirect(url([ADMIN, 'settings', 'aplikasi']));
+        }
+    }
+
 
     public function postChangeOrderOfNavItem()
     {

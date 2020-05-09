@@ -871,8 +871,10 @@ class Admin extends AdminModule
     {
       header('Content-type: text/html');
       $date = date('Y-m-d');
-      $url = BpjsApiUrl.'Peserta/nokartu/'.$_GET['noka'].'/tglSEP/'.$date;
-      $output = BpjsRequest::get($url);
+      $url = $this->options->get('settings.BpjsApiUrl').'Peserta/nokartu/'.$_GET['noka'].'/tglSEP/'.$date;
+      $consid = $this->options->get('settings.BpjsConsID');
+      $secretkey = $this->options->get('settings.BpjsSecretKey');
+      $output = BpjsRequest::get($url, NULL, NULL, $consid, $secretkey);
       echo $output;
       exit();
     }
@@ -881,8 +883,10 @@ class Admin extends AdminModule
     {
       header('Content-type: text/html');
       $date = date('Y-m-d');
-      $url = BpjsApiUrl.'Peserta/nik/'.$_GET['nik'].'/tglSEP/'.$date;
-      $output = BpjsRequest::get($url);
+      $url = $this->options->get('settings.BpjsApiUrl').'Peserta/nik/'.$_GET['nik'].'/tglSEP/'.$date;
+      $consid = $this->options->get('settings.BpjsConsID');
+      $secretkey = $this->options->get('settings.BpjsSecretKey');
+      $output = BpjsRequest::get($url, NULL, NULL, $consid, $secretkey);
       echo $output;
       exit();
     }

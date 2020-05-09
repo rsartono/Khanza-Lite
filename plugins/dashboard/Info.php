@@ -6,5 +6,6 @@ return [
     'author'        =>  'Basoro',
     'version'       =>  '1.0',
     'compatibility' =>  '3.*',
-    'icon'          =>  'home'
+    'icon'          =>  'home',
+    'pages'         =>  ['Dashboard' => 'dashboard'],    
 ];
