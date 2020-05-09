@@ -1,3 +1,11 @@
+$( function() {
+  $( ".datepicker" ).datepicker({
+    dateFormat: "yy-mm-dd",
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-100:+0",
+  });
+} );
 $(document).ready(function() {
     if (location.hash) {
         $("a[href='" + location.hash + "']").tab("show");

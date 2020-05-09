@@ -17,7 +17,12 @@ class Admin extends AdminModule
     {
 
       $this->_addHeaderFiles();
-      $date = date('Y-m-d');
+      $start_date = date('Y-m-d');
+      if(isset($_GET['start_date']))
+        $start_date = $_GET['start_date'];
+      $end_date = date('Y-m-d');
+      if(isset($_GET['end_date']))
+        $end_start = $_GET['end_date'];
       $perpage = '10';
       $phrase = '';
       if(isset($_GET['s']))
@@ -28,7 +33,8 @@ class Admin extends AdminModule
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
         ->like('reg_periksa.no_rawat', '%'.$phrase.'%')
         ->where('status_lanjut', 'Ralan')
-        ->where('reg_periksa.tgl_registrasi', $date)
+        ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
+        ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
         ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
         ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
         ->like('pasien.nm_pasien', '%'.$phrase.'%')
@@ -42,7 +48,8 @@ class Admin extends AdminModule
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
         ->like('reg_periksa.no_rawat', '%'.$phrase.'%')
         ->where('status_lanjut', 'Ralan')
-        ->where('reg_periksa.tgl_registrasi', $date)
+        ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
+        ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
         ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
         ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
         ->like('pasien.nm_pasien', '%'.$phrase.'%')

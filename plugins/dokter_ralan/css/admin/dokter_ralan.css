@@ -1,13 +1,13 @@
 th, td {
   white-space: nowrap;
 }
-.nav-tabs {
+.dokter_ralan_view .nav-tabs {
   overflow-x: auto;
   overflow-y: hidden;
   display: -webkit-box;
   display: -moz-box;
 }
-.nav-tabs>li {
+.dokter_ralan_view .nav-tabs>li {
   float: none;
 }
 .card {
