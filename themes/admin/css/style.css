@@ -767,6 +767,9 @@ footer {
 table a:not(.btn) {
     text-decoration: none;
 }
+th, td {
+  white-space: nowrap;
+}
 .pagination {
     margin: 21px 0 0 0;
 }

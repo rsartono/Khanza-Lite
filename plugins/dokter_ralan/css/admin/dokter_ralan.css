@@ -10,11 +10,6 @@ th, td {
 .dokter_ralan_view .nav-tabs>li {
   float: none;
 }
-.dokter_ralan.nav-tabs > li.active a {
-    border-bottom: 1px solid #ddd;
-    background-color: #f5f5f5;
-    color: #888;
-}
 
 .card {
   background: #fff;

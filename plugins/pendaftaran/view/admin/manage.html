@@ -4,7 +4,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Kelola Pendaftaran Pasien</h3>
                 <ul class="nav nav-tabs">
-                    <li class="dropdown">
+                    <li class="dropdown {if: isset($_GET['start_date']) && $_GET['start_date'] !== date('Y-m-d', strtotime('-1 days')) && $_GET['start_date'] !== date('Y-m-d', strtotime('-7 days')) && $_GET['start_date'] !== date('Y-m-d', strtotime('-30 days'))}active{else}{/if}">
                         <a class="dropdown-toggle" href="#tab-main" data-toggle="dropdown" role="tab">Kustom</a>
                         <div class="dropdown-menu" role="menu">
                             <form action="{?=url(ADMIN.'/pendaftaran/manage')?}" style="padding:10px;">
@@ -17,16 +17,16 @@
                             </form>
                         </div>
                     </li>
-                    <li>
-                        <a href="{?=url(ADMIN.'/pendaftaran/manage?start_date='.date('Y-m-d', strtotime('-1 days')).'&end_date='.date('Y-m-d'))?}" role="tab">Kemarin</a>
+                    <li class="{if: empty($_GET['start_date'])}active{/if}">
+                        <a href="{?=url(ADMIN.'/pendaftaran/manage')?}" role="tab">Sekarang</a>
                     </li>
-                    <li class="active">
-                        <a href="{?=url(ADMIN.'/pendaftaran/manage?start_date='.date('Y-m-d')).'&end_date='.date('Y-m-d')?}" role="tab">Sekarang</a>
+                    <li class="{if: $_GET['start_date'] == date('Y-m-d', strtotime('-1 days'))}active{/if}">
+                        <a href="{?=url(ADMIN.'/pendaftaran/manage?start_date='.date('Y-m-d', strtotime('-1 days')).'&end_date='.date('Y-m-d'))?}" role="tab">1 Hari Terakhir</a>
                     </li>
-                    <li>
+                    <li class="{if: $_GET['start_date'] == date('Y-m-d', strtotime('-7 days'))}active{/if}">
                         <a href="{?=url(ADMIN.'/pendaftaran/manage?start_date='.date('Y-m-d', strtotime('-7 days')).'&end_date='.date('Y-m-d'))?}" role="tab">7 Hari Terakhir</a>
                     </li>
-                    <li>
+                    <li class="{if: $_GET['start_date'] == date('Y-m-d', strtotime('-30 days'))}active{/if}">
                         <a href="{?=url(ADMIN.'/pendaftaran/manage?start_date='.date('Y-m-d', strtotime('-30 days')).'&end_date='.date('Y-m-d'))?}" role="tab">30 Hari Terakhir</a>
                     </li>
 				        </ul>
