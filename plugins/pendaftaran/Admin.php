@@ -28,8 +28,8 @@ class Admin extends AdminModule
         $start_date = $_GET['start_date'];
       $end_date = date('Y-m-d');
       if(isset($_GET['end_date']))
-        $end_start = $_GET['end_date'];
-      $perpage = '10';
+        $end_date = $_GET['end_date'];
+      $perpage = '2';
       $phrase = '';
       if(isset($_GET['s']))
         $phrase = $_GET['s'];
@@ -39,7 +39,7 @@ class Admin extends AdminModule
       $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
       $totalRecords = $totalRecords->fetchAll();
 
-      $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), $perpage, url([ADMIN, 'pendaftaran', 'manage', '%d']));
+      $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), $perpage, url([ADMIN, 'pendaftaran', 'manage', '%d?s='.$phrase.'&start_date='.$start_date.'&end_date='.$end_date]));
       $this->assign['pagination'] = $pagination->nav('pagination','5');
       $this->assign['totalRecords'] = $totalRecords;
 
@@ -61,6 +61,7 @@ class Admin extends AdminModule
           }
       }
 
+      $this->assign['searchUrl'] =  url([ADMIN, 'pendaftaran', 'manage', $page.'?s='.$phrase.'&start_date='.$start_date.'&end_date='.$end_date]);
       return $this->draw('manage.html', ['pendaftaran' => $this->assign]);
 
     }

@@ -20,13 +20,13 @@
                     <li class="{if: empty($_GET['start_date'])}active{/if}">
                         <a href="{?=url(ADMIN.'/dokter_ralan/manage')?}" role="tab">Sekarang</a>
                     </li>
-                    <li class="{if: $_GET['start_date'] == date('Y-m-d', strtotime('-1 days'))}active{/if}">
+                    <li class="{if: isset($_GET['start_date']) && $_GET['start_date'] == date('Y-m-d', strtotime('-1 days'))}active{/if}">
                         <a href="{?=url(ADMIN.'/dokter_ralan/manage?start_date='.date('Y-m-d', strtotime('-1 days')).'&end_date='.date('Y-m-d'))?}" role="tab">1 Hari Terakhir</a>
                     </li>
-                    <li class="{if: $_GET['start_date'] == date('Y-m-d', strtotime('-7 days'))}active{/if}">
+                    <li class="{if: isset($_GET['start_date']) && $_GET['start_date'] == date('Y-m-d', strtotime('-7 days'))}active{/if}">
                         <a href="{?=url(ADMIN.'/dokter_ralan/manage?start_date='.date('Y-m-d', strtotime('-7 days')).'&end_date='.date('Y-m-d'))?}" role="tab">7 Hari Terakhir</a>
                     </li>
-                    <li class="{if: $_GET['start_date'] == date('Y-m-d', strtotime('-30 days'))}active{/if}">
+                    <li class="{if: isset($_GET['start_date']) && $_GET['start_date'] == date('Y-m-d', strtotime('-30 days'))}active{/if}">
                         <a href="{?=url(ADMIN.'/dokter_ralan/manage?start_date='.date('Y-m-d', strtotime('-30 days')).'&end_date='.date('Y-m-d'))?}" role="tab">30 Hari Terakhir</a>
                     </li>
 				        </ul>
@@ -37,9 +37,11 @@
                     <h3 style="margin-top:5px;margin-bottom:15px;">Jumlah: {?=count($dokter_ralan.totalRecords)?}</h3>
                   </div>
                   <div class="col col-md-6">
-                    <form action="" class="searchbox-input form-inline pull-right padding-bottom-lg" style="margin-top:5px;margin-bottom:15px;">
+                    <form action="{$dokter_ralan.searchUrl}" class="searchbox-input form-inline pull-right padding-bottom-lg" style="margin-top:5px;margin-bottom:15px;">
                         <div class="input-group">
                             <input type="text" name="s" minlength="3" class="form-control" placeholder="Search" required>
+                            <input type="hidden" name="start_date" value="{if: isset($_GET['start_date'])}{?=$_GET['start_date']?}{else}{?=date('Y-m-d')?}{/if}">
+                            <input type="hidden" name="end_date" value="{if: isset($_GET['end_date'])}{?=$_GET['end_date']?}{else}{?=date('Y-m-d')?}{/if}">
                             <input type="hidden" name="t" value="{?=$_SESSION['token']?}">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>

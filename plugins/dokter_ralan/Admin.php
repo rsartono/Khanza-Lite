@@ -22,40 +22,40 @@ class Admin extends AdminModule
         $start_date = $_GET['start_date'];
       $end_date = date('Y-m-d');
       if(isset($_GET['end_date']))
-        $end_start = $_GET['end_date'];
-      $perpage = '10';
+        $end_date = $_GET['end_date'];
+      $perpage = '2';
       $phrase = '';
       if(isset($_GET['s']))
         $phrase = $_GET['s'];
 
       // pagination
       $totalRecords = $this->db('reg_periksa')
+        ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
-        ->like('reg_periksa.no_rawat', '%'.$phrase.'%')
-        ->where('status_lanjut', 'Ralan')
+        ->orLike('reg_periksa.no_rawat', '%'.$phrase.'%')
+        ->orLike('pasien.nm_pasien', '%'.$phrase.'%')
+        ->where('reg_periksa.status_lanjut', 'Ralan')
         ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
         ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
         ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
-        ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
-        ->like('pasien.nm_pasien', '%'.$phrase.'%')
         ->toArray();
-      $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), $perpage, url([ADMIN, 'dokter_ralan', 'manage', '%d']));
+      $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), $perpage, url([ADMIN, 'dokter_ralan', 'manage', '%d?s='.$phrase.'&start_date='.$start_date.'&end_date='.$end_date]));
       $this->assign['pagination'] = $pagination->nav('pagination','5');
       $this->assign['totalRecords'] = $totalRecords;
 
       $offset = $pagination->offset();
       $rows = $this->db('reg_periksa')
-        ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
-        ->like('reg_periksa.no_rawat', '%'.$phrase.'%')
-        ->where('status_lanjut', 'Ralan')
-        ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
-        ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
-        ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
         ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
-        ->like('pasien.nm_pasien', '%'.$phrase.'%')
         ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
         ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
         ->join('penjab', 'penjab.kd_pj = reg_periksa.kd_pj')
+        ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
+        ->orLike('reg_periksa.no_rawat', '%'.$phrase.'%')
+        ->orLike('pasien.nm_pasien', '%'.$phrase.'%')
+        ->where('reg_periksa.status_lanjut', 'Ralan')
+        ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
+        ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
+        ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
         ->offset($offset)
         ->limit($perpage)
         ->toArray();
@@ -69,6 +69,8 @@ class Admin extends AdminModule
               $this->assign['list'][] = $row;
           }
       }
+
+      $this->assign['searchUrl'] =  url([ADMIN, 'dokter_ralan', 'manage', $page.'?s='.$phrase.'&start_date='.$start_date.'&end_date='.$end_date]);
 
       return $this->draw('manage.html', ['dokter_ralan' => $this->assign]);
 
@@ -145,6 +147,7 @@ class Admin extends AdminModule
                   ->join('resep_obat', 'resep_obat.no_rawat = detail_pemberian_obat.no_rawat')
                   ->join('resep_dokter', 'resep_dokter.no_resep = resep_obat.no_resep')
                   ->where('detail_pemberian_obat.no_rawat', $row['no_rawat'])
+                  ->group('detail_pemberian_obat.kode_brng')
                   ->toArray();
                 $detail_periksa_lab = $this->db('detail_periksa_lab')->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')->where('no_rawat', $row['no_rawat'])->toArray();
                 $hasil_radiologi = $this->db('hasil_radiologi')->where('no_rawat', $row['no_rawat'])->oneArray();
