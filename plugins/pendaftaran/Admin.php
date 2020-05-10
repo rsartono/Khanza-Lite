@@ -29,7 +29,7 @@ class Admin extends AdminModule
       $end_date = date('Y-m-d');
       if(isset($_GET['end_date']))
         $end_date = $_GET['end_date'];
-      $perpage = '2';
+      $perpage = '10';
       $phrase = '';
       if(isset($_GET['s']))
         $phrase = $_GET['s'];
