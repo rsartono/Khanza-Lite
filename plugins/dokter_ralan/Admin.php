@@ -31,7 +31,7 @@ class Admin extends AdminModule
       // pagination
       $totalRecords = $this->db('reg_periksa')
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
-        ->like('reg_periksa.no_rawat', '%'.$phrase.'%')
+        ->orLike('reg_periksa.no_rawat', '%'.$phrase.'%')
         ->where('reg_periksa.status_lanjut', 'Ralan')
         ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
         ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
@@ -46,7 +46,7 @@ class Admin extends AdminModule
       $offset = $pagination->offset();
       $rows = $this->db('reg_periksa')
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
-        ->like('reg_periksa.no_rawat', '%'.$phrase.'%')
+        ->orLike('reg_periksa.no_rawat', '%'.$phrase.'%')
         ->where('reg_periksa.status_lanjut', 'Ralan')
         ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
         ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
