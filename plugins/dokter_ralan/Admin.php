@@ -30,14 +30,14 @@ class Admin extends AdminModule
 
       // pagination
       $totalRecords = $this->db('reg_periksa')
-        ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
         ->orLike('reg_periksa.no_rawat', '%'.$phrase.'%')
-        ->orLike('pasien.nm_pasien', '%'.$phrase.'%')
         ->where('reg_periksa.status_lanjut', 'Ralan')
         ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
         ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
         ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
+        ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
+        ->like('pasien.nm_pasien', '%'.$phrase.'%')
         ->toArray();
       $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), $perpage, url([ADMIN, 'dokter_ralan', 'manage', '%d?s='.$phrase.'&start_date='.$start_date.'&end_date='.$end_date]));
       $this->assign['pagination'] = $pagination->nav('pagination','5');
@@ -45,17 +45,17 @@ class Admin extends AdminModule
 
       $offset = $pagination->offset();
       $rows = $this->db('reg_periksa')
-        ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
-        ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
-        ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
-        ->join('penjab', 'penjab.kd_pj = reg_periksa.kd_pj')
         ->like('reg_periksa.no_rkm_medis', '%'.$phrase.'%')
         ->orLike('reg_periksa.no_rawat', '%'.$phrase.'%')
-        ->orLike('pasien.nm_pasien', '%'.$phrase.'%')
         ->where('reg_periksa.status_lanjut', 'Ralan')
         ->where('reg_periksa.tgl_registrasi', '>=', $start_date)
         ->where('reg_periksa.tgl_registrasi', '<=', $end_date)
         ->where('reg_periksa.kd_dokter', $_SESSION['opensimrs_username'])
+        ->join('pasien', 'pasien.no_rkm_medis = reg_periksa.no_rkm_medis')
+        ->like('pasien.nm_pasien', '%'.$phrase.'%')
+        ->join('poliklinik', 'poliklinik.kd_poli = reg_periksa.kd_poli')
+        ->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')
+        ->join('penjab', 'penjab.kd_pj = reg_periksa.kd_pj')
         ->offset($offset)
         ->limit($perpage)
         ->toArray();
