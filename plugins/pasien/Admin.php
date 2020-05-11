@@ -194,7 +194,13 @@ class Admin extends AdminModule
                 $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
                 $rawat_jl_dr = $this->db('rawat_jl_dr')->join('jns_perawatan', 'jns_perawatan.kd_jenis_prw = rawat_jl_dr.kd_jenis_prw')->where('no_rawat', $row['no_rawat'])->toArray();
                 $catatan_perawatan = $this->db('catatan_perawatan')->where('no_rawat', $row['no_rawat'])->oneArray();
-                $detail_pemberian_obat = $this->db('detail_pemberian_obat')->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')->where('no_rawat', $row['no_rawat'])->toArray();
+                $detail_pemberian_obat = $this->db('detail_pemberian_obat')
+                  ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
+                  ->join('resep_obat', 'resep_obat.no_rawat = detail_pemberian_obat.no_rawat')
+                  ->join('resep_dokter', 'resep_dokter.no_resep = resep_obat.no_resep')
+                  ->where('detail_pemberian_obat.no_rawat', $row['no_rawat'])
+                  ->group('detail_pemberian_obat.kode_brng')
+                  ->toArray();
                 $detail_periksa_lab = $this->db('detail_periksa_lab')->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')->where('no_rawat', $row['no_rawat'])->toArray();
                 $row['keluhan'] = $pemeriksaan_ralan['keluhan'];
                 $row['suhu_tubuh'] = $pemeriksaan_ralan['suhu_tubuh'];
