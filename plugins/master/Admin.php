@@ -115,6 +115,12 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Dokter';
+            $this->assign['kd_dokter'] = $this->db('pegawai')->toArray();
+            $this->assign['jk'] = $this->core->getEnum('dokter', 'jk');
+            $this->assign['gol_drh'] = $this->core->getEnum('dokter', 'gol_drh');
+            $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
+            $this->assign['stts_nikah'] = $this->core->getEnum('dokter', 'stts_nikah');
+            $this->assign['kd_sps'] = $this->db('spesialis')->toArray();
 
             return $this->draw('dokter.form.html', ['dokter' => $this->assign]);
         } else {
@@ -152,10 +158,10 @@ class Admin extends AdminModule
             $location = url([ADMIN, 'master', 'dokteredit', $id]);
         }
 
-        /*if (checkEmptyFields(['kd_dokter', 'nm_dokter'], $_POST)) {
+        if (checkEmptyFields(['kd_dokter', 'nm_dokter'], $_POST)) {
             $this->notify('failure', 'Isian kosong');
             redirect($location, $_POST);
-        }*/
+        }
 
         if (!$errors) {
             unset($_POST['save']);
@@ -273,6 +279,12 @@ class Admin extends AdminModule
         if (!empty($row)) {
             $this->assign['form'] = $row;
             $this->assign['title'] = 'Edit Petugas';
+            $this->assign['nip'] = $this->db('pegawai')->toArray();
+            $this->assign['jk'] = $this->core->getEnum('petugas', 'jk');
+            $this->assign['gol_darah'] = $this->core->getEnum('petugas', 'gol_darah');
+            $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
+            $this->assign['stts_nikah'] = $this->core->getEnum('petugas', 'stts_nikah');
+            $this->assign['kd_jbtn'] = $this->db('jabatan')->toArray();
 
             return $this->draw('petugas.form.html', ['petugas' => $this->assign]);
         } else {
@@ -310,10 +322,13 @@ class Admin extends AdminModule
             $location = url([ADMIN, 'master', 'petugasedit', $id]);
         }
 
-        /*if (checkEmptyFields(['nip', 'nama'], $_POST)) {
+        //$get_pegawai = $this->db('pegawai')->select('nama')->where('nik', $_POST['nip'])->oneArray();
+        //$_POST['nama'] = $get_pegawai['nama'];
+
+        if (checkEmptyFields(['nip', 'nama'], $_POST)) {
             $this->notify('failure', 'Isian kosong');
             redirect($location, $_POST);
-        }*/
+        }
 
         if (!$errors) {
             unset($_POST['save']);

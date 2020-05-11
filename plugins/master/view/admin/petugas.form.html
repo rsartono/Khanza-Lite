@@ -106,3 +106,8 @@
         </div>
     </form>
 </article>
+{if: $petugas.form.nip !== ''}
+  <script>
+    $('#nip option:not(:selected)').remove();
+  </script>
+{/if}

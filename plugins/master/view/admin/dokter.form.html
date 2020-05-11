@@ -115,3 +115,8 @@
         </div>
     </form>
 </article>
+{if: $dokter.form.kd_dokter !== ''}
+  <script>
+    $('#kd_dokter option:not(:selected)').remove();
+  </script>
+{/if}
