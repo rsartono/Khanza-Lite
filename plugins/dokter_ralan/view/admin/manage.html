@@ -17,7 +17,7 @@
                             </form>
                         </div>
                     </li>
-                    <li class="{if: empty($_GET['start_date'])}active{/if}">
+                    <li class="{if: empty($_GET['start_date']) || $_GET['end_date'] == date('Y-m-d')}active{/if}">
                         <a href="{?=url(ADMIN.'/dokter_ralan/manage')?}" role="tab">Sekarang</a>
                     </li>
                     <li class="{if: isset($_GET['start_date']) && $_GET['start_date'] == date('Y-m-d', strtotime('-1 days'))}active{/if}">
