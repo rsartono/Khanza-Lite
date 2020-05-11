@@ -17,6 +17,7 @@ class Admin extends AdminModule
     {
 
       $this->_addHeaderFiles();
+      $username = $_SESSION['opensimrs_username'];
       $start_date = date('Y-m-d');
       if(isset($_GET['start_date']))
         $start_date = $_GET['start_date'];
@@ -35,7 +36,7 @@ class Admin extends AdminModule
           WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis
           AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?)
           AND reg_periksa.status_lanjut = 'Ralan'
-          AND reg_periksa.kd_dokter = '.$_SESSION['opensimrs_username'].'
+          AND reg_periksa.kd_dokter = '$username'
           AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date'");
       $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
       $totalRecords = $totalRecords->fetchAll();
@@ -55,7 +56,7 @@ class Admin extends AdminModule
           FROM reg_periksa, pasien, dokter, poliklinik, penjab
           WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis
           AND reg_periksa.status_lanjut = 'Ralan'
-          AND reg_periksa.kd_dokter = '.$_SESSION['opensimrs_username'].'
+          AND reg_periksa.kd_dokter = '$username'
           AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date'
           AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?)
           AND reg_periksa.kd_dokter = dokter.kd_dokter
