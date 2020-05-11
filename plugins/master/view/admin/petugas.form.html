@@ -7,7 +7,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label>Nama Dokter</label>
+                        <label>Nama Petugas</label>
                         <select name="nip" id="nip" class="form-control">
                           {loop: $petugas.nip}
                             <option value="{$value.nik}"{if: $value.nik == $petugas.form.nip} selected{/if}>{$value.nama}</option>
