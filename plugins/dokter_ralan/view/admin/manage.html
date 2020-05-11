@@ -4,7 +4,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Pasien Rawat Jalan</h3>
                 <ul class="nav nav-tabs">
-                    <li class="dropdown {if: isset($_GET['start_date']) && $_GET['end_date'] !== date('Y-m-d') && $_GET['start_date'] !== date('Y-m-d', strtotime('-1 days')) && $_GET['start_date'] !== date('Y-m-d', strtotime('-7 days')) && $_GET['start_date'] !== date('Y-m-d', strtotime('-30 days'))}active{else}{/if}">
+                    <li class="dropdown {if: isset($_GET['start_date']) && $_GET['start_date'] !== date('Y-m-d') && $_GET['end_date'] !== date('Y-m-d') && $_GET['start_date'] !== date('Y-m-d', strtotime('-1 days')) && $_GET['start_date'] !== date('Y-m-d', strtotime('-7 days')) && $_GET['start_date'] !== date('Y-m-d', strtotime('-30 days'))}active{else}{/if}">
                         <a class="dropdown-toggle" href="#tab-main" data-toggle="dropdown" role="tab">Kustom</a>
                         <div class="dropdown-menu" role="menu">
                             <form action="{?=url(ADMIN.'/dokter_ralan/manage')?}" style="padding:10px;">
@@ -17,7 +17,7 @@
                             </form>
                         </div>
                     </li>
-                    <li class="{if: empty($_GET['start_date']) || $_GET['end_date'] == date('Y-m-d')}active{/if}">
+                    <li class="{if: $_GET['start_date'] == date('Y-m-d') && $_GET['end_date'] == date('Y-m-d') || empty($_GET['start_date'])}active{/if}">
                         <a href="{?=url(ADMIN.'/dokter_ralan/manage')?}" role="tab">Sekarang</a>
                     </li>
                     <li class="{if: isset($_GET['start_date']) && $_GET['start_date'] == date('Y-m-d', strtotime('-1 days'))}active{/if}">
