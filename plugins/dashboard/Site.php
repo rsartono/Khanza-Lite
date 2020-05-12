@@ -38,7 +38,7 @@ class Site extends SiteModule
 
         $stats['getPasiens'] = number_format($this->countPasien(),0,'','.');
         $stats['getVisities'] = number_format($this->countVisite(),0,'','.');
-        $stats['getEmployes'] = number_format($this->countEmploye(),0,'','.');
+        $stats['getCurrentVisities'] = number_format($this->countCurrentVisite(),0,'','.');
         $stats['pasienChart'] = $this->pasienChart(15);
 
         $page = [
@@ -73,14 +73,14 @@ class Site extends SiteModule
         return $record['count'];
     }
 
-    public function countEmploye()
+    public function countCurrentVisite()
     {
-        $record = $this->db('pegawai')
+        $date = date('Y-m-d');
+        $record = $this->db('reg_periksa')
             ->select([
-                'count' => 'COUNT(DISTINCT nik)',
+                'count' => 'COUNT(DISTINCT no_rawat)',
             ])
-            ->where('stts_aktif', '=', 'AKTIF')
-            ->orWhere('stts_aktif', '=', 'CUTI')
+            ->where('tgl_registrasi', $date)
             ->oneArray();
 
         return $record['count'];
