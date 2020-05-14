@@ -5,10 +5,10 @@
                 <h3 class="panel-title">{$databarang.title}</h3>
                 <ul class="nav nav-tabs">
                     <li class="{if: empty($databarang.getStatus)}active{/if}">
-                        <a href="{?=url(ADMIN.'/master/databarang')?}" role="tab">Aktif</a>
+                        <a href="{?=url(ADMIN.'/farmasi/manage')?}" role="tab">Aktif</a>
                     </li>
                     <li class="{if: !empty($databarang.getStatus)}active{/if}">
-                        <a href="{?=url(ADMIN.'/master/databarang?status=0')?}" role="tab">Tidak Aktif</a>
+                        <a href="{?=url(ADMIN.'/farmasi/manage?status=0')?}" role="tab">Tidak Aktif</a>
                     </li>
                     <li>
                         <a href="{$databarang.printURL}" target="_blank" role="tab">Cetak</a>
@@ -57,9 +57,6 @@
                       <td class="text-right">{?=number_format($value.h_beli,0,",",".")?}</td>
                       <td>{$value.expire}</td>
     									<td class="text-right">
-    										<a href="{$value.viewURL}" class="btn btn-primary btn-xs">
-    											<i class="fa fa-search"></i> <span class="hidden-xs">Tampil</span>
-    										</a>
     										<a href="{$value.editURL}" class="btn btn-success btn-xs">
     											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>
     										</a>
@@ -76,7 +73,7 @@
     								</tr>
     								{/loop}
     								{else}
-    								<tr><td colspan="6" class="text-center">Kosong</td></tr>
+    								<tr><td colspan="6" class="text-center">Databarang tidak tersedia</td></tr>
     								{/if}
     							</tbody>
     						</table>
