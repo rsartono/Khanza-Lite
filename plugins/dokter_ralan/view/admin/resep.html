@@ -7,7 +7,7 @@
     <div class="panel-body">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="resep_umum">
-                <form name="dokter_ralan" action="{?=url(ADMIN.'/dokter_ralan/resepsave/'.@$dokter_ralan.no_rawat)?}" method="POST">
+                <form name="dokter_ralan" action="{?=url(ADMIN.'/dokter_ralan/resepsave/'.@$dokter_ralan.no_rawat)?}#resep" method="POST">
                 <div class="row clearfix" id="item_resep">
                     <div class="col-md-5">
                         <div class="form-group">
@@ -38,7 +38,7 @@
                 </form>
             </div>
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
-              <form method="post" action="{?=url(ADMIN.'/dokter_ralan/resepracikansave/'.@$dokter_ralan.no_rawat)?}">
+              <form method="post" action="{?=url(ADMIN.'/dokter_ralan/resepracikansave/'.@$dokter_ralan.no_rawat)?}#resep">
               <div class="row clearfix">
                   <div class="col-md-3">
                       <div class="form-group">
@@ -127,29 +127,35 @@
 {/if}
 
 {if: !empty($dokter_ralan.permintaan_resep_racikan)}
-<h4 style="background-color: #ddd;border-bottom: 2px #ccc solid;padding:5px;">Permintaan e-Resep Racikan</h4>
-<div class="table-responsive no-margin">
-  <table class="table table-striped no-margin">
-    <thead>
-      <tr>
-        <th>Nomor Resep</th>
-        <th>Nama Obat</th>
-        <th>Jumlah</th>
-        <th>Aturan Pakai</th>
-      </tr>
-    </thead>
-    <tbody>
-        {loop: $dokter_ralan.permintaan_resep_racikan}
+  <h4 style="background-color: #ddd;border-bottom: 2px #ccc solid;padding:5px;">Permintaan e-Resep Racikan</h4>
+  <div class="table-responsive no-margin racikan">
+    <table class="table table-striped no-margin">
+      <thead>
         <tr>
-          <td>{$value.no_resep}</td>
-          <td>{$value.nama_brng}</td>
-          <td>{$value.jml}</td>
-          <td>{$value.aturan_pakai}</td>
+          <th>Nomor Resep</th>
+          <th>Obat & Kandungan</th>
+          <th>Nama Racik</th>
+          <th>Metode</th>
+          <th>Jumlah</th>
+          <th>Aturan Pakai</th>
+          <th>Keterangan</th>
         </tr>
-        {/loop}
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+          {loop: $dokter_ralan.permintaan_resep_racikan}
+          <tr>
+            <td>{$value.no_resep}</td>
+            <td>{$value.detail_racikan}</td>
+            <td>{$value.nama_racik}</td>
+            <td>{$value.nm_racik}</td>
+            <td>{$value.jml_dr}</td>
+            <td>{$value.aturan_pakai}</td>
+            <td>{$value.keterangan}</td>
+          </tr>
+          {/loop}
+      </tbody>
+    </table>
+  </div>
 {/if}
 
 <script>

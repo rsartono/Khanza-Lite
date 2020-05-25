@@ -1,6 +1,9 @@
 th, td {
   white-space: nowrap;
 }
+.racikan table td, .racikan table td * {
+    vertical-align: top !important;
+}
 .dokter_ralan_view .nav-tabs {
   overflow-x: auto;
   overflow-y: hidden;
