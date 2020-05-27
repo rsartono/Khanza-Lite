@@ -161,13 +161,13 @@ class Admin extends AdminModule
                 $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
                 $prosedur_pasien = $this->db('prosedur_pasien')->join('icd9', 'icd9.kode = prosedur_pasien.kode')->where('no_rawat', $row['no_rawat'])->toArray();
                 $rawat_jl_dr = $this->db('rawat_jl_dr')->join('jns_perawatan', 'jns_perawatan.kd_jenis_prw = rawat_jl_dr.kd_jenis_prw')->where('no_rawat', $row['no_rawat'])->toArray();
-                $detail_pemberian_obat = $this->db('detail_pemberian_obat')
-                  ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
-                  //->join('resep_obat', 'resep_obat.no_rawat = detail_pemberian_obat.no_rawat')
+                $detail_pemberian_obat = $this->db('aturan_pakai')
+                  ->join('databarang', 'databarang.kode_brng = aturan_pakai.kode_brng')
+                  ->join('detail_pemberian_obat', 'detail_pemberian_obat.no_rawat = aturan_pakai.no_rawat')
                   //->join('resep_dokter', 'resep_dokter.no_resep = resep_obat.no_resep')
-                  ->where('detail_pemberian_obat.no_rawat', $row['no_rawat'])
+                  ->where('aturan_pakai.no_rawat', $row['no_rawat'])
                   //->where('resep_dokter.kode_brng', 'detail_pemberian_obat.kode_brng')
-                  //->group('detail_pemberian_obat.kode_brng')
+                  ->group('aturan_pakai.kode_brng')
                   //->select('databarang.nama_brng')
                   //->select('detail_pemberian_obat.jml')
                   //->select('resep_dokter.aturan_pakai')

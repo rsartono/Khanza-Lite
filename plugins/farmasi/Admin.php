@@ -286,6 +286,20 @@ class Admin extends AdminModule
             $this->assign['golongan'][] = $row;
         }
 
+        $rows = $this->db('master_aturan_pakai')->toArray();
+        $this->assign['aturanpakai'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'aturanpakaiedit', $row['aturan']]);
+            $this->assign['aturanpakai'][] = $row;
+        }
+
+        $rows = $this->db('metode_racik')->toArray();
+        $this->assign['metoderacik'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'metoderacikedit', $row['kd_racik']]);
+            $this->assign['metoderacik'][] = $row;
+        }
+
         return $this->draw('master.html', ['master' => $this->assign]);
     }
 
@@ -622,6 +636,138 @@ class Admin extends AdminModule
 
         redirect($location, $_POST);
     }
+
+    public function getAturanPakaiAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'aturan' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Aturan Pakai';
+
+        return $this->draw('aturanpakai.form.html', ['master' => $this->assign]);
+    }
+
+    public function getAturanPakaiEdit($id)
+    {
+        $row = $this->db('master_aturan_pakai')->where('aturan', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Aturan Pakai';
+
+            return $this->draw('aturanpakai.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postAturanPakaiSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('master_aturan_pakai')->where('aturan', $_POST['aturan'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'aturanpakaiedit', $id]);
+        }
+
+        if (checkEmptyFields(['aturan'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('master_aturan_pakai')->save($_POST);
+            } else {        // edit
+                $query = $this->db('master_aturan_pakai')->where('aturan', $_POST['aturan'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getMetodeRacikAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kd_racik' => '',
+              'nm_racik' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Metode Racik';
+
+        return $this->draw('metoderacik.form.html', ['master' => $this->assign]);
+    }
+
+    public function getMetodeRacikEdit($id)
+    {
+        $row = $this->db('metode_racik')->where('kd_racik', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Metode Racik';
+
+            return $this->draw('metoderacik.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postMetodeRacikSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('metode_racik')->where('kd_racik', $_POST['kd_racik'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'metoderacikedit', $id]);
+        }
+
+        if (checkEmptyFields(['kd_racik', 'nm_racik'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('metode_racik')->save($_POST);
+            } else {        // edit
+                $query = $this->db('metode_racik')->where('kd_racik', $_POST['kd_racik'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
 
     public function getCSS()
     {
