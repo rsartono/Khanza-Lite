@@ -251,6 +251,376 @@ class Admin extends AdminModule
     /* Master Farmasi Section */
     public function getMaster()
     {
+        $rows = $this->db('kodesatuan')->toArray();
+        $this->assign['kodesatuan'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'kodesatuanedit', $row['kode_sat']]);
+            $this->assign['kodesatuan'][] = $row;
+        }
+
+        $rows = $this->db('jenis')->toArray();
+        $this->assign['jenis'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'jenisedit', $row['kdjns']]);
+            $this->assign['jenis'][] = $row;
+        }
+
+        $rows = $this->db('industrifarmasi')->toArray();
+        $this->assign['kodeindustri'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'kodeindustriedit', $row['kode_industri']]);
+            $this->assign['kodeindustri'][] = $row;
+        }
+
+        $rows = $this->db('kategori_barang')->toArray();
+        $this->assign['kategori'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'kategoriedit', $row['kode']]);
+            $this->assign['kategori'][] = $row;
+        }
+
+        $rows = $this->db('golongan_barang')->toArray();
+        $this->assign['golongan'] = [];
+        foreach ($rows as $row) {
+            $row['editURL'] = url([ADMIN, 'farmasi', 'golonganedit', $row['kode']]);
+            $this->assign['golongan'][] = $row;
+        }
+
+        return $this->draw('master.html', ['master' => $this->assign]);
+    }
+
+    public function getKodeSatuanAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode_sat' => '',
+              'satuan' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Kode Satuan';
+
+        return $this->draw('kodesatuan.form.html', ['master' => $this->assign]);
+    }
+
+    public function getKodeSatuanEdit($id)
+    {
+        $row = $this->db('kodesatuan')->where('kode_sat', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Kode Satuan';
+
+            return $this->draw('kodesatuan.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postKodeSatuanSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('kodesatuan')->where('kode_sat', $_POST['kode_sat'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'kodesatuanedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode_sat', 'satuan'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('kodesatuan')->save($_POST);
+            } else {        // edit
+                $query = $this->db('kodesatuan')->where('kode_sat', $_POST['kode_sat'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getJenisAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kdjns' => '',
+              'nama' => '',
+              'keterangan' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Jenis';
+
+        return $this->draw('jenis.form.html', ['master' => $this->assign]);
+    }
+
+    public function getJenisEdit($id)
+    {
+        $row = $this->db('jenis')->where('kdjns', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Jenis';
+
+            return $this->draw('jenis.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postJenisSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('jenis')->where('kdjns', $_POST['kdjns'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'jenisedit', $id]);
+        }
+
+        if (checkEmptyFields(['kdjns', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('jenis')->save($_POST);
+            } else {        // edit
+                $query = $this->db('jenis')->where('kdjns', $_POST['kdjns'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getKodeIndustriAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode_industri' => '',
+              'nama_industri' => '',
+              'alamat' => '',
+              'kota' => '',
+              'no_telp' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Industri Farmasi';
+
+        return $this->draw('kodeindustri.form.html', ['master' => $this->assign]);
+    }
+
+    public function getKodeIndustriEdit($id)
+    {
+        $row = $this->db('industrifarmasi')->where('kode_industri', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Industri Farmasi';
+
+            return $this->draw('kodeindustri.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postKodeIndustriSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('industrifarmasi')->where('kode_industri', $_POST['kode_industri'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'kodeindustriedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode_industri', 'nama_industri'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('industrifarmasi')->save($_POST);
+            } else {        // edit
+                $query = $this->db('industrifarmasi')->where('kode_industri', $_POST['kode_industri'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getKategoriAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode' => '',
+              'nama' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Kategori';
+
+        return $this->draw('kategori.form.html', ['master' => $this->assign]);
+    }
+
+    public function getKategoriEdit($id)
+    {
+        $row = $this->db('kategori_barang')->where('kode', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Kategori Barang';
+
+            return $this->draw('kategori.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postKategoriSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('kategori_barang')->where('kode', $_POST['kode'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'kategoriedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('kategori_barang')->save($_POST);
+            } else {        // edit
+                $query = $this->db('kategori_barang')->where('kode', $_POST['kode'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getGolonganAdd()
+    {
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kode' => '',
+              'nama' => ''
+            ];
+        }
+        $this->assign['title'] = 'Tambah Master Kategori';
+
+        return $this->draw('golongan.form.html', ['master' => $this->assign]);
+    }
+
+    public function getGolonganEdit($id)
+    {
+        $row = $this->db('golongan_barang')->where('kode', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Master Golongan Barang';
+
+            return $this->draw('golongan.form.html', ['master' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'farmasi', 'master']));
+        }
+    }
+
+    public function postGolonganSave($id = null)
+    {
+        $errors = 0;
+
+        $cek_penjab = $this->db('golongan_barang')->where('kode', $_POST['kode'])->count();
+
+        if (!$id) {
+            $location = url([ADMIN, 'farmasi', 'master']);
+        } else {
+            $location = url([ADMIN, 'farmasi', 'golonganedit', $id]);
+        }
+
+        if (checkEmptyFields(['kode', 'nama'], $_POST)) {
+            $this->notify('failure', 'Isian ada yang masih kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$cek_penjab) {    // new
+                $query = $this->db('golongan_barang')->save($_POST);
+            } else {        // edit
+                $query = $this->db('golongan_barang')->where('kode', $_POST['kode'])->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
     }
 
     public function getCSS()
