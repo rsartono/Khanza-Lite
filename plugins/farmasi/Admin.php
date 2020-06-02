@@ -251,6 +251,8 @@ class Admin extends AdminModule
     /* Master Farmasi Section */
     public function getMaster()
     {
+        $this->_addHeaderFiles();
+
         $rows = $this->db('kodesatuan')->toArray();
         $this->assign['kodesatuan'] = [];
         foreach ($rows as $row) {
@@ -787,9 +789,12 @@ class Admin extends AdminModule
     {
         // CSS
         $this->core->addCSS(url('assets/css/jquery-ui.css'));
+        $this->core->addCSS(url('assets/css/dataTables.bootstrap.min.css'));
 
         // JS
         $this->core->addJS(url('assets/jscripts/jquery-ui.js'), 'footer');
+        $this->core->addJS(url('assets/jscripts/jquery.dataTables.min.js'), 'footer');
+        $this->core->addJS(url('assets/jscripts/dataTables.bootstrap.min.js'), 'footer');
 
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'farmasi', 'css']));
