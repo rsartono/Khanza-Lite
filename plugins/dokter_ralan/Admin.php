@@ -674,6 +674,13 @@ class Admin extends AdminModule
         exit();
     }
 
+    public function getTelemedicineCss()
+    {
+        header('Content-type: text/css');
+        echo $this->draw(MODULES.'/dokter_ralan/css/admin/telemedicine.css');
+        exit();
+    }
+
     private function _addHeaderFiles()
     {
         // CSS
@@ -689,6 +696,7 @@ class Admin extends AdminModule
 
     private function _addTelemedicineFiles()
     {
+        $this->core->addCSS(url([ADMIN, 'dokter_ralan', 'telemedicinecss']));
         // JS
         $this->core->addJS(url(MODULES.'/dokter_ralan/js/admin/peer.js'));
         $this->core->addJS(url(MODULES.'/dokter_ralan/js/admin/app.js'));
