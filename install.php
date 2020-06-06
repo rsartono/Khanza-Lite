@@ -84,10 +84,10 @@ ini_set('max_execution_time', 300);
             <?php
             }
             if($action == 'config') {
-              file_put_contents('config.php', str_replace("\ndefine('DBHOST', '')", "\ndefine('DBHOST', '".$_POST['DB_HOST']."')", file_get_contents('config.php')));
-              file_put_contents('config.php', str_replace("\ndefine('DBUSER', '')", "\ndefine('DBUSER', '".$_POST['DB_USER']."')", file_get_contents('config.php')));
-              file_put_contents('config.php', str_replace("\ndefine('DBPASS', '')", "\ndefine('DBPASS', '".$_POST['DB_PASS']."')", file_get_contents('config.php')));
-              file_put_contents('config.php', str_replace("\ndefine('DBNAME', '')", "\ndefine('DBNAME', '".$_POST['DB_NAME']."')", file_get_contents('config.php')));
+              file_put_contents('config.php', str_replace("\ndefine('DBHOST', '')", "\ndefine('DBHOST', '".$_POST['DBHOST']."')", file_get_contents('config.php')));
+              file_put_contents('config.php', str_replace("\ndefine('DBUSER', '')", "\ndefine('DBUSER', '".$_POST['DBUSER']."')", file_get_contents('config.php')));
+              file_put_contents('config.php', str_replace("\ndefine('DBPASS', '')", "\ndefine('DBPASS', '".$_POST['DBPASS']."')", file_get_contents('config.php')));
+              file_put_contents('config.php', str_replace("\ndefine('DBNAME', '')", "\ndefine('DBNAME', '".$_POST['DBNAME']."')", file_get_contents('config.php')));
             ?>
             <div class="row">
                 <div class="col-xs-12">

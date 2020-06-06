@@ -10,6 +10,7 @@ class Admin extends AdminModule
     {
         return [
             'Manage' => 'manage',
+            'Telemedicine' => 'telemedicine',
         ];
     }
 
@@ -83,6 +84,10 @@ class Admin extends AdminModule
 
     }
 
+    public function getTelemedicine()
+    {
+      return $this->draw('telemedicine.html', ['dokter_ralan' => $this->assign]);
+    }
     public function getView($id, $page = 1)
     {
         $id = revertNorawat($id);
