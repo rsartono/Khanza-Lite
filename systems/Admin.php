@@ -27,7 +27,7 @@ class Admin extends Main
         } else {
             $username = $this->getUserInfo('username', null, true);
             $pegawai  = $this->db('pegawai')->where('nik', $username)->oneArray();
-            $nama     = $pegawai['nama'];
+            $nama     = $pegawai['nama'] ?? 'default value';
             $this->assign['avatarURL']     = url('/plugins/users/img/default.png');
         }
         $access = $this->getUserInfo('access');
