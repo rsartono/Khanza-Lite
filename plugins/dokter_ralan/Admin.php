@@ -86,6 +86,9 @@ class Admin extends AdminModule
 
     public function getTelemedicine()
     {
+      $this->_addTelemedicineFiles();
+      $this->assign['list'] = [];
+
       return $this->draw('telemedicine.html', ['dokter_ralan' => $this->assign]);
     }
     public function getView($id, $page = 1)
@@ -682,6 +685,14 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'dokter_ralan', 'css']));
         $this->core->addJS(url([ADMIN, 'dokter_ralan', 'javascript']), 'footer');
+    }
+
+    private function _addTelemedicineFiles()
+    {
+        // JS
+        $this->core->addJS(url(MODULES.'/dokter_ralan/js/admin/peer.js'));
+        $this->core->addJS(url(MODULES.'/dokter_ralan/js/admin/app.js'));
+        $this->core->addJS(url(MODULES.'/dokter_ralan/js/admin/peer-client.js'));
     }
 
 }
