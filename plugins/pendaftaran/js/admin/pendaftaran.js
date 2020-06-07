@@ -11,7 +11,9 @@ $( function() {
 $( function() {
   $('.timepicker').timepicker();
 } );
-
+$(document).ready(function(){
+    $('.display').DataTable();
+});
 $(document).ready(function(){
     var keyword = '';
     load_data(keyword);

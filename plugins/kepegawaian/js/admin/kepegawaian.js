@@ -15,3 +15,6 @@ $( function() {
     yearRange: "-100:+0",
   });
 } );
+$(document).ready(function(){
+    $('.display').DataTable();
+});
