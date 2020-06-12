@@ -6,11 +6,11 @@ if (!version_compare(PHP_VERSION, '5.5.0', '>=')) {
 ini_set('memory_limit', '-1');
 date_default_timezone_set('Asia/Jakarta');
 
-define('DBHOST', '');
+define('DBHOST', 'localhost');
 define('DBPORT', '3306');
-define('DBUSER', '');
+define('DBUSER', 'root');
 define('DBPASS', '');
-define('DBNAME', '');
+define('DBNAME', 'sik');
 
 // URL Webapps
 define('WEBAPPS_URL', '');

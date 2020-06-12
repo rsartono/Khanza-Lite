@@ -182,7 +182,7 @@ abstract class Main
             self::$userCache = $this->db('lite_roles')->where('id', $id)->oneArray();
         }
 
-        return self::$userCache[$field] ?? 'default value';
+        return self::$userCache[$field];
     }
 
     public function getPasienInfo($field, $no_rkm_medis)
