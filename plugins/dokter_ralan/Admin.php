@@ -97,6 +97,7 @@ class Admin extends AdminModule
         $this->_addHeaderFiles();
         $reg_periksa = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
         $pasien = $this->db('pasien')->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])->oneArray();
+        $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])->oneArray();
         $count_ralan = $this->db('reg_periksa')->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])->where('status_lanjut', 'Ralan')->count();
         $count_ranap = $this->db('reg_periksa')->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])->where('status_lanjut', 'Ranap')->count();
         $this->assign['print_rm'] = url([ADMIN, 'dokter_ralan', 'print_rm', $reg_periksa['no_rkm_medis']]);
@@ -145,6 +146,9 @@ class Admin extends AdminModule
                 ->where('no_rawat', $id)
                 ->toArray();
             $this->assign['fotoURL'] = url(MODULES.'/dokter_ralan/img/'.$pasien['jk'].'.png');
+            if(!empty($personal_pasien['gambar'])) {
+              $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/pages/upload/'.$personal_pasien['gambar']);
+            }
             $this->assign['manageURL'] = url([ADMIN, 'dokter_ralan', 'manage']);
             $totalRecords = $this->db('reg_periksa')
                 ->where('no_rkm_medis', $reg_periksa['no_rkm_medis'])

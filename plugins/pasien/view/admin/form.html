@@ -251,6 +251,13 @@
                 </div>
                 <div class="panel-body">
 									<div class="form-group">
+	                    <label>Foto</label>
+	                    <div>
+	                      <img src="{$pasien.fotoURL}" width="96" height="96" class="img-thumbnail" id="photoPreview" style="cursor:pointer;" onclick="$('input[name=photo]').click()" />
+	                      <input type="file" name="photo" class="form-control hidden" />
+	                    </div>
+	                </div>
+									<div class="form-group">
 											<label>Nomor HP</label>
 											<input type="number" name="no_tlp" id="no_tlp" class="form-control" value="{$pasien.form.no_tlp}" />
 									</div>

@@ -107,7 +107,9 @@ class Admin extends AdminModule
               'email' => '',
               'nip' => '',
               'kd_prop' => '',
-              'propinsipj' => ''
+              'propinsipj' => '',
+              'gambar' => '',
+              'password' => ''
             ];
         }
 
@@ -129,6 +131,7 @@ class Admin extends AdminModule
         $this->assign['kelurahan']['nm_kel'] = '';
 
         $this->assign['manageURL'] = url([ADMIN, 'pasien', 'manage']);
+        $this->assign['fotoURL'] = url(MODULES.'/pasien/img/default.png');
 
         return $this->draw('form.html', ['pasien' => $this->assign]);
     }
@@ -137,6 +140,7 @@ class Admin extends AdminModule
     {
         $this->_addHeaderFiles();
         $pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
+        $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
         $this->assign['jk'] = $this->core->getEnum('pasien', 'jk');
         $this->assign['gol_darah'] = $this->core->getEnum('pasien', 'gol_darah');
         $this->assign['stts_nikah'] = $this->core->getEnum('pasien', 'stts_nikah');
@@ -153,6 +157,7 @@ class Admin extends AdminModule
         $this->assign['kabupaten'] = $this->db('kabupaten')->where('kd_kab', $pasien['kd_kab'])->oneArray();
         $this->assign['kecamatan'] = $this->db('kecamatan')->where('kd_kec', $pasien['kd_kec'])->oneArray();
         $this->assign['kelurahan'] = $this->db('kelurahan')->where('kd_kel', $pasien['kd_kel'])->oneArray();
+        $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/pages/upload/'.$personal_pasien['gambar']);
 
         if (!empty($pasien)) {
             $this->assign['form'] = $pasien;
@@ -172,6 +177,7 @@ class Admin extends AdminModule
         $this->assign['print_rm'] = url([ADMIN, 'pasien', 'print_rm', $no_rkm_medis]);
         $this->assign['print_kartu'] = url([ADMIN, 'pasien', 'print_kartu', $no_rkm_medis]);
         $pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
+        $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray();
 
         $count_ralan = $this->db('reg_periksa')->where('no_rkm_medis', $no_rkm_medis)->where('status_lanjut', 'Ralan')->count();
         $count_ranap = $this->db('reg_periksa')->where('no_rkm_medis', $no_rkm_medis)->where('status_lanjut', 'Ranap')->count();
@@ -181,6 +187,9 @@ class Admin extends AdminModule
             $this->assign['view']['count_ralan'] = $count_ralan;
             $this->assign['view']['count_ranap'] = $count_ranap;
             $this->assign['fotoURL'] = url('/plugins/pasien/img/'.$pasien['jk'].'.png');
+            if(!empty($personal_pasien['gambar'])) {
+              $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/pages/upload/'.$personal_pasien['gambar']);
+            }
 
             $rows = $this->db('reg_periksa')
                 ->where('no_rkm_medis', $no_rkm_medis)
@@ -768,16 +777,51 @@ class Admin extends AdminModule
         if (!$errors) {
             unset($_POST['save']);
 
+            if (($photo = isset_or($_FILES['photo']['tmp_name'], false)) || !$_POST['no_rkm_medis']) {
+                $img = new \Systems\Lib\Image;
+
+                if (empty($photo) && !$_POST['no_rkm_medis']) {
+                    $photo = MODULES.'/pasien/img/default.png';
+                }
+                if ($img->load($photo)) {
+                    if ($img->getInfos('width') < $img->getInfos('height')) {
+                        $img->crop(0, 0, $img->getInfos('width'), $img->getInfos('width'));
+                    } else {
+                        $img->crop(0, 0, $img->getInfos('height'), $img->getInfos('height'));
+                    }
+
+                    if ($img->getInfos('width') > 512) {
+                        $img->resize(512, 512);
+                    }
+
+                    if ($cek_no_rkm_medis !== 0) {
+                        $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->oneArray();
+                    }
+
+                    $gambar = uniqid('photo').".".$img->getInfos('type');
+                }
+            }
+
             if ($cek_no_rkm_medis == 0) {    // new
                 $_POST['no_rkm_medis'] = $this->core->setNoRM();
                 $_POST['umur'] = $this->_setUmur($_POST['tgl_lahir']);
                 $query = $this->db('pasien')->save($_POST);
+                $this->db('personal_pasien')->save(['no_rkm_medis' => $_POST['no_rkm_medis'], 'gambar' => $gambar, 'password' => $_POST['no_rkm_medis']]);
                 $this->core->db()->pdo()->exec("UPDATE set_no_rkm_medis SET no_rkm_medis='$_POST[no_rkm_medis]'");
             } else {        // edit
                 $query = $this->db('pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->save($_POST);
+                $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->update(['gambar' => $gambar, 'password' => $_POST['no_rkm_medis']]);
             }
 
             if ($query) {
+                if (isset($img) && $img->getInfos('width')) {
+                    if (isset($personal_pasien)) {
+                        unlink(WEBAPPS_PATH."/photopasien/pages/upload/".$personal_pasien['gambar']);
+                    }
+
+                    $img->save(WEBAPPS_PATH."/photopasien/pages/upload/".$gambar);
+                }
+
                 $this->notify('success', 'Simpan sukes');
             } else {
                 $this->notify('failure', 'Simpan gagal');
@@ -793,6 +837,7 @@ class Admin extends AdminModule
     {
         if ($pasien = $this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->oneArray()) {
             if ($this->db('pasien')->where('no_rkm_medis', $no_rkm_medis)->delete()) {
+                $this->db('personal_pasien')->where('no_rkm_medis', $no_rkm_medis)->delete();
                 $this->notify('success', 'Hapus sukses');
             } else {
                 $this->notify('failure', 'Hapus gagal');
