@@ -157,7 +157,7 @@ class Admin extends AdminModule
         $this->assign['kabupaten'] = $this->db('kabupaten')->where('kd_kab', $pasien['kd_kab'])->oneArray();
         $this->assign['kecamatan'] = $this->db('kecamatan')->where('kd_kec', $pasien['kd_kec'])->oneArray();
         $this->assign['kelurahan'] = $this->db('kelurahan')->where('kd_kel', $pasien['kd_kel'])->oneArray();
-        $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/pages/upload/'.$personal_pasien['gambar']);
+        $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/'.$personal_pasien['gambar']);
 
         if (!empty($pasien)) {
             $this->assign['form'] = $pasien;
@@ -798,7 +798,8 @@ class Admin extends AdminModule
                         $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->oneArray();
                     }
 
-                    $gambar = uniqid('photo').".".$img->getInfos('type');
+                    //$gambar = uniqid('photo').".".$img->getInfos('type');
+		    $gambar = "pages/upload/".$_POST['no_rkm_medis'].".".$img->getInfos('type');
                 }
             }
 
@@ -816,10 +817,10 @@ class Admin extends AdminModule
             if ($query) {
                 if (isset($img) && $img->getInfos('width')) {
                     if (isset($personal_pasien)) {
-                        unlink(WEBAPPS_PATH."/photopasien/pages/upload/".$personal_pasien['gambar']);
+                        unlink(WEBAPPS_PATH."/photopasien/".$personal_pasien['gambar']);
                     }
 
-                    $img->save(WEBAPPS_PATH."/photopasien/pages/upload/".$gambar);
+                    $img->save(WEBAPPS_PATH."/photopasien/".$gambar);
                 }
 
                 $this->notify('success', 'Simpan sukes');
