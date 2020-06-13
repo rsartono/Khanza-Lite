@@ -188,7 +188,7 @@ class Admin extends AdminModule
             $this->assign['view']['count_ranap'] = $count_ranap;
             $this->assign['fotoURL'] = url('/plugins/pasien/img/'.$pasien['jk'].'.png');
             if(!empty($personal_pasien['gambar'])) {
-              $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/pages/upload/'.$personal_pasien['gambar']);
+              $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/'.$personal_pasien['gambar']);
             }
 
             $rows = $this->db('reg_periksa')

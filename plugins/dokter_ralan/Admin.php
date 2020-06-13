@@ -147,7 +147,7 @@ class Admin extends AdminModule
                 ->toArray();
             $this->assign['fotoURL'] = url(MODULES.'/dokter_ralan/img/'.$pasien['jk'].'.png');
             if(!empty($personal_pasien['gambar'])) {
-              $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/pages/upload/'.$personal_pasien['gambar']);
+              $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/'.$personal_pasien['gambar']);
             }
             $this->assign['manageURL'] = url([ADMIN, 'dokter_ralan', 'manage']);
             $totalRecords = $this->db('reg_periksa')
