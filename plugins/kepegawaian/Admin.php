@@ -136,7 +136,7 @@ class Admin extends AdminModule
             $this->assign['bank'] = $this->db('bank')->toArray();
             $this->assign['emergency_index'] = $this->db('emergency_index')->toArray();
 
-            $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/penggajian/pages/pegawai/photo/'.$row['photo']);
+            $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/penggajian/'.$row['photo']);
             return $this->draw('form.html', ['pegawai' => $this->assign]);
         } else {
             redirect(url([ADMIN, 'kepegawaian', 'manage']));
@@ -182,7 +182,7 @@ class Admin extends AdminModule
                         $pegawai = $this->db('pegawai')->oneArray($id);
                     }
 
-                    $_POST['photo'] = uniqid('photo').".".$img->getInfos('type');
+                    $_POST['photo'] = "pages/pegawai/photo/".$pegawai['nik'].".".$img->getInfos('type');
                 }
             }
 
@@ -195,10 +195,10 @@ class Admin extends AdminModule
             if ($query) {
                 if (isset($img) && $img->getInfos('width')) {
                     if (isset($pegawai)) {
-                        unlink(WEBAPPS_PATH."/penggajian/pages/pegawai/photo/".$pegawai['photo']);
+                        unlink(WEBAPPS_PATH."/penggajian/".$pegawai['photo']);
                     }
 
-                    $img->save(WEBAPPS_PATH."/penggajian/pages/pegawai/photo/".$_POST['photo']);
+                    $img->save(WEBAPPS_PATH."/penggajian/".$_POST['photo']);
                 }
 
                 $this->notify('success', 'Simpan sukes');
@@ -247,7 +247,7 @@ class Admin extends AdminModule
     public function getMaster()
     {
         $this->_addHeaderFiles();
-        
+
         $rows = $this->db('jnj_jabatan')->toArray();
         $this->assign['jnj_jabatan'] = [];
         foreach ($rows as $row) {
