@@ -14,5 +14,8 @@ $( function() {
   });
 } );
 $(document).ready(function(){
-    $('.display').DataTable();
+    $('.display').DataTable({
+      "lengthChange": false,
+      "scrollX": true
+    });
 });

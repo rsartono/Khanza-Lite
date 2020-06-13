@@ -48,6 +48,13 @@ $( function() {
 } );
 
 $(document).ready(function(){
+    $('.display').DataTable({
+      "lengthChange": false,
+      "scrollX": true
+    });
+});
+
+$(document).ready(function(){
     $.ajax({
       type: 'GET',
       url: '{?=url()?}/admin/pasien/ajax?show=propinsi&t={?=$_SESSION['token']?}',

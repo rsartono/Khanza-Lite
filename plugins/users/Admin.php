@@ -21,6 +21,7 @@ class Admin extends AdminModule
     */
     public function getManage()
     {
+        $this->_addHeaderFiles();
         //$rows = $this->db('lite_roles')->where('id', '!=', '1')->toArray();
         $rows = $this->db()->pdo()->prepare("SELECT lite_roles.*, pegawai.nama as nama, AES_DECRYPT(user.password,'windi') as password FROM lite_roles, pegawai, user WHERE pegawai.nik = lite_roles.username AND pegawai.nik = AES_DECRYPT(user.id_user,'nur') AND lite_roles.id !=1");
         $rows->execute();
@@ -238,11 +239,12 @@ class Admin extends AdminModule
     {
         // CSS
         $this->core->addCSS(url('assets/css/jquery-ui.css'));
-        //$this->core->addCSS(url('assets/css/select2.min.css'));
+        $this->core->addCSS(url('assets/css/dataTables.bootstrap.min.css'));
 
         // JS
         $this->core->addJS(url('assets/jscripts/jquery-ui.js'), 'footer');
-        //$this->core->addJS(url('assets/jscripts/select2.min.js'), 'footer');
+        $this->core->addJS(url('assets/jscripts/jquery.dataTables.min.js'), 'footer');
+        $this->core->addJS(url('assets/jscripts/dataTables.bootstrap.min.js'), 'footer');
 
         // MODULE SCRIPTS
         $this->core->addJS(url([ADMIN, 'users', 'javascript']), 'footer');
