@@ -799,7 +799,7 @@ class Admin extends AdminModule
                     }
 
                     //$gambar = uniqid('photo').".".$img->getInfos('type');
-		    $gambar = "pages/upload/".$_POST['no_rkm_medis'].".".$img->getInfos('type');
+                    $gambar = "pages/upload/".$_POST['no_rkm_medis'].".".$img->getInfos('type');
                 }
             }
 
