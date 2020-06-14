@@ -12,6 +12,10 @@ class Admin extends AdminModule
     {
         return [
             'Manage' => 'manage',
+            'Pengadaan' => 'pengadaan',
+            'Pembelian' => 'pembelian',
+            'Stok Opname' => 'opname',
+            'Mutasi' => 'mutasi',
             'Master' => 'master',
         ];
     }

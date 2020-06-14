@@ -12,7 +12,10 @@ $( function() {
   $('.timepicker').timepicker();
 } );
 $(document).ready(function(){
-    $('.display').DataTable();
+    $('.display').DataTable({
+      "lengthChange": false,
+      "scrollX": true      
+    });
 });
 $(document).ready(function(){
     var keyword = '';
