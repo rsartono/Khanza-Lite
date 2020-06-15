@@ -754,6 +754,7 @@ class Admin extends AdminModule
         $errors = 0;
 
         $cek_no_rkm_medis = $this->db('pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->count();
+        $cek_personal = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->count();
 
         // location to redirect
         if ($cek_no_rkm_medis == 0) {
@@ -812,7 +813,11 @@ class Admin extends AdminModule
                 $this->core->db()->pdo()->exec("UPDATE set_no_rkm_medis SET no_rkm_medis='$_POST[no_rkm_medis]'");
             } else {        // edit
                 $query = $this->db('pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->save($_POST);
-                $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->update(['gambar' => $gambar, 'password' => $_POST['no_rkm_medis']]);
+                if ($cek_personal == 0) {
+                  $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->save(['gambar' => $gambar, 'password' => $_POST['no_rkm_medis']]);
+                } else{
+                  $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->update(['gambar' => $gambar]);
+                }
             }
 
             if ($query) {
