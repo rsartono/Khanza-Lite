@@ -4,13 +4,13 @@ th, td {
 .racikan table td, .racikan table td * {
     vertical-align: top !important;
 }
-.dokter_ralan_view .nav-tabs {
+.ralan_view .nav-tabs {
   overflow-x: auto;
   overflow-y: hidden;
   display: -webkit-box;
   display: -moz-box;
 }
-.dokter_ralan_view .nav-tabs>li {
+._view .nav-tabs>li {
   float: none;
 }
 

@@ -10,7 +10,7 @@ class Admin extends AdminModule
     {
         return [
             'Manage' => 'manage',
-            'Telemedicine' => 'telemedicine',
+            //'Telemedicine' => 'telemedicine',
         ];
     }
 
@@ -18,7 +18,7 @@ class Admin extends AdminModule
     {
 
       $this->_addHeaderFiles();
-      $username = $_SESSION['opensimrs_username'];
+      $poliklinik = $this->core->getUserInfo('cap', null, true);
       $start_date = date('Y-m-d');
       if(isset($_GET['start_date']))
         $start_date = $_GET['start_date'];
@@ -37,7 +37,7 @@ class Admin extends AdminModule
           WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis
           AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?)
           AND reg_periksa.status_lanjut = 'Ralan'
-          AND reg_periksa.kd_dokter = '$username'
+          AND reg_periksa.kd_poli = '$poliklinik'
           AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date'");
       $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
       $totalRecords = $totalRecords->fetchAll();
@@ -57,7 +57,7 @@ class Admin extends AdminModule
           FROM reg_periksa, pasien, dokter, poliklinik, penjab
           WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis
           AND reg_periksa.status_lanjut = 'Ralan'
-          AND reg_periksa.kd_dokter = '$username'
+          AND reg_periksa.kd_poli = '$poliklinik'
           AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date'
           AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?)
           AND reg_periksa.kd_dokter = dokter.kd_dokter
@@ -275,7 +275,7 @@ class Admin extends AdminModule
                     ->save([
                       'no_rawat' => revertNorawat($id),
                       'kd_jenis_prw' => $kd_jenis_prw,
-                      'kd_dokter' => $_SESSION['opensimrs_username'],
+                      'kd_dokter' => $_POST['kd_dokter'],
                       'tgl_perawatan' => date('Y-m-d'),
                       'jam_rawat' => date('H:i:s'),
                       'material' => $row['material'],
@@ -293,7 +293,7 @@ class Admin extends AdminModule
                   'tanggal' => date('Y-m-d'),
                   'jam' => date('H:i:s'),
                   'no_rawat' => revertNorawat($id),
-                  'kd_dokter' => $_SESSION['opensimrs_username'],
+                  'kd_dokter' => $_POST['kd_dokter'],
                   'catatan' => $_POST['catatan']
               ]);
 
@@ -353,7 +353,7 @@ class Admin extends AdminModule
                     ->save([
                       'no_rawat' => revertNorawat($id),
                       'kd_jenis_prw' => $kd_jenis_prw,
-                      'kd_dokter' => $_SESSION['opensimrs_username'],
+                      'kd_dokter' => $_POST['kd_dokter'],
                       'tgl_perawatan' => date('Y-m-d'),
                       'jam_rawat' => date('H:i:s'),
                       'material' => $row['material'],
@@ -368,7 +368,7 @@ class Admin extends AdminModule
 
               $query = $this->db('catatan_perawatan')
                 ->where('no_rawat', revertNorawat($id))
-                ->where('kd_dokter', $_SESSION['opensimrs_username'])
+                ->where('kd_dokter', $_POST['kd_dokter'])
                 ->update([
                   'catatan' => $_POST['catatan']
               ]);
@@ -405,7 +405,7 @@ class Admin extends AdminModule
                 'jam_sampel' => '00:00:00',
                 'tgl_hasil' => '0000-00-00',
                 'jam_hasil' => '00:00:00',
-                'dokter_perujuk' => $_SESSION['opensimrs_username'],
+                'dokter_perujuk' => $_POST['kd_dokter'],
                 'status' => 'ralan',
                 'informasi_tambahan' => $_POST['informasi_tambahan'],
                 'diagnosa_klinis' => $_POST['diagnosa_klinis']
@@ -449,7 +449,7 @@ class Admin extends AdminModule
                 'jam_sampel' => '00:00:00',
                 'tgl_hasil' => '0000-00-00',
                 'jam_hasil' => '00:00:00',
-                'dokter_perujuk' => $_SESSION['opensimrs_username'],
+                'dokter_perujuk' => $_POST['kd_dokter'],
                 'status' => 'ralan',
                 'informasi_tambahan' => $_POST['informasi_tambahan'],
                 'diagnosa_klinis' => $_POST['diagnosa_klinis']
@@ -489,7 +489,7 @@ class Admin extends AdminModule
                 'tgl_perawatan' => date('Y-m-d'),
                 'jam' => date('H:i:s'),
                 'no_rawat' => revertNorawat($id),
-                'kd_dokter' => $_SESSION['opensimrs_username'],
+                'kd_dokter' => $_POST['kd_dokter'],
                 'tgl_peresepan' => date('Y-m-d'),
                 'jam_peresepan' => date('H:i:s'),
                 'status' => 'ralan'
@@ -530,7 +530,7 @@ class Admin extends AdminModule
                 'tgl_perawatan' => date('Y-m-d'),
                 'jam' => date('H:i:s'),
                 'no_rawat' => revertNorawat($id),
-                'kd_dokter' => $_SESSION['opensimrs_username'],
+                'kd_dokter' => $_POST['kd_dokter'],
                 'tgl_peresepan' => date('Y-m-d'),
                 'jam_peresepan' => date('H:i:s'),
                 'status' => 'ralan'
@@ -656,6 +656,20 @@ class Admin extends AdminModule
             $array[] = array(
                 'kode' => $row['kode'],
                 'deskripsi_panjang'  => $row['deskripsi_panjang']
+            );
+          }
+          echo json_encode($array, true);
+          break;
+          case "dokter":
+          $phrase = '';
+          if(isset($_GET['s']))
+            $phrase = $_GET['s'];
+
+          $rows = $this->db('dokter')->like('kd_dokter', '%'.$phrase.'%')->orLike('nm_dokter', '%'.$phrase.'%')->toArray();
+          foreach ($rows as $row) {
+            $array[] = array(
+                'kd_dokter' => $row['kd_dokter'],
+                'nm_dokter'  => $row['nm_dokter']
             );
           }
           echo json_encode($array, true);

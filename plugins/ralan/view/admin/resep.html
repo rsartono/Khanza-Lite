@@ -9,6 +9,16 @@
             <div role="tabpanel" class="tab-pane fade in active" id="resep_umum">
                 <form name="ralan" action="{?=url(ADMIN.'/ralan/resepsave/'.@$ralan.no_rawat)?}#resep" method="POST">
                 <div class="row clearfix" id="item_resep">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Nama Dokter</label>
+                            <select name="kd_dokter" class="form-control dokter" data-keep-open="true" data-use-dimmer="false" data-options-height="126px">
+                                {loop: $ralan.dokter}
+                                <option value="{$value.kd_dokter}" selected>{$value.nm_dokter}</option>
+                                {/loop}
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label>Nama Obat</label>
@@ -40,6 +50,16 @@
             <div role="tabpanel" class="tab-pane fade in" id="resep_racikan">
               <form method="post" action="{?=url(ADMIN.'/ralan/resepracikansave/'.@$ralan.no_rawat)?}#resep">
               <div class="row clearfix">
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Nama Dokter</label>
+                          <select name="kd_dokter" class="form-control dokter" data-keep-open="true" data-use-dimmer="false" data-options-height="126px">
+                              {loop: $ralan.dokter}
+                              <option value="{$value.kd_dokter}" selected>{$value.nm_dokter}</option>
+                              {/loop}
+                          </select>
+                      </div>
+                  </div>
                   <div class="col-md-3">
                       <div class="form-group">
                           <label>Nama Racikan</label>

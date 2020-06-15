@@ -52,7 +52,7 @@ class Admin extends AdminModule
         if (!empty($redirectData = getRedirectData())) {
             $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
         } else {
-            $this->assign['form'] = ['username' => '', 'role' => '', 'access' => ''];
+            $this->assign['form'] = ['username' => '', 'role' => '', 'cap' => '', 'access' => ''];
         }
 
         $this->assign['title'] = 'Pengguna baru';
@@ -274,6 +274,7 @@ class Admin extends AdminModule
 
     private function _addInfoCap() {
       $cap = $this->db()->pdo()->prepare("(SELECT kd_poli AS cap, nm_poli AS nm_cap FROM poliklinik) UNION (SELECT kd_bangsal AS cap, nm_bangsal AS nm_cap FROM bangsal)");
+      //$cap = $this->db()->pdo()->prepare("SELECT kd_poli AS cap, nm_poli AS nm_cap FROM poliklinik");
       $cap->execute();
       $cap = $cap->fetchAll();
 

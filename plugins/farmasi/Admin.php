@@ -17,6 +17,7 @@ class Admin extends AdminModule
             'Stok Opname' => 'opname',
             'Mutasi' => 'mutasi',
             'Master' => 'master',
+            'Pengaturan' => 'settings',
         ];
     }
 
@@ -251,6 +252,25 @@ class Admin extends AdminModule
     }
 
     /* End Databarang Section */
+
+    /* Settings Farmasi Section */
+    public function getSettings()
+    {
+        $this->assign['title'] = 'Pengaturan Modul Farmasi';
+        $this->assign['bangsal'] = $this->db('bangsal')->toArray();
+        $this->assign = htmlspecialchars_array($this->options('farmasi'));
+        return $this->draw('settings.html', ['settings' => $this->assign]);
+    }
+
+    public function postSaveSettings()
+    {
+        foreach ($_POST['farmasi'] as $key => $val) {
+            $this->options('farmasi', $key, $val);
+        }
+        $this->notify('success', 'Pengaturan telah disimpan');
+        redirect(url([ADMIN, 'farmasi', 'settings']));
+    }
+    /* End Settings Farmasi Section */
 
     /* Master Farmasi Section */
     public function getMaster()

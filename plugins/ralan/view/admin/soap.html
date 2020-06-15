@@ -1,6 +1,23 @@
 <form name="ralan" action="{?=url(ADMIN.'/ralan/soapsave/'.@$ralan.no_rawat)?}#soap" method="POST">
 <div class="panel-default">
     <div class="panel-heading">
+        <h3 class="panel-title">Dokter Penanggung Jawab Pasien (DPJP)</h3>
+    </div>
+    <div class="panel-body">
+        <div class="post">
+            <div class="post-content">
+                <div class="form-group">
+                    <label>Nama Dokter</label>
+                    <select name="kd_dokter" class="form-control dokter" data-keep-open="true" data-use-dimmer="false" data-options-height="126px">
+                        {loop: $ralan.dokter}
+                        <option value="{$value.kd_dokter}" selected>{$value.nm_dokter}</option>
+                        {/loop}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-heading">
         <h3 class="panel-title">Subjective</h3>
     </div>
     <div class="panel-body">
