@@ -814,7 +814,7 @@ class Admin extends AdminModule
             } else {        // edit
                 $query = $this->db('pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->save($_POST);
                 if ($cek_personal == 0) {
-                  $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->save(['gambar' => $gambar, 'password' => $_POST['no_rkm_medis']]);
+                  $this->db('personal_pasien')->save(['no_rkm_medis' => $_POST['no_rkm_medis'], 'gambar' => $gambar, 'password' => $_POST['no_rkm_medis']]);
                 } else{
                   $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->update(['gambar' => $gambar]);
                 }
