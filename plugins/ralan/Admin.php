@@ -19,6 +19,10 @@ class Admin extends AdminModule
 
       $this->_addHeaderFiles();
       $poliklinik = $this->core->getUserInfo('cap', null, true);
+      if ($this->core->getUserInfo('role') == 'admin') {
+        $poliklinik = $this->db('poliklinik')->select('kd_poli')->toArray();
+        $poliklinik = implode("','", array_map(function($obj) { foreach ($obj as $p => $v) { return $v;} }, $poliklinik));
+      }
       $start_date = date('Y-m-d');
       if(isset($_GET['start_date']))
         $start_date = $_GET['start_date'];
@@ -37,7 +41,7 @@ class Admin extends AdminModule
           WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis
           AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?)
           AND reg_periksa.status_lanjut = 'Ralan'
-          AND reg_periksa.kd_poli = '$poliklinik'
+          AND reg_periksa.kd_poli IN ('$poliklinik')
           AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date'");
       $totalRecords->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
       $totalRecords = $totalRecords->fetchAll();
@@ -57,7 +61,7 @@ class Admin extends AdminModule
           FROM reg_periksa, pasien, dokter, poliklinik, penjab
           WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis
           AND reg_periksa.status_lanjut = 'Ralan'
-          AND reg_periksa.kd_poli = '$poliklinik'
+          AND reg_periksa.kd_poli IN ('$poliklinik')
           AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date'
           AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?)
           AND reg_periksa.kd_dokter = dokter.kd_dokter
