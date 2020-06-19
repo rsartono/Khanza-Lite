@@ -136,7 +136,15 @@ class Admin extends AdminModule
                 $this->core->db()->pdo()->exec("CREATE TABLE IF NOT EXISTS temp_user LIKE user");
                 $this->core->db()->pdo()->exec("INSERT INTO temp_user SELECT * FROM user WHERE id_user=(SELECT id_user FROM user LIMIT 1)");
                 $this->core->db()->pdo()->exec("UPDATE temp_user SET id_user=AES_ENCRYPT('$_POST[username]','nur'), password=AES_ENCRYPT('$_POST[username]','windi')");
-                $insert = $this->core->db()->pdo()->exec("INSERT INTO user SELECT * FROM temp_user");
+
+                $row_user = $this->db()->pdo()->prepare("SELECT AES_DECRYPT('$_POST[username]','nur') FROM user");
+                $row_user->execute();
+                $row_user = $row_user->fetch();
+
+                if(!$row_user) {
+                  $insert = $this->core->db()->pdo()->exec("INSERT INTO user SELECT * FROM temp_user");
+                }
+                
                 $this->core->db()->pdo()->exec("DROP TABLE temp_user");
                 if($insert) {
                   $query = $this->db('lite_roles')->save($_POST);
