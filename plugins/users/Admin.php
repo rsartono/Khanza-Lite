@@ -142,13 +142,11 @@ class Admin extends AdminModule
                 $row_user = $row_user->fetch();
 
                 if(!$row_user) {
-                  $insert = $this->core->db()->pdo()->exec("INSERT INTO user SELECT * FROM temp_user");
+                  $this->core->db()->pdo()->exec("INSERT INTO user SELECT * FROM temp_user");
                 }
-                
+
                 $this->core->db()->pdo()->exec("DROP TABLE temp_user");
-                if($insert) {
-                  $query = $this->db('lite_roles')->save($_POST);
-                }
+                $query = $this->db('lite_roles')->save($_POST);
 
             } else {        // edit
                 $query = $this->db('lite_roles')->where('id', $id)->save($_POST);
