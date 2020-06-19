@@ -8,15 +8,18 @@
             	  <div class="panel-body">
                     <div class="form-group">
                         <label>Depo Rawat Jalan</label>
-                        <select name="kd_bangsal" id="kd_bangsal" class="form-control">
+                        <select name="farmasi[deporalan]" class="form-control">
                           {loop: $settings.bangsal}
-                            <option value="{$value.kd_bangsal}">{$value.nm_bangsal}</option>
+                            <option value="{$value.kd_bangsal}" {if: $value.kd_bangsal == $settings.farmasi.deporalan}selected{/if}>{$value.nm_bangsal}</option>
                           {/loop}
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Depo Rawat Inap</label>
-                        <select name="kode_kategori" id="kode_kategori" class="form-control">
+                        <select name="farmasi[deporanap]" class="form-control">
+                          {loop: $settings.bangsal}
+                            <option value="{$value.kd_bangsal}" {if: $value.kd_bangsal == $settings.farmasi.deporanap}selected{/if}>{$value.nm_bangsal}</option>
+                          {/loop}
                         </select>
                     </div>
                     <input type="submit" name="save" class="btn btn-primary" value="Simpan" />

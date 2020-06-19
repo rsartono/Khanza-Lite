@@ -13,6 +13,7 @@ class Admin extends AdminModule
             'Dokter' => 'dokter',
             'Petugas' => 'petugas',
             'Poliklinik' => 'poliklinik',
+            'Bangsal' => 'bangsal',
             'Data Barang' => 'databarang',
             'Perawatan Ralan' => 'jnsperawatan',
             'Perawatan Laboratorium' => 'jnsperawatanlab',
@@ -534,6 +535,186 @@ class Admin extends AdminModule
 
     }
     /* End Master Poliklinik Section */
+
+    /* Master Bangsal Section */
+    public function getBangsal($page = 1)
+    {
+        $this->_addHeaderFiles();
+        $perpage = '10';
+
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $status = '1';
+        if(isset($_GET['status']))
+          $status = $_GET['status'];
+
+        // pagination
+        $totalRecords = $this->db('bangsal')
+            ->where('status', $status)
+            ->like('kd_bangsal', '%'.$phrase.'%')
+            ->like('nm_bangsal', '%'.$phrase.'%')
+            ->toArray();
+        $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'master', 'bangsal', '%d']));
+        $this->assign['pagination'] = $pagination->nav('pagination','5');
+        $this->assign['totalRecords'] = $totalRecords;
+
+        // list
+        $offset = $pagination->offset();
+        $rows = $this->db('bangsal')
+            ->where('status', $status)
+            ->like('kd_bangsal', '%'.$phrase.'%')
+            ->like('nm_bangsal', '%'.$phrase.'%')
+            ->offset($offset)
+            ->limit($perpage)
+            ->toArray();
+
+        $this->assign['list'] = [];
+        if (count($rows)) {
+            foreach ($rows as $row) {
+                $row = htmlspecialchars_array($row);
+                $row['editURL'] = url([ADMIN, 'master', 'bangsaledit', $row['kd_bangsal']]);
+                $row['delURL']  = url([ADMIN, 'master', 'bangsaldelete', $row['kd_bangsal']]);
+                $row['restoreURL']  = url([ADMIN, 'master', 'bangsalrestore', $row['kd_bangsal']]);
+                $row['viewURL'] = url([ADMIN, 'master', 'bangsalview', $row['kd_bangsal']]);
+                $this->assign['list'][] = $row;
+            }
+        }
+
+        $this->assign['getStatus'] = isset($_GET['status']);
+        $this->assign['addURL'] = url([ADMIN, 'master', 'bangsaladd']);
+        $this->assign['printURL'] = url([ADMIN, 'master', 'bangsalprint']);
+
+        return $this->draw('bangsal.manage.html', ['bangsal' => $this->assign]);
+
+    }
+
+    public function getBangsalAdd()
+    {
+        $this->_addHeaderFiles();
+        if (!empty($redirectData = getRedirectData())) {
+            $this->assign['form'] = filter_var_array($redirectData, FILTER_SANITIZE_STRING);
+        } else {
+            $this->assign['form'] = [
+              'kd_bangsal' => '',
+              'nm_bangsal' => '',
+              'status' => ''
+            ];
+        }
+
+        $this->assign['title'] = 'Tambah Bangsal';
+
+        return $this->draw('bangsal.form.html', ['bangsal' => $this->assign]);
+    }
+
+    public function getBangsalEdit($id)
+    {
+        $this->_addHeaderFiles();
+        $row = $this->db('bangsal')->where('kd_bangsal', $id)->oneArray();
+        if (!empty($row)) {
+            $this->assign['form'] = $row;
+            $this->assign['title'] = 'Edit Bangsal';
+
+            return $this->draw('bangsal.form.html', ['bangsal' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'master', 'bangsal']));
+        }
+    }
+
+    public function getBangsalDelete($id)
+    {
+        if ($this->core->db('bangsal')->where('kd_bangsal', $id)->update('status', '0')) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'master', 'bangsal']));
+    }
+
+    public function getBangsalRestore($id)
+    {
+        if ($this->core->db('bangsal')->where('kd_bangsal', $id)->update('status', '1')) {
+            $this->notify('success', 'Restore sukses');
+        } else {
+            $this->notify('failure', 'Restore gagal');
+        }
+        redirect(url([ADMIN, 'master', 'bangsal']));
+    }
+
+    public function postBangsalSave($id = null)
+    {
+        $errors = 0;
+
+        if (!$id) {
+            $location = url([ADMIN, 'master', 'bangsaladd']);
+        } else {
+            $location = url([ADMIN, 'master', 'bangsaledit', $id]);
+        }
+
+        if (checkEmptyFields(['kd_bangsal', 'nm_bangsal'], $_POST)) {
+            $this->notify('failure', 'Isian kosong');
+            redirect($location, $_POST);
+        }
+
+        if (!$errors) {
+            unset($_POST['save']);
+
+            if (!$id) {    // new
+                $_POST['status'] = '1';
+                $query = $this->db('bangsal')->save($_POST);
+            } else {        // edit
+                $query = $this->db('bangsal')->where('kd_bangsal', $id)->save($_POST);
+            }
+
+            if ($query) {
+                $this->notify('success', 'Simpan sukes');
+            } else {
+                $this->notify('failure', 'Simpan gagal');
+            }
+
+            redirect($location);
+        }
+
+        redirect($location, $_POST);
+    }
+
+    public function getBangsalPrint()
+    {
+      $pasien = $this->db('bangsal')->toArray();
+      $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
+
+      $pdf = new PDF_MC_Table();
+      $pdf->AddPage();
+      $pdf->SetAutoPageBreak(true, 10);
+      $pdf->SetTopMargin(10);
+      $pdf->SetLeftMargin(10);
+      $pdf->SetRightMargin(10);
+
+      $pdf->Image($logo, 10, 8, '18', '18', 'png');
+      $pdf->SetFont('Arial', '', 24);
+      $pdf->Text(30, 16, $this->core->getSettings('nama_instansi'));
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->Text(30, 21, $this->core->getSettings('alamat_instansi').' - '.$this->core->getSettings('kabupaten'));
+      $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
+      $pdf->Line(10, 30, 200, 30);
+      $pdf->Line(10, 31, 200, 31);
+      $pdf->Text(10, 40, 'DATA Bangsal');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 10);
+      $pdf->SetWidths(array(30,120,40));
+      $pdf->Row(array('Kode Bangsal','Nama Bangsal','Status'));
+      foreach ($pasien as $hasil) {
+        $status = 'Aktif';
+        if($hasil['status'] == '0') {
+          $status = 'Tidak Aktif';
+        }
+        $pdf->Row(array($hasil['kd_bangsal'],$hasil['nm_bangsal'],$status));
+      }
+      $pdf->Output('laporan_bangsal_'.date('Y-m-d').'.pdf','I');
+
+    }
+    /* End Master Bangsal Section */
 
     /* Master Databarang Section */
     public function getDatabarang($page = 1)

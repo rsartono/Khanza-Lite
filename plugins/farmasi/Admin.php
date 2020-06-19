@@ -110,7 +110,7 @@ class Admin extends AdminModule
             ];
         }
 
-        $this->assign['title'] = 'Tambah Databarang';
+        $this->assign['title'] = 'Tambah Databarang ';
         $this->assign['status'] = $this->core->getEnum('databarang', 'status');
         $this->assign['kdjns'] = $this->db('jenis')->toArray();
         $this->assign['kode_sat'] = $this->db('kodesatuan')->toArray();
@@ -258,7 +258,8 @@ class Admin extends AdminModule
     {
         $this->assign['title'] = 'Pengaturan Modul Farmasi';
         $this->assign['bangsal'] = $this->db('bangsal')->toArray();
-        $this->assign = htmlspecialchars_array($this->options('farmasi'));
+        $this->assign['farmasi'] = htmlspecialchars_array($this->options('farmasi'));
+        //print_r($this->assign['row']);
         return $this->draw('settings.html', ['settings' => $this->assign]);
     }
 
