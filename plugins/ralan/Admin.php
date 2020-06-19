@@ -10,7 +10,6 @@ class Admin extends AdminModule
     {
         return [
             'Manage' => 'manage',
-            //'Telemedicine' => 'telemedicine',
         ];
     }
 
@@ -88,13 +87,6 @@ class Admin extends AdminModule
 
     }
 
-    public function getTelemedicine()
-    {
-      $this->_addTelemedicineFiles();
-      $this->assign['list'] = [];
-
-      return $this->draw('telemedicine.html', ['ralan' => $this->assign]);
-    }
     public function getView($id, $page = 1)
     {
         $id = revertNorawat($id);
@@ -696,13 +688,6 @@ class Admin extends AdminModule
         exit();
     }
 
-    public function getTelemedicineCss()
-    {
-        header('Content-type: text/css');
-        echo $this->draw(MODULES.'/ralan/css/admin/telemedicine.css');
-        exit();
-    }
-
     private function _addHeaderFiles()
     {
         // CSS
@@ -714,15 +699,6 @@ class Admin extends AdminModule
         // MODULE SCRIPTS
         $this->core->addCSS(url([ADMIN, 'ralan', 'css']));
         $this->core->addJS(url([ADMIN, 'ralan', 'javascript']), 'footer');
-    }
-
-    private function _addTelemedicineFiles()
-    {
-        $this->core->addCSS(url([ADMIN, 'ralan', 'telemedicinecss']));
-        // JS
-        $this->core->addJS(url(MODULES.'/ralan/js/admin/peer.js'));
-        $this->core->addJS(url(MODULES.'/ralan/js/admin/app.js'));
-        $this->core->addJS(url(MODULES.'/ralan/js/admin/peer-client.js'));
     }
 
 }
