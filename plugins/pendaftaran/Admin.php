@@ -368,8 +368,8 @@ class Admin extends AdminModule
     public function getDelete($id)
     {
         if ($pendaftaran = $this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->oneArray()) {
-            if ($this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->delete()) {
-                $this->db('rujuk_masuk')->where('no_rawat', revertNorawat($id))->delete();
+            if ($this->db('rujuk_masuk')->where('no_rawat', revertNorawat($id))->delete()) {
+                $this->db('reg_periksa')->where('no_rawat', revertNorawat($id))->delete();
                 $this->notify('success', 'Hapus sukses');
             } else {
                 $this->notify('failure', 'Hapus gagal');
