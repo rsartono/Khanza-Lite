@@ -38,7 +38,7 @@ class Admin extends AdminModule
         $totalRecords = $this->db('databarang')
             ->where('status', $status)
             ->like('kode_brng', '%'.$phrase.'%')
-            ->like('nama_brng', '%'.$phrase.'%')
+            ->orLike('nama_brng', '%'.$phrase.'%')
             ->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'farmasi', 'manage', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
@@ -49,7 +49,7 @@ class Admin extends AdminModule
         $rows = $this->db('databarang')
             ->where('status', $status)
             ->like('kode_brng', '%'.$phrase.'%')
-            ->like('nama_brng', '%'.$phrase.'%')
+            ->orLike('nama_brng', '%'.$phrase.'%')
             ->offset($offset)
             ->limit($perpage)
             ->toArray();
