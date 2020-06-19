@@ -60,6 +60,10 @@ $(document).ready(function(){
       url: '{?=url()?}/admin/pasien/ajax?show=propinsi&t={?=$_SESSION['token']?}',
       success: function(response) {
         $('#propinsi').html(response);
+        $('.propinsi').DataTable({
+          "lengthChange": false,
+          "scrollX": true
+        });
         console.log(response);
       }
     })
@@ -75,6 +79,10 @@ $(document).on('click', '.pilihpropinsi', function (e) {
     url: '{?=url()?}/admin/pasien/ajax?show=kabupaten&kd_prop='+kd_prop+'&t={?=$_SESSION['token']?}',
     success: function(response) {
       $('#kabupaten').html(response);
+      $('.kabupaten').DataTable({
+        "lengthChange": false,
+        "scrollX": true
+      });
       console.log(kd_prop);
     }
   })
@@ -90,6 +98,10 @@ $(document).on('click', '.pilihkabupaten', function (e) {
     url: '{?=url()?}/admin/pasien/ajax?show=kecamatan&kd_kab='+kd_kab+'&t={?=$_SESSION['token']?}',
     success: function(response) {
       $('#kecamatan').html(response);
+      $('.kecamatan').DataTable({
+        "lengthChange": false,
+        "scrollX": true
+      });
       console.log(response);
     }
   })
@@ -105,6 +117,10 @@ $(document).on('click', '.pilihkecamatan', function (e) {
     url: '{?=url()?}/admin/pasien/ajax?show=kelurahan&kd_kec='+kd_kec+'&t={?=$_SESSION['token']?}',
     success: function(response) {
       $('#kelurahan').html(response);
+      $('.kelurahan').DataTable({
+        "lengthChange": false,
+        "scrollX": true
+      });
       console.log(response);
     }
   })
