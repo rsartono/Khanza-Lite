@@ -24,10 +24,10 @@ class Admin extends AdminModule
     {
       $this->_addHeaderFiles();
       $start_date = date('Y-m-d');
-      if(isset($_GET['start_date']))
+      if(isset($_GET['start_date']) && $_GET['start_date'] !='')
         $start_date = $_GET['start_date'];
       $end_date = date('Y-m-d');
-      if(isset($_GET['end_date']))
+      if(isset($_GET['end_date']) && $_GET['end_date'] !='')
         $end_date = $_GET['end_date'];
       $perpage = '10';
       $phrase = '';

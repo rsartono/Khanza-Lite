@@ -25,10 +25,10 @@ class Admin extends AdminModule
         $username = implode("','", array_map(function($obj) { foreach ($obj as $p => $v) { return $v;} }, $username));
       }
       $start_date = date('Y-m-d');
-      if(isset($_GET['start_date']))
+      if(isset($_GET['start_date']) && $_GET['start_date'] !='')
         $start_date = $_GET['start_date'];
       $end_date = date('Y-m-d');
-      if(isset($_GET['end_date']))
+      if(isset($_GET['end_date']) && $_GET['end_date'] !='')
         $end_date = $_GET['end_date'];
       $perpage = '10';
       $phrase = '';
