@@ -25,14 +25,14 @@ class Admin extends AdminModule
           $phrase = $_GET['s'];
 
         // pagination
-        $totalRecords = $this->db('pegawai')->like('nik', '%'.$phrase.'%')->like('nama', '%'.$phrase.'%')->toArray();
+        $totalRecords = $this->db('pegawai')->like('nik', '%'.$phrase.'%')->orLike('nama', '%'.$phrase.'%')->toArray();
         $pagination = new \Systems\Lib\Pagination($page, count($totalRecords), 10, url([ADMIN, 'kepegawaian', 'manage', '%d']));
         $this->assign['pagination'] = $pagination->nav('pagination','5');
         $this->assign['totalRecords'] = $totalRecords;
 
         // list
         $offset = $pagination->offset();
-        $rows = $this->db('pegawai')->like('nik', '%'.$phrase.'%')->like('nama', '%'.$phrase.'%')->offset($offset)->limit($perpage)->toArray();
+        $rows = $this->db('pegawai')->like('nik', '%'.$phrase.'%')->orLike('nama', '%'.$phrase.'%')->offset($offset)->limit($perpage)->toArray();
 
         $this->assign['list'] = [];
         if (count($rows)) {
