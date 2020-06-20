@@ -275,7 +275,7 @@ class Admin extends AdminModule
               $get_kd_jenis_prw = $_POST['kd_jenis_prw'];
               for ($i = 0; $i < count($get_kd_jenis_prw); $i++) {
                   $kd_jenis_prw = $get_kd_jenis_prw[$i];
-                  $row = $this->db('rawat_jl_dr')->where('kd_jenis_prw', $kd_jenis_prw)->oneArray();
+                  $row = $this->db('jns_perawatan')->where('kd_jenis_prw', $kd_jenis_prw)->oneArray();
                   $query = $this->db('rawat_jl_dr')
                     ->save([
                       'no_rawat' => revertNorawat($id),
@@ -353,7 +353,7 @@ class Admin extends AdminModule
               $this->db('rawat_jl_dr')->where('no_rawat', revertNorawat($id))->delete();
               for ($i = 0; $i < count($get_kd_jenis_prw); $i++) {
                   $kd_jenis_prw = $get_kd_jenis_prw[$i];
-                  $row = $this->db('rawat_jl_dr')->where('kd_jenis_prw', $kd_jenis_prw)->oneArray();
+                  $row = $this->db('jns_perawatan')->where('kd_jenis_prw', $kd_jenis_prw)->oneArray();
                   $query = $this->db('rawat_jl_dr')
                     ->save([
                       'no_rawat' => revertNorawat($id),
