@@ -814,9 +814,11 @@ class Admin extends AdminModule
                         $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->oneArray();
                     }
 
-                    //$gambar = uniqid('photo').".".$img->getInfos('type');
                     $gambar = "pages/upload/".$_POST['no_rkm_medis'].".".$img->getInfos('type');
                 }
+            } else {
+                $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->oneArray();
+                $gambar = $personal_pasien['gambar'];
             }
 
             if ($cek_no_rkm_medis == 0) {    // new
