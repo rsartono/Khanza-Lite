@@ -183,6 +183,7 @@ class Admin extends AdminModule
                 $detail_periksa_lab = $this->db('detail_periksa_lab')->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')->where('no_rawat', $row['no_rawat'])->toArray();
                 $hasil_radiologi = $this->db('hasil_radiologi')->where('no_rawat', $row['no_rawat'])->oneArray();
                 $catatan_perawatan = $this->db('catatan_perawatan')->where('no_rawat', $row['no_rawat'])->oneArray();
+                $row['reg_periksa'] = $reg_periksa;
                 $row['keluhan'] = $pemeriksaan_ralan['keluhan'];
                 $row['suhu_tubuh'] = $pemeriksaan_ralan['suhu_tubuh'];
                 $row['tensi'] = $pemeriksaan_ralan['tensi'];
@@ -212,6 +213,11 @@ class Admin extends AdminModule
     {
         $errors = 0;
         $location = url([ADMIN, 'ralan', 'view', $id]);
+
+        if (checkEmptyFields(['kd_dokter'], $_POST)) {
+            $this->notify('failure', 'Nama dokter masih kosong');
+            redirect($location, $_POST);
+        }
 
         if (!$errors) {
             unset($_POST['save']);
@@ -388,6 +394,11 @@ class Admin extends AdminModule
         $errors = 0;
         $location = url([ADMIN, 'ralan', 'view', $id]);
 
+        if (checkEmptyFields(['kd_dokter'], $_POST)) {
+            $this->notify('failure', 'Nama dokter masih kosong');
+            redirect($location, $_POST);
+        }
+
         if (!$errors) {
             unset($_POST['save']);
             $no_order = $this->core->setNoOrderRad();
@@ -431,6 +442,11 @@ class Admin extends AdminModule
     {
         $errors = 0;
         $location = url([ADMIN, 'ralan', 'view', $id]);
+
+        if (checkEmptyFields(['kd_dokter'], $_POST)) {
+            $this->notify('failure', 'Nama dokter masih kosong');
+            redirect($location, $_POST);
+        }
 
         if (!$errors) {
             unset($_POST['save']);
@@ -476,6 +492,11 @@ class Admin extends AdminModule
         $errors = 0;
         $location = url([ADMIN, 'ralan', 'view', $id]);
 
+        if (checkEmptyFields(['kd_dokter'], $_POST)) {
+            $this->notify('failure', 'Nama dokter masih kosong');
+            redirect($location, $_POST);
+        }
+
         if (!$errors) {
             unset($_POST['save']);
             $no_resep = $this->core->setNoResep();
@@ -516,6 +537,11 @@ class Admin extends AdminModule
     {
         $errors = 0;
         $location = url([ADMIN, 'ralan', 'view', $id]);
+
+        if (checkEmptyFields(['kd_dokter'], $_POST)) {
+            $this->notify('failure', 'Nama dokter masih kosong');
+            redirect($location, $_POST);
+        }
 
         if (!$errors) {
             unset($_POST['save']);
