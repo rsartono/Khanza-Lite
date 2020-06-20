@@ -78,7 +78,13 @@
                         <td>{$value.no_reg}</td>
                         <td>{$value.nm_poli}</td>
       									<td>{$value.nm_dokter}</td>
-                        <td>{$value.png_jawab}</td>
+                        <td>
+                          {$value.png_jawab}
+                          {if: $value.png_jawab == 'BPJS KESEHATAN'}
+                            <a href="{$value.bridgingBPJS}" class="btn btn-info btn-xs"><span class="hidden-xs">Ajukan SEP</span>
+        										</a>
+                          {/if}
+                        </td>
                         <td>{$value.almt_pj}</td>
                         <td>{$value.tgl_registrasi}</td>
                         <td>{$value.jam_reg}</td>
@@ -86,9 +92,6 @@
       									<td class="text-right">
       										<a href="{$value.print_buktidaftar}" target="_blank" class="btn btn-primary btn-xs">
       											<i class="fa fa-print"></i> <span class="hidden-xs">Cetak</span>
-      										</a>
-                          <a href="{$value.bridgingBPJS}" class="btn btn-warning btn-xs">
-      											<i class="fa fa-print"></i> <span class="hidden-xs">BPJS</span>
       										</a>
       										<a href="{$value.editURL}" class="btn btn-success btn-xs">
       											<i class="fa fa-pencil"></i> <span class="hidden-xs">Ganti</span>

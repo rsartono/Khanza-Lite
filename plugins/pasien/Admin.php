@@ -290,7 +290,11 @@ class Admin extends AdminModule
         } else {
             $this->assign['form'] = [
               'kd_pj' => '',
-              'png_jawab' => ''
+              'png_jawab' => '',
+              'nama_perusahaan' => '',
+              'alamat_asuransi' => '',
+              'no_telp' => '',
+              'attn' => ''
             ];
         }
         $this->assign['title'] = 'Tambah Cara Bayar';
@@ -309,6 +313,16 @@ class Admin extends AdminModule
         } else {
             redirect(url([ADMIN, 'pasien', 'master']));
         }
+    }
+
+    public function getCarabayarDelete($id)
+    {
+        if ($this->core->db('penjab')->where('kd_pj', $id)->delete()) {
+            $this->notify('success', 'Hapus sukses');
+        } else {
+            $this->notify('failure', 'Hapus gagal');
+        }
+        redirect(url([ADMIN, 'pasien', 'master']));
     }
 
     public function postCarabayarSave($id = null)
