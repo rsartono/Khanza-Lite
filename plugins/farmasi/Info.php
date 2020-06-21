@@ -10,5 +10,8 @@ return [
     'install'       =>  function () use ($core) {
         $core->db()->pdo()->exec("INSERT INTO `lite_options` (`module`, `field`, `value`) VALUES ('farmasi', 'deporalan', '-')");
         $core->db()->pdo()->exec("INSERT INTO `lite_options` (`module`, `field`, `value`) VALUES ('farmasi', 'deporanap', '-')");
+    },
+    'uninstall'     =>  function () use ($core) {
+        $core->db()->pdo()->exec("DELETE FROM `lite_options` WHERE `module` = 'farmasi'");
     }
 ];
