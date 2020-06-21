@@ -786,15 +786,37 @@ class Admin extends AdminModule
           ->toArray();
         $detail_periksa_lab = $this->db('detail_periksa_lab')->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')->where('no_rawat', $row['no_rawat'])->toArray();
         $row['dokter'] = $dokter['nm_dokter'];
-        $row['keluhan'] = $pemeriksaan_ralan['keluhan'];
-        $row['suhu_tubuh'] = $pemeriksaan_ralan['suhu_tubuh'];
-        $row['tensi'] = $pemeriksaan_ralan['tensi'];
-        $row['nadi'] = $pemeriksaan_ralan['nadi'];
-        $row['respirasi'] = $pemeriksaan_ralan['respirasi'];
+        $row['keluhan'] = '';
+        if($pemeriksaan_ralan['keluhan'] !='') {
+          $row['keluhan'] = 'Keluhan: '.$pemeriksaan_ralan['keluhan'];
+        }
+        $row['pemeriksaan'] = '';
+        if($pemeriksaan_ralan['pemeriksaan'] !='') {
+          $row['pemeriksaan'] = 'Pemeriksaan: '.$pemeriksaan_ralan['pemeriksaan'];
+        }
+        $row['suhu_tubuh'] = '';
+        if($pemeriksaan_ralan['suhu_tubuh'] !='') {
+          $row['suhu_tubuh'] = '
+Temp: '.$pemeriksaan_ralan['suhu_tubuh'].' Celcius';
+        }
+        $row['tensi'] = '';
+        if($pemeriksaan_ralan['tensi'] !='') {
+          $row['tensi'] = '
+TD: '.$pemeriksaan_ralan['tensi'].' mmHg';
+        }
+        $row['nadi'] = '';
+        if($pemeriksaan_ralan['nadi'] !='') {
+          $row['nadi'] = '
+BR: '.$pemeriksaan_ralan['nadi'].' /mnt';
+        }
+        $row['respirasi'] = '';
+        if($pemeriksaan_ralan['respirasi'] !='') {
+          $row['respirasi'] = '
+RR: '.$pemeriksaan_ralan['respirasi'].' /mnt';
+        }
         $row['tinggi'] = $pemeriksaan_ralan['tinggi'];
         $row['berat'] = $pemeriksaan_ralan['berat'];
         $row['gcs'] = $pemeriksaan_ralan['gcs'];
-        $row['pemeriksaan'] = $pemeriksaan_ralan['pemeriksaan'];
         $row['rtl'] = $pemeriksaan_ralan['rtl'];
         $row['catatan_perawatan'] = $catatan_perawatan['catatan'];
         $diagnosa_list = '';
@@ -815,18 +837,18 @@ class Admin extends AdminModule
         $row['detail_periksa_lab'] = $detail_periksa_lab;
         $hasil = $row;
         $pdf->Row(array(
-$hasil['tgl_registrasi'].''.
-$hasil['dokter'],
-$hasil['keluhan'],
-$hasil['pemeriksaan'].'
-Temp: '.$hasil['suhu_tubuh'].' Celcius
-TD: '.$hasil['tensi'].' mmHg
-BR: '.$hasil['nadi'].' /mnt
-RR: '.$hasil['respirasi'].' /mnt',
-$hasil['diagnosa_pasien'],
-$hasil['rawat_jl_dr'].'
-'.$hasil['detail_pemberian_obat'],
-$hasil['catatan_perawatan']
+          $hasil['tgl_registrasi'].''.
+          $hasil['dokter'],
+          $hasil['keluhan'],
+          $hasil['pemeriksaan'].''.
+          $hasil['suhu_tubuh'].''.
+          $hasil['tensi'].''.
+          $hasil['nadi'].''.
+          $hasil['respirasi'],
+          $hasil['diagnosa_pasien'],
+          $hasil['rawat_jl_dr'].'
+          '.$hasil['detail_pemberian_obat'],
+          $hasil['catatan_perawatan']
         ));
       }
 
