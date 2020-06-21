@@ -772,6 +772,7 @@ class Admin extends AdminModule
       $pdf->SetWidths(array(22,33,35,35,45,20));
       $pdf->Row(array('Tanggal','Anamnesa','Pemeriksaan', 'Diagnosa', 'Terapi', 'Catatan'));
       foreach ($rows as &$row) {
+        $dokter = $this->db('reg_periksa')->join('dokter', 'dokter.kd_dokter = reg_periksa.kd_dokter')->where('no_rawat', $row['no_rawat'])->oneArray();
         $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
         $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
         $rawat_jl_dr = $this->db('rawat_jl_dr')->join('jns_perawatan', 'jns_perawatan.kd_jenis_prw = rawat_jl_dr.kd_jenis_prw')->where('no_rawat', $row['no_rawat'])->toArray();
@@ -784,6 +785,7 @@ class Admin extends AdminModule
           ->group('detail_pemberian_obat.kode_brng')
           ->toArray();
         $detail_periksa_lab = $this->db('detail_periksa_lab')->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')->where('no_rawat', $row['no_rawat'])->toArray();
+        $row['dokter'] = $dokter['nm_dokter'];
         $row['keluhan'] = $pemeriksaan_ralan['keluhan'];
         $row['suhu_tubuh'] = $pemeriksaan_ralan['suhu_tubuh'];
         $row['tensi'] = $pemeriksaan_ralan['tensi'];
@@ -797,23 +799,24 @@ class Admin extends AdminModule
         $row['catatan_perawatan'] = $catatan_perawatan['catatan'];
         $diagnosa_list = '';
         foreach ($diagnosa_pasien as $diagnosa) {
-          $diagnosa_list .= $diagnosa['nm_penyakit'].',';
+          $diagnosa_list .= $diagnosa['nm_penyakit'].', ';
         }
         $row['diagnosa_pasien'] = $diagnosa_list;
         $tindakan_list = '';
         foreach ($rawat_jl_dr as $tindakan) {
-          $tindakan_list .= $tindakan['nm_perawatan'].',';
+          $tindakan_list .= $tindakan['nm_perawatan'].', ';
         }
         $row['rawat_jl_dr'] = $tindakan_list;
         $obat_list = '';
         foreach ($detail_pemberian_obat as $obat) {
-          $obat_list .= $obat['nama_brng'].',';
+          $obat_list .= $obat['nama_brng'].', ';
         }
         $row['detail_pemberian_obat'] = $obat_list;
         $row['detail_periksa_lab'] = $detail_periksa_lab;
         $hasil = $row;
         $pdf->Row(array(
-$hasil['tgl_registrasi'],
+$hasil['tgl_registrasi'].''.
+$hasil['dokter'],
 $hasil['keluhan'],
 $hasil['pemeriksaan'].'
 Temp: '.$hasil['suhu_tubuh'].' Celcius
