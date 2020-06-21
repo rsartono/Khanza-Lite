@@ -733,6 +733,10 @@ class Admin extends AdminModule
     public function getPrint_rm($id)
     {
       $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();
+      $jk = 'Laki-Laki';
+      if($pasien['jk'] == 'P') {
+        $jk = 'Perempuan';
+      }
       $rows = $this->db('reg_periksa')->where('no_rkm_medis', $id)->toArray();
       $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
 
@@ -751,11 +755,22 @@ class Admin extends AdminModule
       $pdf->Text(30, 25, $this->core->getSettings('kontak').' - '.$this->core->getSettings('email'));
       $pdf->Line(10, 30, 200, 30);
       $pdf->Line(10, 31, 200, 31);
-      $pdf->Text(10, 40, 'DATA REKAM MEDIK');
+      $pdf->SetFont('Arial', '', 16);
+      $pdf->Text(80, 40, 'DATA REKAM MEDIK');
+      $pdf->Ln(34);
+      $pdf->SetFont('Arial', '', 11);
+      $pdf->Text(10, 50, 'NOMOR');
+      $pdf->Text(50, 50, ': '.$pasien['no_rkm_medis']);
+      $pdf->Text(10, 56, 'NAMA LENGKAP');
+      $pdf->Text(50, 56, ': '.$pasien['nm_pasien']);
+      $pdf->Text(10, 62, 'JENIS KELAMIN');
+      $pdf->Text(50, 62, ': '.$jk);
+      $pdf->Text(10, 68, 'UMUR DAFTAR');
+      $pdf->Text(50, 68, ': '.$pasien['umur']);
       $pdf->Ln(34);
       $pdf->SetFont('Arial', '', 10);
-      $pdf->SetWidths(array(22,33,35,35,35,30));
-      $pdf->Row(array('Tanggal','Anamnesa','Pemeriksaan', 'Diagnosa', 'Terapi', 'Keterangan'));
+      $pdf->SetWidths(array(22,33,35,35,45,20));
+      $pdf->Row(array('Tanggal','Anamnesa','Pemeriksaan', 'Diagnosa', 'Terapi', 'Catatan'));
       foreach ($rows as &$row) {
         $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
         $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
@@ -806,8 +821,8 @@ TD: '.$hasil['tensi'].' mmHg
 BR: '.$hasil['nadi'].' /mnt
 RR: '.$hasil['respirasi'].' /mnt',
 $hasil['diagnosa_pasien'],
-$hasil['rawat_jl_dr'].''.
-$hasil['detail_pemberian_obat'],
+$hasil['rawat_jl_dr'].'
+'.$hasil['detail_pemberian_obat'],
 $hasil['catatan_perawatan']
         ));
       }
