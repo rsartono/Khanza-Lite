@@ -907,7 +907,8 @@ RR: '.$pemeriksaan_ralan['respirasi'].' /mnt';
                         $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->oneArray();
                     }
 
-                    $gambar = "pages/upload/".$_POST['no_rkm_medis'].".".$img->getInfos('type');
+                    $gambar = "pages/upload/".uniqid('photo').".".$img->getInfos('type');
+                    //$gambar = "pages/upload/".$_POST['no_rkm_medis'].".".$img->getInfos('type');
                 }
             } else {
                 $personal_pasien = $this->db('personal_pasien')->where('no_rkm_medis', $_POST['no_rkm_medis'])->oneArray();
