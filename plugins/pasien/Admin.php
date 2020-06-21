@@ -733,6 +733,7 @@ class Admin extends AdminModule
     public function getPrint_rm($id)
     {
       $pasien = $this->db('pasien')->where('no_rkm_medis', $id)->oneArray();
+      $rows = $this->db('reg_periksa')->where('no_rkm_medis', $id)->toArray();
       $logo = 'data:image/png;base64,' . base64_encode($this->core->getSettings('logo'));
 
       $pdf = new PDF_MC_Table();
@@ -753,11 +754,63 @@ class Admin extends AdminModule
       $pdf->Text(10, 40, 'DATA REKAM MEDIK');
       $pdf->Ln(34);
       $pdf->SetFont('Arial', '', 10);
-      $pdf->SetWidths(array(20,35,35,35,35,30));
+      $pdf->SetWidths(array(22,33,35,35,35,30));
       $pdf->Row(array('Tanggal','Anamnesa','Pemeriksaan', 'Diagnosa', 'Terapi', 'Keterangan'));
-      //foreach ($pasien as $hasil) {
-      //  $pdf->Row(array($hasil['no_rkm_medis'],$hasil['nm_pasien'],$hasil['no_ktp'],$hasil['alamat']));
-      //}
+      foreach ($rows as &$row) {
+        $pemeriksaan_ralan = $this->db('pemeriksaan_ralan')->where('no_rawat', $row['no_rawat'])->oneArray();
+        $diagnosa_pasien = $this->db('diagnosa_pasien')->join('penyakit', 'penyakit.kd_penyakit = diagnosa_pasien.kd_penyakit')->where('no_rawat', $row['no_rawat'])->toArray();
+        $rawat_jl_dr = $this->db('rawat_jl_dr')->join('jns_perawatan', 'jns_perawatan.kd_jenis_prw = rawat_jl_dr.kd_jenis_prw')->where('no_rawat', $row['no_rawat'])->toArray();
+        $catatan_perawatan = $this->db('catatan_perawatan')->where('no_rawat', $row['no_rawat'])->oneArray();
+        $detail_pemberian_obat = $this->db('detail_pemberian_obat')
+          ->join('databarang', 'databarang.kode_brng = detail_pemberian_obat.kode_brng')
+          ->join('resep_obat', 'resep_obat.no_rawat = detail_pemberian_obat.no_rawat')
+          ->join('resep_dokter', 'resep_dokter.no_resep = resep_obat.no_resep')
+          ->where('detail_pemberian_obat.no_rawat', $row['no_rawat'])
+          ->group('detail_pemberian_obat.kode_brng')
+          ->toArray();
+        $detail_periksa_lab = $this->db('detail_periksa_lab')->join('template_laboratorium', 'template_laboratorium.id_template = detail_periksa_lab.id_template')->where('no_rawat', $row['no_rawat'])->toArray();
+        $row['keluhan'] = $pemeriksaan_ralan['keluhan'];
+        $row['suhu_tubuh'] = $pemeriksaan_ralan['suhu_tubuh'];
+        $row['tensi'] = $pemeriksaan_ralan['tensi'];
+        $row['nadi'] = $pemeriksaan_ralan['nadi'];
+        $row['respirasi'] = $pemeriksaan_ralan['respirasi'];
+        $row['tinggi'] = $pemeriksaan_ralan['tinggi'];
+        $row['berat'] = $pemeriksaan_ralan['berat'];
+        $row['gcs'] = $pemeriksaan_ralan['gcs'];
+        $row['pemeriksaan'] = $pemeriksaan_ralan['pemeriksaan'];
+        $row['rtl'] = $pemeriksaan_ralan['rtl'];
+        $row['catatan_perawatan'] = $catatan_perawatan['catatan'];
+        $diagnosa_list = '';
+        foreach ($diagnosa_pasien as $diagnosa) {
+          $diagnosa_list .= $diagnosa['nm_penyakit'].',';
+        }
+        $row['diagnosa_pasien'] = $diagnosa_list;
+        $tindakan_list = '';
+        foreach ($rawat_jl_dr as $tindakan) {
+          $tindakan_list .= $tindakan['nm_perawatan'].',';
+        }
+        $row['rawat_jl_dr'] = $tindakan_list;
+        $obat_list = '';
+        foreach ($detail_pemberian_obat as $obat) {
+          $obat_list .= $obat['nama_brng'].',';
+        }
+        $row['detail_pemberian_obat'] = $obat_list;
+        $row['detail_periksa_lab'] = $detail_periksa_lab;
+        $hasil = $row;
+        $pdf->Row(array(
+$hasil['tgl_registrasi'],
+$hasil['keluhan'],
+$hasil['pemeriksaan'].'
+Temp: '.$hasil['suhu_tubuh'].' Celcius
+TD: '.$hasil['tensi'].' mmHg
+BR: '.$hasil['nadi'].' /mnt
+RR: '.$hasil['respirasi'].' /mnt',
+$hasil['diagnosa_pasien'],
+$hasil['rawat_jl_dr'].''.
+$hasil['detail_pemberian_obat'],
+$hasil['catatan_perawatan']
+        ));
+      }
 
       $pdf->Output('rekam_medik_pasien_'.$pasien['no_rkm_medis'].'.pdf','I');
 
