@@ -146,7 +146,7 @@ class Admin extends AdminModule
         $this->assign['stts_nikah'] = $this->core->getEnum('pasien', 'stts_nikah');
         $this->assign['pnd'] = $this->core->getEnum('pasien', 'pnd');
         $this->assign['keluarga'] = $this->core->getEnum('pasien', 'keluarga');
-        $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'HINDU', 'BUDHA');
+        $this->assign['agama'] = array('ISLAM', 'KRISTEN', 'PROTESTAN', 'HINDU', 'BUDHA', 'KONGHUCU', 'KEPERCAYAAN');
         $this->assign['penjab'] = $this->db('penjab')->toArray();
         $this->assign['suku_bangsa'] = $this->db('suku_bangsa')->toArray();
         $this->assign['bahasa_pasien'] = $this->db('bahasa_pasien')->toArray();
