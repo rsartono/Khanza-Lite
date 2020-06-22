@@ -143,6 +143,21 @@ class Admin extends AdminModule
         }
     }
 
+    public function getView($id)
+    {
+        $this->_addHeaderFiles();
+        $row = $this->db('pegawai')->oneArray($id);
+
+        if (!empty($row)) {
+
+            $this->assign['manageURL'] = url([ADMIN, 'kepegawaian', 'manage']);
+
+            return $this->draw('view.html', ['kepegawaian' => $this->assign]);
+        } else {
+            redirect(url([ADMIN, 'kepegawaian', 'manage']));
+        }
+    }
+
     public function postSave($id = null)
     {
         $errors = 0;
