@@ -4,7 +4,7 @@ return [
     'name'          =>  'Pendaftaran',
     'description'   =>  'Pengelolaan data pendaftaran pasien.',
     'author'        =>  'Basoro',
-    'version'       =>  '1.2',
+    'version'       =>  '1.3',
     'compatibility' =>  '3.*',
     'icon'          =>  'user-plus',
 

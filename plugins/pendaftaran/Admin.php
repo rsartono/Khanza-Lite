@@ -299,11 +299,11 @@ class Admin extends AdminModule
 
     public function getNoRujukan($id)
     {
-      $url = $this->options->get('settings.BpjsApiUrl').'Rujukan/'.$id;
-
       $date = date('Y-m-d');
       $consid = $this->options->get('settings.BpjsConsID');
       $secretkey = $this->options->get('settings.BpjsSecretKey');
+
+      $url = $this->options->get('settings.BpjsApiUrl').'Rujukan/'.$id;
       $rujukan = BpjsRequest::get($url, NULL, NULL, $consid, $secretkey);
       $json = json_decode($rujukan, true);
       $this->assign['rujukan'] = $json['response']['rujukan'];
