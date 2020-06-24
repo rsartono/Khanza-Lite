@@ -104,7 +104,7 @@
 												<label>Cara Bayar</label>
 												<select name="kd_pj" class="form-control">
 													{loop: $pendaftaran.penjab}
-														<option value="{$value.kd_pj}"{if: $value == $pendaftaran.form.kd_pj} selected{/if}>{$value.png_jawab}</option>
+														<option value="{$value.kd_pj}"{if: $value.kd_pj == $pendaftaran.form.kd_pj} selected{/if}>{$value.png_jawab}</option>
 													{/loop}
 												</select>
 										</div>

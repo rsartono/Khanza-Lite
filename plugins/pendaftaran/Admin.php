@@ -3,6 +3,7 @@
 namespace Plugins\Pendaftaran;
 
 use Systems\AdminModule;
+use Systems\Lib\BpjsRequest;
 use Systems\Lib\Fpdf\FPDF;
 use Systems\Lib\Fpdf\PDF_MC_Table;
 
@@ -44,7 +45,7 @@ class Admin extends AdminModule
       $this->assign['totalRecords'] = $totalRecords;
 
       $offset = $pagination->offset();
-      $query = $this->db()->pdo()->prepare("SELECT reg_periksa.*, pasien.nm_pasien, pasien.alamat, dokter.nm_dokter, poliklinik.nm_poli, penjab.png_jawab FROM reg_periksa, pasien, dokter, poliklinik, penjab WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis AND reg_periksa.kd_dokter = dokter.kd_dokter AND reg_periksa.kd_poli = poliklinik.kd_poli AND reg_periksa.kd_pj = penjab.kd_pj AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?) AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date' LIMIT $perpage OFFSET $offset");
+      $query = $this->db()->pdo()->prepare("SELECT reg_periksa.*, pasien.nm_pasien, pasien.alamat, dokter.nm_dokter, poliklinik.nm_poli, penjab.png_jawab, pasien.no_peserta FROM reg_periksa, pasien, dokter, poliklinik, penjab WHERE reg_periksa.no_rkm_medis = pasien.no_rkm_medis AND reg_periksa.kd_dokter = dokter.kd_dokter AND reg_periksa.kd_poli = poliklinik.kd_poli AND reg_periksa.kd_pj = penjab.kd_pj AND (reg_periksa.no_rkm_medis LIKE ? OR reg_periksa.no_rawat LIKE ? OR pasien.nm_pasien LIKE ?) AND reg_periksa.tgl_registrasi BETWEEN '$start_date' AND '$end_date' LIMIT $perpage OFFSET $offset");
       $query->execute(['%'.$phrase.'%', '%'.$phrase.'%', '%'.$phrase.'%']);
       $rows = $query->fetchAll();
 
@@ -55,7 +56,8 @@ class Admin extends AdminModule
               $row['editURL'] = url([ADMIN, 'pendaftaran', 'edit', convertNorawat($row['no_rawat'])]);
               $row['delURL']  = url([ADMIN, 'pendaftaran', 'delete', convertNorawat($row['no_rawat'])]);
               $row['viewURL'] = url([ADMIN, 'pendaftaran', 'view', convertNorawat($row['no_rawat'])]);
-              $row['bridgingBPJS'] = url([ADMIN, 'pendaftaran', 'bridgingbpjs', convertNorawat($row['no_rawat'])]);
+              $row['bridgingBPJS'] = url([ADMIN, 'pendaftaran', 'bridgingbpjs', convertNorawat($row['no_peserta'])]);
+              $row['dataSEP'] = url([ADMIN, 'pendaftaran', 'datasep', convertNorawat($row['no_peserta'])]);
               $row['print_buktidaftar'] = url([ADMIN, 'pendaftaran', 'print_buktidaftar', convertNorawat($row['no_rawat'])]);
               $this->assign['list'][] = $row;
           }
@@ -260,28 +262,62 @@ class Admin extends AdminModule
         redirect(url([ADMIN, 'pendaftaran', 'settings']));
     }
 
+    public function getDataSEP($id)
+    {
+      $rows = $this->db('bridging_sep')->where('nomr', $id)->toArray();
+      $sep['detail'] = [];
+      foreach ($rows as $row) {
+          $row = htmlspecialchars_array($row);
+          $row['NoRujukanURL'] = url([ADMIN, 'pendaftaran', 'norujukan', $row['no_rujukan']]);
+          $sep['detail'][] = $row;
+      }
+      $sep['title'] = 'Data SEP BPJS';
+      $this->tpl->set('bridging', $sep);
+      echo $this->tpl->draw(MODULES.'/pendaftaran/view/admin/data.sep.html', true);
+      exit();
+    }
+
     public function getBridgingBPJS($id)
     {
-        $id = revertNorawat($id);
-        $this->_addHeaderFiles();
-        $pasien = $this->db('reg_periksa')->where('no_rawat', $id)->oneArray();
-        $this->assign['poliklinik'] = $this->core->db('poliklinik')->where('status', '1')->toArray();
-        $this->assign['dokter'] = $this->core->db('dokter')->toArray();
-        $this->assign['status_lanjut'] = $this->core->getEnum('reg_periksa', 'status_lanjut');
-        $this->assign['status_bayar'] = $this->core->getEnum('reg_periksa', 'status_bayar');
-        $this->assign['penjab'] = $this->core->db('penjab')->toArray();
+      $url = $this->options->get('settings.BpjsApiUrl').'Rujukan/List/Peserta/'.$id;
+      $consid = $this->options->get('settings.BpjsConsID');
+      $secretkey = $this->options->get('settings.BpjsSecretKey');
+      $output = BpjsRequest::get($url, NULL, NULL, $consid, $secretkey);
+      $json = json_decode($output, true);
+      //print("<pre>".print_r($json,true)."</pre>");
 
-        if (!empty($pasien)) {
-            $this->assign['form'] = $pasien;
-            $this->assign['form']['norawat'] = convertNorawat($pasien['no_rawat']);
-            $this->assign['title'] = 'Edit Pendaftaran Pasien';
-            $this->assign['manageURL'] = url([ADMIN, 'pendaftaran', 'manage']);
-            $this->assign['pasien'] = $this->db('pasien')->where('no_rkm_medis', $pasien['no_rkm_medis'])->oneArray();
+      $sep['detail'] = [];
+      foreach ($json['response']['rujukan'] as $key=>$value) {
+          $value['NoRujukanURL'] = url([ADMIN, 'pendaftaran', 'norujukan', $value['noKunjungan']]);
+          $sep['detail'][] = $value;
+      }
+      $sep['title'] = 'Data SEP BPJS';
+      $this->tpl->set('bridging', $sep);
+      echo $this->tpl->draw(MODULES.'/pendaftaran/view/admin/manage.rujukan.html', true);
+      exit();
+    }
 
-            return $this->draw('bridgingbpjs.form.html', ['pendaftaran' => $this->assign]);
-        } else {
-            redirect(url([ADMIN, 'pendaftaran', 'manage']));
-        }
+    public function getNoRujukan($id)
+    {
+      $url = $this->options->get('settings.BpjsApiUrl').'Rujukan/'.$id;
+
+      $date = date('Y-m-d');
+      $consid = $this->options->get('settings.BpjsConsID');
+      $secretkey = $this->options->get('settings.BpjsSecretKey');
+      $rujukan = BpjsRequest::get($url, NULL, NULL, $consid, $secretkey);
+      $json = json_decode($rujukan, true);
+      $this->assign['rujukan'] = $json['response']['rujukan'];
+
+      $url_referensi = $this->options->get('settings.BpjsApiUrl').'referensi/dokter/pelayanan/'.$json['response']['rujukan']['pelayanan']['kode'].'/tglPelayanan/'.$date.'/Spesialis/'.$json['response']['rujukan']['poliRujukan']['kode'];
+      $dpjp = BpjsRequest::get($url_referensi, NULL, NULL, $consid, $secretkey);
+      $json = json_decode($dpjp, true);
+      $this->assign['dpjp'] = [];
+      foreach ($json['response']['list'] as $key=>$value) {
+          $this->assign['dpjp'][] = $value;
+      }
+
+      $this->assign['title'] = 'Detail Rujukan BPJS';
+      return $this->draw('bridgingbpjs.form.html', ['bridging' => $this->assign]);
     }
 
     public function getJadwalAdd()

@@ -1,170 +1,309 @@
 <article class="row">
-		<form name="pendaftaran" action="{?=url(ADMIN.'/pendaftaran/save/'.@$pendaftaran.form.norawat)?}" method="POST" enctype="multipart/form-data">
-				<div class="col-md-8">
+		<form name="pendaftaran" action="{?=url(ADMIN.'/pendaftaran/sepsave/'.@$pendaftaran.form.norawat)?}" method="POST" enctype="multipart/form-data">
+				<div class="col-md-12">
 				    <div class="panel panel-default">
 			          <div class="panel-heading">
-			          <h3 class="panel-title">Informasi Pribadi</h3>
+			          <h3 class="panel-title">{$bridging.title}</h3>
 			          </div>
 								<div class="panel-body">
-										<div class="row clearfix">
-												<div class="col-md-6">
-														<div class="form-group">
-																<label>Nomor RM</label>
-																<div class="input-group">
-																		<input type="text" name="no_rkm_medis" value="{$pendaftaran.form.no_rkm_medis}" id="no_rkm_medis" class="form-control" placeholder="Nomor Rekam Medik">
-																		<span class="input-group-addon caripasien" data-toggle="modal" data-target="#pasienModal">
-																				<i class="fa fa-paperclip"></i>
-																		</span>
-																</div>
-					    	            </div>
-												</div>
-												<div class="col-md-6">
-														<div class="form-group">
-																<label>Nomor Rawat</label>
-																<input type="text" name="no_rawat" class="form-control" required value="{$pendaftaran.form.no_rawat}" />
-														</div>
-												</div>
-										</div>
-										<div class="row clearfix">
-												<div class="col-md-6">
-														<div class="form-group">
-																<label>Nama Pasien</label>
-																<input type="text" id="nm_pasien" class="form-control" required value="{$pendaftaran.pasien.nm_pasien}" />
-														</div>
-												</div>
-												<div class="col-md-6">
-														<div class="form-group">
-					    	                <label>Penanggung Jawab</label>
-																<input type="text" name="p_jawab" id="namakeluarga" class="form-control" required value="{$pendaftaran.form.p_jawab}" />
-					    	            </div>
-												</div>
-										</div>
-										<div class="row clearfix">
-												<div class="col-md-12">
-														<div class="form-group">
-					    	                <label>Alamat Penanggung Jawab</label>
-																<textarea name="almt_pj" id="alamatkeluarga" class="form-control" rows="4" required />{$pendaftaran.form.almt_pj}</textarea>
-					    	            </div>
-												</div>
-										</div>
-										<div class="row clearfix">
-												<div class="col-md-6">
-														<div class="form-group">
-																<label>Tanggal Registrasi</label>
-																<input type="text" name="tgl_registrasi" class="form-control datepicker" required value="{$pendaftaran.form.tgl_registrasi}" readonly />
-														</div>
-												</div>
-												<div class="col-md-6">
-														<div class="form-group">
-																<label>Jam Registrasi</label>
-																<input type="text" name="jam_reg" class="form-control" required value="{$pendaftaran.form.jam_reg}" readonly />
-														</div>
-												</div>
-										</div>
-										<div class="row clearfix">
-												<div class="col-md-6">
-														<div class="form-group">
-					    	                <label>Klinik / Unit</label>
-																<select name="kd_poli" class="form-control">
-																	{loop: $pendaftaran.poliklinik}
-																		<option value="{$value.kd_poli}"{if: $value.kd_poli == $pendaftaran.form.kd_poli} selected{/if}>{$value.nm_poli}</option>
-																	{/loop}
-																</select>
-					    	            </div>
-												</div>
-												<div class="col-md-6">
-														<div class="form-group">
-					    	                <label>Dokter Tujuan</label>
-																<select name="kd_dokter" class="form-control">
-																	{loop: $pendaftaran.dokter}
-																		<option value="{$value.kd_dokter}"{if: $value.kd_dokter == $pendaftaran.form.kd_dokter} selected{/if}>{$value.nm_dokter}</option>
-																	{/loop}
-																</select>
-					    	            </div>
-												</div>
-										</div>
-			      	  </div>
-		        </div>
-		    </div>
-				<div class="col-md-4">
-				    <div class="panel panel-default">
-			          <div class="panel-heading">
-			          <h3 class="panel-title">Informasi Pribadi</h3>
-			          </div>
-								<div class="panel-body">
-										<div class="form-group">
-												<label>Statu Lanjut</label>
-												<select name="status_lanjut" class="form-control">
-													{loop: $pendaftaran.status_lanjut}
-														<option value="{$value}"{if: $value == $pendaftaran.form.status_lanjut} selected{/if}>{$value}</option>
-													{/loop}
-												</select>
-										</div>
-										<div class="form-group">
-												<label>Cara Bayar</label>
-												<select name="kd_pj" class="form-control">
-													{loop: $pendaftaran.penjab}
-														<option value="{$value.kd_pj}"{if: $value == $pendaftaran.form.kd_pj} selected{/if}>{$value.png_jawab}</option>
-													{/loop}
-												</select>
-										</div>
-										<div class="form-group">
-												<label>Status Bayar</label>
-												<select name="status_bayar" class="form-control">
-													{loop: $pendaftaran.status_bayar}
-														<option value="{$value}"{if: $value == $pendaftaran.form.status_bayar} selected{/if}>{$value}</option>
-													{/loop}
-												</select>
-										</div>
-										<div class="form-group">
-	    	                <label>Rujukan</label>
-												<input type="text" class="form-control" />
-	    	            </div>
-				            <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
-										<a href="{$pendaftaran.manageURL}" class="btn btn-default">Batal</a>
-			      	  </div>
+									<div class="row clearfix">
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Tanggal SEP</label>
+						                <input type="text" class="form-control" name="tglsep" value="{?=date('Y-m-d')?}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Tanggal Rujuk</label>
+						                <input type="text" class="form-control" name="tglrjk" value="{$bridging.rujukan.tglKunjungan}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Status</label>
+						                <input type="text" class="form-control" name="stts" value="{$bridging.rujukan.peserta.statusPeserta.keterangan}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-1">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label>Kode</label>
+						                <input type="text" class="form-control" name="kkls" value="{$bridging.rujukan.peserta.hakKelas.kode}" readonly>
+						                </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label>Kelas</label>
+						                <input type="text" class="form-control" name="kls" value="{$bridging.rujukan.peserta.hakKelas.keterangan}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-3">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Peserta</label>
+						                <input type="text" class="form-control" name="psrt" value="{$bridging.rujukan.peserta.jenisPeserta.keterangan}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						        </div>
+						        <div class="row clearfix">
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Kode Diagnosa</label>
+						                <input type="text" class="form-control" name="kddx" value="{$bridging.rujukan.diagnosa.kode}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-4">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Nama Diagnosa</label>
+						                <input type="text" class="form-control" name="nmdx" value="{$bridging.rujukan.diagnosa.nama}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Kode Poli Tujuan</label>
+						                <input type="text" class="form-control" name="kdpoli"  id="kdpoli" value="{$bridging.rujukan.poliRujukan.kode}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                  <label for="norm">Nama Poli Tujuan</label>
+						                  <input type="text" class="form-control" name="nmpoli" value="{$bridging.rujukan.poliRujukan.nama}" readonly>
+						                </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Jenis Pelayanan</label>
+						                <select class="form-control" name="kdpl">
+						                  <option value="{$bridging.rujukan.pelayanan.kode}" selected>{$bridging.rujukan.pelayanan.nama}</option>
+						                  <option value="1">Rawat Inap</option>
+						                  <option value="2">Rawat Jalan</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						        </div>
+						        <div class="row clearfix">
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">PPK Perujuk</label>
+						                <input type="text" class="form-control" name="ppruj" value="{$bridging.rujukan.provPerujuk.kode}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-4">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Nama Perujuk</label>
+						                <input type="text" class="form-control" name="nmruj" value="{$bridging.rujukan.provPerujuk.nama}" readonly>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-4">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="dpjp">Nama DPJP</label>
+						                <select class="form-control" name="dpjp">
+															{loop: $bridging.dpjp}
+																<option value="{$value.kode}">{$value.nama}</option>
+															{/loop}
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">No SKDP</label>
+						                <input type="text" class="form-control" name="skdp" value="" placeholder="No SKDP">
+						              </div>
+						            </div>
+						          </div>
+						        </div>
+						        <div class="row clearfix">
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Eksekutif</label>
+						                <select class="form-control" id="eks" name="eks">
+						                  <option value="0" selected>0. Tidak</option>
+						                  <option value="1">1. Ya</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">COB</label>
+						                <select class="form-control" id="cob" name="cob">
+						                  <option value="0" selected>0. Tidak</option>
+						                  <option value="1">1. Ya</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Katarak</label>
+						                <select class="form-control" id="katara" name="ktrk">
+						                  <option value="0" selected>0. Tidak</option>
+						                  <option value="1">1. Ya</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Suplesi</label>
+						                <select class="form-control" id="suple" name="suplesi">
+						                  <option value="0" selected>0. Tidak</option>
+						                  <option value="1">1. Ya</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="form-group col-md-2 col-sm-2" style="display:none;">
+						            <label for="norm">Nama Dokter</label>
+						            <input type="text" class="form-control" id="nmdp" name="nmdpjp" value="" readonly>
+						          </div>
+						          <div class="form-group col-md-2 col-sm-2" style="display:none;">
+						            <label for="norm">No Rujukan</label>
+						            <input type="text" class="form-control" name="no_rujuk" value="" readonly>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label>Faskes</label>
+						                <select name="fsks" id="faskes" class="form-control">
+						                  <option value="1" selected>1. Faskes 1</option>
+						                  <option value="2">2. Faskes 2(RS)</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Tgl Pulang</label>
+						                <input type="text" class="tglplg form-control" name="tglplg" value="0000-00-00">
+						              </div>
+						            </div>
+						          </div>
+						        </div>
+						        <div class="row clearfix">
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">SEP Suplesi</label>
+						                <input type="text" class="form-control" name="sepsup" value="" placeholder="SEP Suplesi">
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Laka Lantas</label>
+						                <select class="form-control" name="lkln">
+						                  <option value="0" selected>0. Tidak</option>
+						                  <option value="1">1. Ya</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Penjamin Laka</label>
+						                <select class="form-control" name="pjlk">
+						                  <option value="" selected>Tidak Ada</option>
+						                  <option value="1">Jasa Raharja</option>
+						                  <option value="2">BPJS Ketenagakerjaan</option>
+						                  <option value="3">TASPEN PT</option>
+						                  <option value="4">ASABRI PT</option>
+						                </select>
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Tgl Kejadian</label>
+						                <input type="text" class="tglkkl form-control" name="tglkkl" value="0000-00-00">
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Keterangan</label>
+						                <input type="text" class="form-control" name="ktrg" value="" placeholder="Keterangan">
+						              </div>
+						            </div>
+						          </div>
+						        </div>
+						        <div class="row clearfix">
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Propinsi</label>
+						                <input type="text" class="form-control" name="prop" value="" placeholder="Propinsi">
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Kabupaten</label>
+						                <input type="text" class="form-control" name="kbpt" value="" placeholder="Kabupaten">
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-2">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Kecamatan</label>
+						                <input type="text" class="form-control" name="kec" value="" placeholder="Kecamatan">
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-md-4">
+						            <div class="form-group">
+						              <div class="form-line">
+						                <label for="norm">Catatan</label>
+						                <input type="text" class="form-control" name="cttn" value="" placeholder="Catatan">
+						              </div>
+						            </div>
+						          </div>
+						        </div>
+						        <div class="form-row">
+						          <div class="form-group col col">
+						            <input type="submit" class="btn btn-success form-control" name="build_sep" value="SIMPAN SEP">
+						          </div>
+						        </div>
 		        </div>
 		    </div>
 		</form>
 </article>
-
-<div class="modal fade" id="pasienModal" tabindex="-1" role="dialog" aria-labelledby="pasienModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-						<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								<h4 class="modal-title" id="pasienModalLabel">Database Pasien</h4>
-						</div>
-						<div class="modal-body">
-								<div class="row clearfix" style="margin-bottom:30px;">
-										<div class="col-md-12">
-												<div class="input-group">
-														<input type="text" name="s_keyword" id="s_keyword" class="form-control" placeholder="Masukkan No. RM / Nama / No. KTP / No. Peserta Asuransi">
-														<span class="input-group-addon">
-																<i class="fa fa-search"></i>
-														</span>
-												</div>
-								    </div>
-								</div>
-								<div class="table-responsive no-margin">
-										<table class="table table-striped table-hover display" width="100%">
-												<thead>
-														<tr>
-																<th>Nomor RM</th>
-																<th>Nama Pasien</th>
-																<th>No. KTP</th>
-																<th>Nama P. Jawab</th>
-																<th>Alamat P. Jawab</th>
-																<th>Pekerjaan</th>
-																<th>No. Peserta</th>
-																<th>No. Tlp</th>
-														</tr>
-												</thead>
-												<tbody id="pasien">
-												</tbody>
-										</table>
-								</div>
-						</div>
-				</div>
-		</div>
-</div>
