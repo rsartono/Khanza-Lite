@@ -62,5 +62,10 @@ location @handler {
 ```
 
 Untuk masuk ke panel administrasi, tambahkan `/admin/` di akhir URL.
-#### Login: `spv` Kata sandi: `server` 
+#### Login: `spv` Kata sandi: `server`
 Ini harus diubah segera setelah login untuk alasan keamanan. Juga dapat mengganti nama direktori dengan panel administrasi.  (Anda perlu mengubahnya pada `config.php`)
+
+
+## TANGKAPAN LAYAR
+
+![Plugins](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_1.png?s=200)
