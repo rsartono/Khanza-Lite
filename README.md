@@ -59,4 +59,8 @@ location @handler {
    }
 ```
 
-Untuk masuk ke panel administrasi, tambahkan `/ admin /` di akhir URL. ** Login awal `spv` dan kata sandi awal adalah * `server` *. ** Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`) *.
+Untuk masuk ke panel administrasi, tambahkan `/admin/` di akhir URL.
+*.** Login awal `spv`
+dan
+*.** Kata sandi awal adalah `server`
+*.** Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`) *.
