@@ -77,3 +77,5 @@ Ini harus diubah segera setelah login untuk alasan keamanan. Juga dapat menggant
 ![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_3.png)
 
 ![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_4.png)
+
+![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_5.png)
