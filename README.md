@@ -1,10 +1,10 @@
 # Khanza LITE V3.0
 
-Khanza LITE 3  dibuat sebagai alternatif ringan untuk SIMKES Khanza agar bisa dijalankan via Mobile / Browser. Kali ini Khanza LITE 3  dibangun lagi dari awal dengan berfokus pada kesederhanaan - bahkan programer pemula dapat membuat Module-Modul sendiri. Bahkan mengganti tampilan pengguna (User Interface). Untuk mencapai ini, kami menerapkan sistem dan arsitektur aplikasi yang sangat mudah dalam bentuk Kerangka Kerja (Framework).
+Khanza LITE 3  dibuat sebagai alternatif ringan untuk SIMKES Khanza agar bisa dijalankan via Mobile / Browser. Kali ini Khanza LITE 3  dibangun lagi dari awal dengan berfokus pada kesederhanaan - bahkan programer pemula dapat membuat Module-Modul sendiri. Bahkan mengganti tampilan pengguna (User Interface). Ini karena menerapkan sistem dan arsitektur aplikasi yang sangat mudah dalam bentuk Kerangka Kerja (Framework).
 
 Oh iya, Khanza LITE 3  memiliki panduan pemasangan yang sangat mudah juga. Hanya perlu 1 langkah penyesuaian (jika sudah ada database SIMEKS Khanza sebelum) atau 5 langkah pemasangan jika anda menginginkan sistem anda kosong (tanpa dummy data). Segera setelah anda menyalin file-file ke komputer / server dan pengaturan selesai, Khanza LITE 3  siap digunakan! Proses pemasangan bahkan tidak membutuhkan waktu sebanyak yang diperlukan untuk menyalin file-filenya ;-)
 
-Panel kontrol dan tampilan default sepenuhnya responsif, yang membuatnya dapat diakses dari perangkat seluler apa pun, bahkan di ponsel berkat kerangka kerja CSS yang digunakan - Bootstrap. Setiap modul kami disesuaikan dengannya.
+Panel kontrol dan tampilan default sepenuhnya responsif, yang membuatnya dapat diakses dari perangkat seluler apa pun, bahkan di ponsel berkat kerangka kerja CSS yang digunakan - Bootstrap. Setiap modul dapat menyesuaikan dengan CSS nya sendiri.
 
 Masih banyak fitur-fitur tersembunyi untuk kebutuhan pengembangan. Silahkan jelajahi!!
 
@@ -62,5 +62,5 @@ location @handler {
 ```
 
 Untuk masuk ke panel administrasi, tambahkan `/admin/` di akhir URL.
-#### Login: `spv` Kata sandi: `server`
-Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`)
+#### Login: `spv` Kata sandi: `server` 
+Ini harus diubah segera setelah login untuk alasan keamanan. Juga dapat mengganti nama direktori dengan panel administrasi.  (Anda perlu mengubahnya pada `config.php`)
