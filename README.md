@@ -42,7 +42,9 @@ Pemasangan
 
 6. Buka browser Anda dan navigasikan ke alamat tempat file Khanza LITE 3 berada.
 
-** Peringatan! ** Untuk pengguna Apache, pastikan file `.htaccess` juga ada di server. Tanpanya Khanza LITE 3 tidak akan berfungsi. Untuk pengguna Nginx, tambahkan konfigurasi berikut di pengaturan nginx.conf (atau sejenisnya)
+** Peringatan!
+*** Untuk pengguna Apache, pastikan file `.htaccess` juga ada di server. Tanpanya Khanza LITE 3 tidak akan berfungsi. 
+*** Untuk pengguna Nginx, tambahkan konfigurasi berikut di pengaturan nginx.conf (atau sejenisnya)
 
 ```
 location / {
