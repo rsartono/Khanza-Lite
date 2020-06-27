@@ -62,7 +62,5 @@ location @handler {
 ```
 
 Untuk masuk ke panel administrasi, tambahkan `/admin/` di akhir URL.
-#### Login: `spv`
-#### Kata sandi: `server`
-
+#### Login: `spv` Kata sandi: `server`
 Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`)
