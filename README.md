@@ -70,6 +70,13 @@ Ini harus diubah segera setelah login untuk alasan keamanan. Juga dapat menggant
 
 ### Pemasangan
 
+| | |
+|:-------------------------:|:-------------------------:|
+|<img src="https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_1.png">  Install 1 |  <img src="https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_2.png"> Install 2|
+|<img src="https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_3.png">  Install 3 |  <img src="https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_4.png"> Install 4|
+|<img src="https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_5.png">  Install 5 |
+
+
 ![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_1.png)
 
 ![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_2.png)
