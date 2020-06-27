@@ -1,6 +1,6 @@
 # Khanza LITE V3.0
 
-Khanza LITE 3 (Joyoboyo) dibuat sebagai alternatif ringan untuk SIMKES Khanza agar bisa dijalankan via Mobile / Browser. Kali ini Khanza LITE 3 (Joyoboyo) dibangun lagi dari awal dengan berfokus pada kesederhanaan - bahkan programer pemula membuat Module-Modul sendiri, bahkan mengganti tampilan pengguna (User Interface). Untuk mencapai ini, kami menerapkan sistem dan arsitektur aplikasi yang sangat mudah dalam bentuk Kerangka Kerja (Framework).
+Khanza LITE 3 (Joyoboyo) dibuat sebagai alternatif ringan untuk SIMKES Khanza agar bisa dijalankan via Mobile / Browser. Kali ini Khanza LITE 3 (Joyoboyo) dibangun lagi dari awal dengan berfokus pada kesederhanaan - bahkan programer pemula dapat membuat Module-Modul sendiri. Bahkan mengganti tampilan pengguna (User Interface). Untuk mencapai ini, kami menerapkan sistem dan arsitektur aplikasi yang sangat mudah dalam bentuk Kerangka Kerja (Framework).
 
 Oh iya, Khanza LITE 3 (Joyoboyo) memiliki panduan pemasangan yang sangat mudah juga. Hanya perlu 1 langkah penyesuaian (jika sudah ada database SIMEKS Khanza sebelum) atau 5 langkah pemasangan jika anda menginginkan sistem anda kosong (tanpa dummy data). Segera setelah anda menyalin file-file ke komputer / server dan pengaturan selesai, Khanza LITE 3 (Joyoboyo) siap digunakan! Proses pemasangan bahkan tidak membutuhkan waktu sebanyak yang diperlukan untuk menyalin file-filenya ;-)
 
@@ -34,10 +34,18 @@ Pemasangan
 
 2. Ekstrak semua file dari paket terkompresi dan kemudian transfer ke direktori lokal atau server. Biasanya, file diunggah ke `www`,` htdocs` atau `public_html`.
 
+3. Buat folder tmp/ dan admin/tmp. Beberapa server mungkin memerlukan izin tambahan `chmod 777` untuk direktori dan file tersebut.
+
+4. Jika anda ingin memulai pemasangan dengan data kosong, buat database baru, misal `sik` (jika sudah ada silahkan lompat ke langkah ke 6).
+
+5. Navigasikan ke alamat pemasangan. Misalkan http://localhost/Khanza-Lite/install.php, anda akan melihat tampilan pemasangan.
+
+6. Buka browser Anda dan navigasikan ke alamat tempat file Khanza LITE 3 berada.
 
 ** Peringatan! ** Untuk pengguna Apache, pastikan file `.htaccess` juga ada di server. Tanpanya Khanza LITE 3 tidak akan berfungsi. Untuk pengguna Nginx, tambahkan konfigurasi berikut di pengaturan nginx.conf (atau sejenisnya)
 
-`location / {
+```
+location / {
   try_files $uri $uri/ @handler;
     }
 
@@ -48,12 +56,7 @@ location  /admin {
 location @handler {
    if (!-e $request_filename) { rewrite / /index.php last; }
    rewrite ^(.*.php)/ $1 last;
-   }`
-
-3. Buat folder tmp/ dan admin/tmp. Beberapa server mungkin memerlukan izin tambahan `chmod 777` untuk direktori dan file tersebut.
-
-4. Jika anda ingin memulai pemasangan dengan data kosong, buat database baru, misal `sik` (jika sudah ada silahkan lompat ke langkah ke 6).
-5. Navigasikan ke alamat pemasangan. Misalkan http://localhost/Khanza-Lite/install.php, anda akan melihat tampilan pemasangan.
-6. Buka browser Anda dan navigasikan ke alamat tempat file Khanza LITE 3 berada.
+   }
+```
 
 Untuk masuk ke panel administrasi, tambahkan `/ admin /` di akhir URL. ** Login awal `spv` dan kata sandi awal adalah * `server` *. ** Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`) *.
