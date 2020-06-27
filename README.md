@@ -68,4 +68,12 @@ Ini harus diubah segera setelah login untuk alasan keamanan. Juga dapat menggant
 
 ## TANGKAPAN LAYAR
 
-![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_1.png?s=100)
+### Pemasangan
+
+![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_1.png)
+
+![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_2.png)
+
+![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_3.png)
+
+![Install](https://raw.githubusercontent.com/basoro/Khanza-Lite/ataaka/screenshoot/install_4.png)
