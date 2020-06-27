@@ -14,7 +14,7 @@ define('DBNAME', 'sik');
 
 // URL Webapps
 define('WEBAPPS_URL', '');
-define('WEBAPPS_PATH', BASE_DIR . '/../webapps');
+define('WEBAPPS_PATH', BASE_DIR . '/webapps');
 
 // Admin url path
 define('ADMIN', 'admin');

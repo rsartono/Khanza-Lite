@@ -299,7 +299,7 @@ class Admin extends AdminModule
 
     public function getNoRujukan($id)
     {
-      $this->_addHeaderFiles();
+      $this->_addProfileHeaderFiles();
       $date = date('Y-m-d');
       $bridging_sep = $this->db('bridging_sep')->where('no_rujukan', $id)->oneArray();
       $this->assign['bridging_sep'] = $bridging_sep;
@@ -713,6 +713,13 @@ class Admin extends AdminModule
         exit();
     }
 
+    public function getCssProfile()
+    {
+        header('Content-type: text/css');
+        echo $this->draw(MODULES.'/pendaftaran/css/admin/pendaftaran_profile.css');
+        exit();
+    }
+
     private function _addProfileHeaderFiles()
     {
         // CSS
@@ -724,7 +731,7 @@ class Admin extends AdminModule
         $this->core->addJS(url('assets/jscripts/jquery.timepicker.js'), 'footer');
 
         // MODULE SCRIPTS
-        $this->core->addCSS(url([ADMIN, 'pendaftaran', 'css']));
+        $this->core->addCSS(url([ADMIN, 'pendaftaran', 'cssprofile']));
         $this->core->addJS(url([ADMIN, 'pendaftaran', 'javascript']), 'footer');
     }
     private function _addHeaderFiles()
