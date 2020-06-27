@@ -42,7 +42,7 @@ Pemasangan
 
 6. Buka browser Anda dan navigasikan ke alamat tempat file Khanza LITE 3 berada.
 
-** Peringatan! **
+### Peringatan!
 + Untuk pengguna Apache, pastikan file `.htaccess` juga ada di server. Tanpanya Khanza LITE 3 tidak akan berfungsi.
 + Untuk pengguna Nginx, tambahkan konfigurasi berikut di pengaturan nginx.conf (atau sejenisnya)
 
@@ -62,7 +62,7 @@ location @handler {
 ```
 
 Untuk masuk ke panel administrasi, tambahkan `/admin/` di akhir URL.
-*** Login awal `spv` ***
-*** Kata sandi awal adalah `server` ***
+### Login awal `spv`
+### Kata sandi awal adalah `server`
 
-Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`) *.
+Ini harus diubah segera setelah login untuk alasan keamanan. Kami juga merekomendasikan untuk mengganti nama direktori dengan panel administrasi. * (Anda perlu mengubahnya pada `config.php`)
