@@ -1,0 +1,414 @@
+<article class="row">
+		<form name="pendaftaran" action="{?=url(ADMIN.'/pendaftaran/savesep/'.@$pendaftaran.form.norawat)?}" method="POST" enctype="multipart/form-data">
+				<div class="col-md-8">
+				    <div class="panel panel-default">
+			          <div class="panel-heading">
+			          <h3 class="panel-title">Profile Peserta</h3>
+			          </div>
+								<div class="panel-body">
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Nomor Rujukan</label>
+																<input type="text" name="no_rawat" class="form-control" required value="" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Nomor Rawat</label>
+																<input type="text" name="no_rkm_medis" class="form-control" required value="" />
+														</div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Nomor RM</label>
+																<input type="text" name="no_rkm_medis" class="form-control" required value="" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Nama Pasien</label>
+																<input type="text" name="nm_pasien" class="form-control" required value="" />
+														</div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-4">
+														<div class="form-group">
+																<label>Tanggal Lahir</label>
+																<input type="text" name="tgl_lahir" class="form-control" required value="" />
+														</div>
+												</div>
+												<div class="col-md-4">
+														<div class="form-group">
+																<label>Jenis Kelamin</label>
+																<input type="text" name="jk" class="form-control" required value="" />
+														</div>
+												</div>
+												<div class="col-md-4">
+														<div class="form-group">
+																<label>Nomor Telepon</label>
+																<input type="text" name="jk" class="form-control" required value="" />
+														</div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Tanggal Rujukan</label>
+																<input type="text" name="tgl_lahir" class="form-control" required value="{$bridging.rujukan.tglKunjungan}" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Tanggal SEP</label>
+																<input type="text" name="jk" class="form-control" required value="{?=date('Y-m-d')?}" />
+														</div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Asal Rujukan</label>
+																<input type="text" id="nm_pasien" class="form-control" required value="{$bridging.rujukan.provPerujuk.nama}" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+					    	                <label>Nomor SKDP</label>
+																<input type="text" name="p_jawab" id="namakeluarga" class="form-control" required value="" />
+					    	            </div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>PPK Rujukan</label>
+																<input type="text" id="nm_pasien" class="form-control" required value="{$bridging.rujukan.provPerujuk.kode}" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+					    	                <label>Diagnosa Awal</label>
+																<input type="text" name="p_jawab" id="namakeluarga" class="form-control" required value="" />
+					    	            </div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Poli Tujuan</label>
+																<input type="text" id="nm_pasien" class="form-control" required value="" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+					    	                <label>Nama DPJP</label>
+																<input type="text" name="p_jawab" id="namakeluarga" class="form-control" required value="" />
+					    	            </div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-6">
+														<div class="form-group">
+																<label>Kode PPK</label>
+																<input type="text" id="nm_pasien" class="form-control" required value="" />
+														</div>
+												</div>
+												<div class="col-md-6">
+														<div class="form-group">
+					    	                <label>Nama PPK</label>
+																<input type="text" name="p_jawab" id="namakeluarga" class="form-control" required value="" />
+					    	            </div>
+												</div>
+										</div>
+										<div class="row clearfix">
+												<div class="col-md-12">
+														<div class="form-group">
+																<label>Catatan</label>
+																<textarea name="name" class="form-control" rows="4"></textarea>
+														</div>
+												</div>
+										</div>
+			      	  </div>
+		        </div>
+		    </div>
+				<div class="col-md-4">
+				    <div class="panel panel-default">
+			          <div class="panel-heading">
+			          <h3 class="panel-title">Informasi Tambahan</h3>
+			          </div>
+								<div class="panel-body">
+										<div class="form-group">
+												<label for="norm">Peserta</label>
+												<input type="text" class="form-control" name="psrt" value="{$bridging.rujukan.peserta.jenisPeserta.keterangan}" readonly>
+										</div>
+										<div class="form-group">
+												<label>Jenis Pelayanan</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Kelas</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Eksekutif</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>COB</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Katarak</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Laka Lantas</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Tanggal KLL</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Penjamin KLL</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Keterangan</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Suplesi</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>SEP Suplesi</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Propinsi KLL</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Kabupaten KLL</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+										<div class="form-group">
+												<label>Kecamatan KLL</label>
+												<input type="text" name="jk" class="form-control" required value="" />
+										</div>
+				            <input type="submit" name="save" value="Simpan" class="btn btn-primary" />
+										<a href="#" class="btn btn-default" data-toggle="modal" data-target="#cetakModal" >Cetak SEP</a>
+			      	  </div>
+		        </div>
+		    </div>
+		</form>
+</article>
+
+<div class="modal fade" id="cetakModal" tabindex="-1" role="dialog" aria-labelledby="cetakModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:1024px;">
+				<div class="modal-content">
+						<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="cetakModalLabel">Data SEP Pasien</h4>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+			            <div class="row clearfix">
+			                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			                    <div class="card">
+			                        <div class="body">
+			                          <div class="container" style="margin-top : 50px;" action="cetak">
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                  <img src="{?=url(MODULES.'/pendaftaran/img/bpjslogo.png')?}" height="60" width="350">
+			                              </div>
+			                              <div class="col-md-10">
+			                                  <h2 style="margin-top:0;padding-top:0;"><center>SURAT ELEGIBILITAS PESERTA</center></h2>
+			                                  <h4><center>{$bridging.nama_instansi}</center></h4>
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                No. SEP
+			                              </div>
+			                              <div class="col-md-10">
+			                                : {$bridging.rujukan.noKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Tgl. SEP
+			                              </div>
+			                              <div class="col-md-10">
+			                                : {?=date('Y-m-d')?}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                No. Kartu
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.peserta.noKartu}
+			                              </div>
+			                              <div class="col-md-2">
+			                                Jenis Kelamin
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.peserta.nik}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Nama Peserta
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.peserta.nama}
+			                              </div>
+			                              <div class="col-md-2">
+			                                No. Rawat
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.noKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Tgl. Lahir
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                              <div class="col-md-2">
+			                                No. Reg
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                No.Telepon
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                              <div class="col-md-2">
+			                                Peserta
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Sub/Spesialis
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                              <div class="col-md-2">
+			                                COB
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Faskes Perujuk
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                              <div class="col-md-2">
+			                                Jns. Rawat
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Diagnosa Awal
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                              <div class="col-md-2">
+			                                Kls. Rawat
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-6">
+			                              </div>
+			                              <div class="col-md-2">
+			                                Penjamin
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                Catatan
+			                              </div>
+			                              <div class="col-md-4">
+			                                : {$bridging.rujukan.tglKunjungan}
+			                              </div>
+			                              <div class="col-md-6" style="left: 90px;">
+			                                Pasien/Keluarga Pasien
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-6">
+			                                <small><em><font size="1px">*Saya Menyetujui BPJS Kesehatan menggunakan informasi Medis Pasien jika diperlukan.</font></em></small>
+			                              </div>
+			                              <div class="col-md-6">
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-6">
+			                              </div>
+			                              <div class="col-md-6">
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-6">
+			                                <small><em><font size="1px">**SEP bukan sebagai bukti penjaminan peserta</font></em></small>
+			                              </div>
+			                              <div class="col-md-6">
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-2">
+			                                <small><em><font size="1px">Cetakan ke 1</font></em></small>
+			                              </div>
+			                              <div class="col-md-10">
+			                                <small><em><font size="1px">{?=date("d/m/Y h:i:s A")?}</font></em></small>
+			                              </div>
+			                            </div>
+			                            <div class="row clearfix">
+			                              <div class="col-md-4">
+			                              </div>
+			                              <div class="col-md-8">
+			                                <center>----------------------------------------------------</center>
+			                              </div>
+			                            </div>
+			                          </div>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+						</div>
+				</div>
+		</div>
+</div>

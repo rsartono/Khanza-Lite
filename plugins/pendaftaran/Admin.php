@@ -299,7 +299,11 @@ class Admin extends AdminModule
 
     public function getNoRujukan($id)
     {
+      $this->_addHeaderFiles();
       $date = date('Y-m-d');
+      $bridging_sep = $this->db('bridging_sep')->where('no_rujukan', $id)->oneArray();
+      $this->assign['bridging_sep'] = $bridging_sep;
+
       $consid = $this->options->get('settings.BpjsConsID');
       $secretkey = $this->options->get('settings.BpjsSecretKey');
 
@@ -307,6 +311,13 @@ class Admin extends AdminModule
       $rujukan = BpjsRequest::get($url, NULL, NULL, $consid, $secretkey);
       $json = json_decode($rujukan, true);
       $this->assign['rujukan'] = $json['response']['rujukan'];
+      $no_kartu = $json['response']['rujukan']['peserta']['noKartu'];
+      $sex = $json['response']['rujukan']['peserta']['sex'];
+
+      $pasien = $this->db('pasien')->where('no_peserta', $json['response']['rujukan']['peserta']['noKartu'])->oneArray();
+      $this->assign['pasien'] = $pasien;
+
+      $this->assign['kode_ppk'] = $this->core->getSettings('kode_ppk');
 
       $url_referensi = $this->options->get('settings.BpjsApiUrl').'referensi/dokter/pelayanan/'.$json['response']['rujukan']['pelayanan']['kode'].'/tglPelayanan/'.$date.'/Spesialis/'.$json['response']['rujukan']['poliRujukan']['kode'];
       $dpjp = BpjsRequest::get($url_referensi, NULL, NULL, $consid, $secretkey);
@@ -316,8 +327,105 @@ class Admin extends AdminModule
           $this->assign['dpjp'][] = $value;
       }
 
-      $this->assign['title'] = 'Detail Rujukan BPJS';
+      $url_rujukan = $this->options->get('settings.BpjsApiUrl').'Rujukan/List/Peserta/'.$no_kartu;
+      $url_rujukan = BpjsRequest::get($url_rujukan, NULL, NULL, $consid, $secretkey);
+      $json_rujukan = json_decode($url_rujukan, true);
+      $this->assign['sepdetail'] = [];
+      foreach ($json_rujukan['response']['rujukan'] as $key=>$value) {
+          $value['NoRujukanURL'] = url([ADMIN, 'pendaftaran', 'norujukan', $value['noKunjungan']]);
+          $this->assign['sepdetail'][] = $value;
+      }
+
+      $this->assign['fotoURL'] = url('/plugins/pasien/img/'.$sex.'.png');
+      if(!empty($personal_pasien['gambar'])) {
+        $this->assign['fotoURL'] = url(WEBAPPS_PATH.'/photopasien/'.$personal_pasien['gambar']);
+      }
+
+      $this->assign['nama_instansi'] = $this->core->getSettings('nama_instansi');
+
       return $this->draw('bridgingbpjs.form.html', ['bridging' => $this->assign]);
+    }
+
+    public function postSaveSEP() {
+      $_POST['ppkPelayanan'] = $this->core->getSettings('kode_ppk');
+      $date = date('Y-m-d');
+      $consid = $this->options->get('settings.BpjsConsID');
+      $secretkey = $this->options->get('settings.BpjsSecretKey');
+
+      $sup = new \StdClass();
+      $sup->noKartu = $_POST['noKartu']; #pass
+      $sup->tglSep = $_POST['tglSep']; #pass
+      $sup->ppkPelayanan = $_POST['ppkPelayanan']; #pass
+      $sup->jnsPelayanan = $_POST['jnsPelayanan']; #pass
+      $sup->klsRawat = $_POST['klsRawat']; #pass
+      $sup->noMR = $_POST['noMR']; #pass
+      $sup->rujukan = new \StdClass();
+      $sup->rujukan->asalRujukan = $_POST['asalRujukan']; #pass
+      $sup->rujukan->tglRujukan = $_POST['tglRujukan']; #pass
+      $sup->rujukan->noRujukan = $_POST['noRujukan']; #pass
+      $sup->rujukan->ppkRujukan = $_POST['ppkRujukan']; #pass
+      $sup->catatan = $_POST['catatan']; #pass
+      $sup->diagAwal = $_POST['diagAwal']; #pass
+      $sup->poli = new \StdClass();
+      $sup->poli->tujuan = $_POST['tujuan']; #pass
+      $sup->poli->eksekutif = $_POST['eksekutif']; #pass
+      $sup->cob = new \StdClass();
+      $sup->cob->cob = $_POST['cob']; #pass
+      $sup->katarak = new \StdClass();
+      $sup->katarak->katarak = $_POST['katarak']; #pass
+      $sup->jaminan = new \StdClass();
+      $sup->jaminan->lakaLantas = $_POST['lakaLantas']; #pass
+      $sup->jaminan->penjamin = new \StdClass();
+      $sup->jaminan->penjamin->penjamin = $_POST['penjamin']; #pass
+      $sup->jaminan->penjamin->tglKejadian = $_POST['tglKejadian']; #pass
+      $sup->jaminan->penjamin->keterangan = $_POST['keterangan']; #pass
+      $sup->jaminan->penjamin->suplesi = new \StdClass();
+      $sup->jaminan->penjamin->suplesi->suplesi = $_POST['suplesi']; #pass
+      $sup->jaminan->penjamin->suplesi->noSepSuplesi = $_POST['noSepSuplesi']; #pass
+      $sup->jaminan->penjamin->suplesi->lokasiLaka = new \StdClass();
+      $sup->jaminan->penjamin->suplesi->lokasiLaka->kdPropinsi = $_POST['kdPropinsi']; #pass
+      $sup->jaminan->penjamin->suplesi->lokasiLaka->kdKabupaten = $_POST['kdKabupaten']; #pass
+      $sup->jaminan->penjamin->suplesi->lokasiLaka->kdKecamatan = $_POST['kdKecamatan']; #pass
+      $sup->skdp = new \StdClass();
+      $sup->skdp->noSurat = $_POST['noSurat']; #pass
+      $sup->skdp->kodeDPJP = $_POST['kodeDPJP']; #pass
+      $sup->noTelp = $_POST['noTelp']; #pass
+      $sup->user = $this->core->getUserInfo('username', null, true);
+
+      $data = new \StdClass();
+      $data->request = new \StdClass();
+      $data->request->t_sep = $sup;
+
+      $savesep = json_encode($data);
+      print_r($savesep);
+
+      ////$url = $this->options->get('settings.BpjsApiUrl').'SEP/1.1/insert';
+      ////$savesep = BpjsRequest::post($url, [$savesep], NULL, $consid, $secretkey);
+      //$getsep = BpjsRequest::get($url, $savesep, NULL, $consid, $secretkey);
+      ////$json = json_decode($savesep, true);
+      ////print("<pre>".print_r($json,true)."</pre>");
+      //print_r($json);
+
+      $json['metaData']['code'] = '200';
+      $code = $json['metaData']['code'];
+      $message = $json['metaData']['message'];
+      $no_sep = $json['response']['sep']['noSep'];
+
+      if($json['metaData']['code'] == '200') {
+        unset($_POST['save']);
+
+        $query = $this->db('bridging_sep')->save($_POST);
+
+        if ($query) {
+            $this->notify('success', 'Simpan sukes');
+        } else {
+            $this->notify('failure', 'Simpan gagal');
+        }
+
+        //redirect($location);
+
+      }
+
     }
 
     public function getJadwalAdd()
@@ -440,6 +548,46 @@ class Admin extends AdminModule
            echo '</tr>';
          }
         break;
+
+        case "poliklinik":
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $url_referensi = $this->options->get('settings.BpjsApiUrl').'referensi/poli/'.$phrase;
+        $consid = $this->options->get('settings.BpjsConsID');
+        $secretkey = $this->options->get('settings.BpjsSecretKey');
+        $poliklinik = BpjsRequest::get($url_referensi, NULL, NULL, $consid, $secretkey);
+        $json_poliklinik = json_decode($poliklinik, true);
+        echo json_encode($json_poliklinik, true);
+        break;
+
+        case "dokter":
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $url_referensi = $this->options->get('settings.BpjsApiUrl').'referensi/dokter/pelayanan/1/tglPelayanan/'.date('Y-m-d').'/Spesialis/'.$phrase;
+        $consid = $this->options->get('settings.BpjsConsID');
+        $secretkey = $this->options->get('settings.BpjsSecretKey');
+        $dokter = BpjsRequest::get($url_referensi, NULL, NULL, $consid, $secretkey);
+        $json_dokter = json_decode($dokter, true);
+        echo json_encode($json_dokter, true);
+        break;
+
+        case "diagnosa":
+        $phrase = '';
+        if(isset($_GET['s']))
+          $phrase = $_GET['s'];
+
+        $url_diagnosa = $this->options->get('settings.BpjsApiUrl').'referensi/diagnosa/'.$phrase;
+        $consid = $this->options->get('settings.BpjsConsID');
+        $secretkey = $this->options->get('settings.BpjsSecretKey');
+        $diagnosa = BpjsRequest::get($url_diagnosa, NULL, NULL, $consid, $secretkey);
+        $json_diagnosa = json_decode($diagnosa, true);
+        echo json_encode($json_diagnosa, true);
+        break;
+
       }
       exit();
     }
@@ -565,6 +713,20 @@ class Admin extends AdminModule
         exit();
     }
 
+    private function _addProfileHeaderFiles()
+    {
+        // CSS
+        $this->core->addCSS(url('assets/css/jquery-ui.css'));
+        $this->core->addCSS(url('assets/css/jquery.timepicker.css'));
+
+        // JS
+        $this->core->addJS(url('assets/jscripts/jquery-ui.js'), 'footer');
+        $this->core->addJS(url('assets/jscripts/jquery.timepicker.js'), 'footer');
+
+        // MODULE SCRIPTS
+        $this->core->addCSS(url([ADMIN, 'pendaftaran', 'css']));
+        $this->core->addJS(url([ADMIN, 'pendaftaran', 'javascript']), 'footer');
+    }
     private function _addHeaderFiles()
     {
         // CSS
