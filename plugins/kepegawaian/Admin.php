@@ -147,10 +147,14 @@ class Admin extends AdminModule
     {
         $this->_addHeaderFiles();
         $row = $this->db('pegawai')->oneArray($id);
+        // $this->db('pegawai')->where('id',$id)->oneArray(); rds
 
         if (!empty($row)) {
 
             $this->assign['manageURL'] = url([ADMIN, 'kepegawaian', 'manage']);
+            // rds
+            $this->assign['fotoURL'] = url('/plugins/kepegawaian/img/default.png');
+            $this->assign['view'] = $row;
 
             return $this->draw('view.html', ['kepegawaian' => $this->assign]);
         } else {
